@@ -1,5 +1,5 @@
 import globals from './utils/globals.js';
-import * as OV from '../tools/engine_main.js';
+import * as OV from '../source/main.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

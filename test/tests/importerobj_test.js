@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as OV from '../../tools/engine_main.js';
+import * as OV from '../../source/main.js';
 import { ImportObjFile } from '../utils/testfiles.js';
 import { ModelToObject, ModelToObjectSimple } from '../utils/testutils.js';
 

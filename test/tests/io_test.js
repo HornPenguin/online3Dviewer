@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as OV from '../../tools/engine_main.js';
+import * as OV from '../../source/main.js';
 import { GetArrayBufferFileContent } from '../utils/testutils.js';
 
 export default function suite ()
