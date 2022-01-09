@@ -47,7 +47,7 @@ def Main (argv):
 		mainFileContent += '\n'
 	mainFileContent += '};\n'
 
-	Tools.WriteContentToFile (os.path.join (toolsDir, 'engine_main.js'), mainFileContent)
+	Tools.WriteContentToFile (os.path.join ('tools', 'engine_main.js'), mainFileContent)
 	return 0
 
 sys.exit (Main (sys.argv))

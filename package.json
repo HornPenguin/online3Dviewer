@@ -28,7 +28,7 @@
 		"update": "node tools/run_python.js tools/update.py",
 		"updatelibs": "npm install && node tools/run_python.js tools/updatelibs.py",
 		"svg": "node tools/run_python.js tools/svg.py",
-		"build_engine" : "webpack --config tools/webpack.engine.js"
+		"build_engine" : "webpack --config tools/webpack.engine.cjs"
 	},
 	"dependencies": {
 		"@simonwep/pickr": "1.8.2",
