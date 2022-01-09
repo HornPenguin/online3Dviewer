@@ -7,8 +7,8 @@ module.exports = [
         entry: './source/main.js',
         target: 'web',
         output: {
-            filename: 'o3dv.min.js',
-            path: path.resolve ('build', 'dev'),
+            filename: 'o3dv.min-dev.js',
+            path: path.resolve ('build'),
             library: 'OV'
         }
     },
@@ -19,7 +19,7 @@ module.exports = [
         target: 'web',
         output: {
             filename: 'o3dv.min.js',
-            path: path.resolve ('build', 'prod'),
+            path: path.resolve ('build'),
             library: 'OV'
         }
     },
@@ -29,8 +29,8 @@ module.exports = [
         entry: './website/o3dv/js/index.js',
         target: 'web',
         output: {
-            filename: 'o3dv.website.min.js',
-            path: path.resolve ('build', 'dev'),
+            filename: 'o3dv.website.min-dev.js',
+            path: path.resolve ('build'),
             library: 'OV'
         }
     },
@@ -41,7 +41,7 @@ module.exports = [
         target: 'web',
         output: {
             filename: 'o3dv.website.min.js',
-            path: path.resolve ('build', 'prod'),
+            path: path.resolve ('build'),
             library: 'OV'
         }
     }
