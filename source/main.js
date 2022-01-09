@@ -37,7 +37,7 @@ import { NameFromLine, ParametersFromLine, ReadLines, IsPowerOfTwo, NextPowerOfT
 import { BinaryReader } from './io/binaryreader.js';
 import { BinaryWriter } from './io/binarywriter.js';
 import { ArrayBufferToUtf8String, ArrayBufferToAsciiString, AsciiStringToArrayBuffer, Utf8StringToArrayBuffer, Base64DataURIToArrayBuffer, GetFileExtensionFromMimeType, CreateObjectUrl, CreateObjectUrlWithMimeType, RevokeObjectUrl } from './io/bufferutils.js';
-import { SetExternalLibLocation, LoadExternalLibrary, ExternalLibLocation, LoadedExternalLibs } from './io/externallibs.js';
+import { SetExternalLibLocation, LoadExternalLibrary } from './io/externallibs.js';
 import { GetFileName, GetFileExtension, RequestUrl, ReadFile, TransformFileHostUrls, FileSource, FileFormat } from './io/fileutils.js';
 import { TextWriter } from './io/textwriter.js';
 import { Color, ColorComponentFromFloat, ColorFromFloatComponents, SRGBToLinear, LinearToSRGB, IntegerToHexString, ColorToHexString, HexStringToColor, ArrayToColor, ColorIsEqual } from './model/color.js';
@@ -190,8 +190,6 @@ export {
     RevokeObjectUrl,
     SetExternalLibLocation,
     LoadExternalLibrary,
-    ExternalLibLocation,
-    LoadedExternalLibs,
     GetFileName,
     GetFileExtension,
     RequestUrl,

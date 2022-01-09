@@ -1,4 +1,4 @@
-import { Color, ColorComponentFromFloat } from '../../../source/model/color.js';
+import { Color } from '../../../source/model/color.js';
 
 export const Theme =
 {
@@ -10,7 +10,7 @@ export class Settings
 {
     constructor ()
     {
-        this.backgroundColor = new ColorComponentFromFloat (255, 255, 255);
+        this.backgroundColor = new Color (255, 255, 255);
         this.defaultColor = new Color (200, 200, 200);
         this.showGrid = false;
         this.showEdges = false;

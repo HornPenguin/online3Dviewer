@@ -1,29 +1,29 @@
-export let ExternalLibLocation = null;
-export let LoadedExternalLibs = new Set ();
+let externalLibLocation = null;
+let loadedExternalLibs = new Set ();
 
 export function SetExternalLibLocation (newExternalLibLocation)
 {
-    ExternalLibLocation = newExternalLibLocation;
+    externalLibLocation = newExternalLibLocation;
 }
 
 export function LoadExternalLibrary (libName)
 {
     return new Promise ((resolve, reject) => {
-        if (ExternalLibLocation === null) {
+        if (externalLibLocation === null) {
             reject ();
             return;
         }
 
-        if (LoadedExternalLibs.has (libName)) {
+        if (loadedExternalLibs.has (libName)) {
             resolve ();
             return;
         }
 
         let scriptElement = document.createElement ('script');
         scriptElement.type = 'text/javascript';
-        scriptElement.src = ExternalLibLocation + '/' + libName;
+        scriptElement.src = externalLibLocation + '/' + libName;
         scriptElement.onload = () => {
-            LoadedExternalLibs.add (libName);
+            loadedExternalLibs.add (libName);
             resolve ();
         };
         scriptElement.onerror = () => {
