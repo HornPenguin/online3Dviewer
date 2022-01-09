@@ -8,9 +8,15 @@ install:
   - ps: Install-Product node $env:nodejs_version
   - set PATH=%python_path%;%python_path%\\Scripts;%PATH%
   - npm install
-  
+
+build_script:
+  - npm run create_package
+
+test_script:
+  - npm run test
+
 artifacts:
-  - path: build\final\package\*
+  - path: dist\final\package\*
 
 deploy:
   description: 'News:\n- ...'

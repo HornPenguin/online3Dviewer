@@ -17,10 +17,6 @@
     <!-- meta start -->
     <!-- meta end -->
 
-    <!-- engine start -->
-
-    <!-- engine end -->
-
     <!-- website start -->
     <link rel="stylesheet" type="text/css" href="o3dv/css/icons.css">
     <link rel="stylesheet" type="text/css" href="o3dv/css/themes.css">
@@ -33,14 +29,8 @@
     <link rel="stylesheet" type="text/css" href="o3dv/css/sidebar.css">
     <link rel="stylesheet" type="text/css" href="o3dv/css/website.css">
     <link rel="stylesheet" type="text/css" href="o3dv/css/embed.css">
-    <script type="module" src="../build/o3dv.website.min.js"></script>
+    <script type="text/javascript" src="../build/dev/o3dv.website.min.js"></script>
     <!-- website end -->
-
-    <!-- externals start -->
-    <script type="text/javascript">
-        //OV.ExternalLibLocation = '../libs';
-    </script>
-    <!-- externals end -->
 
     <!-- analytics start -->
     <script type="text/javascript">
@@ -53,9 +43,11 @@
     </script>
     <!-- analytics end -->
 
+    <!-- website init start -->
     <script type="text/javascript">
-
+        OV.StartWebsite ('../libs');
     </script>
+    <!-- website init end -->
 
     <!-- script start -->
     <!-- script end -->

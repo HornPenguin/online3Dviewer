@@ -141,18 +141,6 @@ export function SetSvgIconImageElement (iconElement, iconName)
     iconDiv.className = 'icon icon-' + iconName;
 }
 
-export function CreateHeaderButton (parentElement, iconName, title, link)
-{
-    let buttonLink = CreateDomElement ('a');
-    buttonLink.setAttribute ('href', link);
-    buttonLink.setAttribute ('target', '_blank');
-    buttonLink.setAttribute ('rel', 'noopener noreferrer');
-    InstallTooltip (buttonLink, title);
-    AddSvgIconElement (buttonLink, iconName, 'header_button');
-    parentElement.appendChild (buttonLink);
-    return buttonLink;
-}
-
 export function CreateInlineColorCircle (color)
 {
     let hexString = '#' + ColorToHexString (color);

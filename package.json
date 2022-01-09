@@ -24,14 +24,15 @@
 		"test": "mocha test",
 		"lint": "eslint source && eslint website",
 		"doc": "jsdoc -c tools/jsdoc.json",
-		"build": "npm run lint && npm run doc && node tools/run_python.js tools/build.py",
-		"update": "node tools/run_python.js tools/update.py",
 		"updatelibs": "npm install && node tools/run_python.js tools/updatelibs.py",
 		"svg": "node tools/run_python.js tools/svg.py",
 		"update_engine_exports": "node tools/run_python.js tools/update_engine_exports.py",
+		"create_package": "npm run lint && npm run test && npm run build_engine_prod && npm run build_website_prod && npm run build_css_prod && node tools/run_python.js tools/create_package.py",
+		"build_css_prod": "cleancss -o build/prod/o3dv.website.min.css website/o3dv/css/*",
 		"build_engine_dev" : "npm run update_engine_exports && webpack --config tools/webpack.config.cjs --config-name engine_dev",
 		"build_engine_prod" : "npm run update_engine_exports && webpack --config tools/webpack.config.cjs --config-name engine_prod",
-		"build_website_dev" : "webpack --config tools/webpack.config.cjs --config-name website_dev"
+		"build_website_dev" : "webpack --config tools/webpack.config.cjs --config-name website_dev",
+		"build_website_prod" : "webpack --config tools/webpack.config.cjs --config-name website_prod"
 	},
 	"dependencies": {
 		"@simonwep/pickr": "1.8.2",
