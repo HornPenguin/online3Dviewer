@@ -1,4 +1,6 @@
-OV.HashHandler = class
+import { CreateModelUrlParameters, CreateUrlParser } from "../../../source/main";
+
+export class HashHandler
 {
     constructor ()
     {
@@ -30,37 +32,37 @@ OV.HashHandler = class
 
     GetModelFilesFromHash ()
     {
-        let parser = OV.CreateUrlParser (this.GetHash ());
+        let parser = CreateUrlParser (this.GetHash ());
         return parser.GetModelUrls ();
     }
 
     SetModelFilesToHash (files)
     {
-        let params = OV.CreateModelUrlParameters (files);
+        let params = CreateModelUrlParameters (files);
         this.SetHash (params);
     }
 
     GetCameraFromHash ()
     {
-        let parser = OV.CreateUrlParser (this.GetHash ());
+        let parser = CreateUrlParser (this.GetHash ());
         return parser.GetCamera ();
     }
 
     GetBackgroundFromHash ()
     {
-        let parser = OV.CreateUrlParser (this.GetHash ());
+        let parser = CreateUrlParser (this.GetHash ());
         return parser.GetBackgroundColor ();
     }
 
     GetDefaultColorFromHash ()
     {
-        let parser = OV.CreateUrlParser (this.GetHash ());
+        let parser = CreateUrlParser (this.GetHash ());
         return parser.GetDefaultColor ();
     }
 
     GetEdgeSettingsFromHash ()
     {
-        let parser = OV.CreateUrlParser (this.GetHash ());
+        let parser = CreateUrlParser (this.GetHash ());
         return parser.GetEdgeSettings ();
     }
 

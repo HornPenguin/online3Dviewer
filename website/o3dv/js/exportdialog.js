@@ -1,10 +1,15 @@
-OV.ExportType =
+import { FileFormat } from "../../../source/io/fileutils";
+import { AddDiv, ClearDomElement } from "../../../source/viewer/domutils";
+import { ShowMessageDialog } from "./dialogs";
+import { ButtonDialog, ProgressDialog } from "./modal";
+
+export const ExportType =
 {
     Model : 0,
     Image : 1
 };
 
-OV.ExporterUI = class
+export class ExporterUI
 {
     constructor (name)
     {
@@ -28,20 +33,20 @@ OV.ExporterUI = class
 
     AddCheckbox (parentDiv, id, name, isChecked)
     {
-        let line = OV.AddDiv (parentDiv, 'ov_dialog_row');
+        let line = AddDiv (parentDiv, 'ov_dialog_row');
         return OV.AddCheckbox (line, id, name, isChecked);
     }
 
     AddSelect (parametersDiv, name, values, defaultIndex)
     {
-        let parameterRow = OV.AddDiv (parametersDiv, 'ov_dialog_row');
-        OV.AddDiv (parameterRow, 'ov_dialog_row_name', name);
-        let parameterValueDiv = OV.AddDiv (parameterRow, 'ov_dialog_row_value');
+        let parameterRow = AddDiv (parametersDiv, 'ov_dialog_row');
+        AddDiv (parameterRow, 'ov_dialog_row_name', name);
+        let parameterValueDiv = AddDiv (parameterRow, 'ov_dialog_row_value');
         return OV.AddSelect (parameterValueDiv, values, defaultIndex);
     }
 };
 
-OV.ModelExporterUI = class extends OV.ExporterUI
+export class ModelExporterUI extends ExporterUI
 {
     constructor (name, format, extension)
     {
@@ -54,7 +59,7 @@ OV.ModelExporterUI = class extends OV.ExporterUI
 
     GetType ()
     {
-        return OV.ExportType.Model;
+        return ExportType.Model;
     }
 
     GenerateParametersUI (parametersDiv)
@@ -82,7 +87,7 @@ OV.ModelExporterUI = class extends OV.ExporterUI
 
         let exporterModel = new OV.ExporterModel (model, settings);
         if (exporterModel.MeshInstanceCount () === 0) {
-            let errorDialog = OV.ShowMessageDialog (
+            let errorDialog = ShowMessageDialog (
                 'Export Failed',
                 'The model doesn\'t contain any meshes.',
                 null
@@ -91,7 +96,7 @@ OV.ModelExporterUI = class extends OV.ExporterUI
             return;
         }
 
-        let progressDialog = new OV.ProgressDialog ();
+        let progressDialog = new ProgressDialog ();
         progressDialog.Init ('Exporting Model');
         progressDialog.Show ();
 
@@ -128,7 +133,7 @@ OV.ModelExporterUI = class extends OV.ExporterUI
     }
 };
 
-OV.ImageExporterUI = class extends OV.ExporterUI
+export class ImageExporterUI extends ExporterUI
 {
     constructor (name, extension)
     {
@@ -144,7 +149,7 @@ OV.ImageExporterUI = class extends OV.ExporterUI
 
     GetType ()
     {
-        return OV.ExportType.Image;
+        return ExportType.Image;
     }
 
     GenerateParametersUI (parametersDiv)
@@ -177,22 +182,22 @@ OV.ExportDialog = class
         this.parametersDiv = null;
 
         this.exporters = [
-            new OV.ModelExporterUI ('Wavefront (.obj)', OV.FileFormat.Text, 'obj'),
-            new OV.ModelExporterUI ('Stereolithography Text (.stl)', OV.FileFormat.Text, 'stl'),
-            new OV.ModelExporterUI ('Stereolithography Binary (.stl)', OV.FileFormat.Binary, 'stl'),
-            new OV.ModelExporterUI ('Polygon File Format Text (.ply)', OV.FileFormat.Text, 'ply'),
-            new OV.ModelExporterUI ('Polygon File Format Binary (.ply)', OV.FileFormat.Binary, 'ply'),
-            new OV.ModelExporterUI ('glTF Text (.gltf)', OV.FileFormat.Text, 'gltf'),
-            new OV.ModelExporterUI ('glTF Binary (.glb)', OV.FileFormat.Binary, 'glb'),
-            new OV.ModelExporterUI ('Object File Format Text (.off)', OV.FileFormat.Text, 'off'),
-            new OV.ModelExporterUI ('Rhinoceros 3D (.3dm)', OV.FileFormat.Binary, '3dm'),
-            new OV.ImageExporterUI ('PNG Image (.png)', 'png')
+            new ModelExporterUI ('Wavefront (.obj)', FileFormat.Text, 'obj'),
+            new ModelExporterUI ('Stereolithography Text (.stl)', FileFormat.Text, 'stl'),
+            new ModelExporterUI ('Stereolithography Binary (.stl)', FileFormat.Binary, 'stl'),
+            new ModelExporterUI ('Polygon File Format Text (.ply)', FileFormat.Text, 'ply'),
+            new ModelExporterUI ('Polygon File Format Binary (.ply)', FileFormat.Binary, 'ply'),
+            new ModelExporterUI ('glTF Text (.gltf)', FileFormat.Text, 'gltf'),
+            new ModelExporterUI ('glTF Binary (.glb)', FileFormat.Binary, 'glb'),
+            new ModelExporterUI ('Object File Format Text (.off)', FileFormat.Text, 'off'),
+            new ModelExporterUI ('Rhinoceros 3D (.3dm)', FileFormat.Binary, '3dm'),
+            new ImageExporterUI ('PNG Image (.png)', 'png')
         ];
     }
 
     Show (model, viewer)
     {
-        let mainDialog = new OV.ButtonDialog ();
+        let mainDialog = new ButtonDialog ();
         let contentDiv = mainDialog.Init ('Export', [
             {
                 name : 'Close',
@@ -211,10 +216,10 @@ OV.ExportDialog = class
         ]);
 
         let text = 'Select the format from the list below, and adjust the settings of the selected format.';
-        OV.AddDiv (contentDiv, 'ov_dialog_section', text);
+        AddDiv (contentDiv, 'ov_dialog_section', text);
 
-        let formatRow = OV.AddDiv (contentDiv, 'ov_dialog_row');
-        this.parametersDiv = OV.AddDiv (contentDiv);
+        let formatRow = AddDiv (contentDiv, 'ov_dialog_row');
+        this.parametersDiv = AddDiv (contentDiv);
         let formatNames = this.exporters.map (exporter => exporter.GetName ());
         let defaultFormatIndex = 6;
         OV.AddSelect (formatRow, formatNames, defaultFormatIndex, (selectedIndex) => {
@@ -228,14 +233,14 @@ OV.ExportDialog = class
 
     OnFormatSelected (selectedIndex)
     {
-        OV.ClearDomElement (this.parametersDiv);
+        ClearDomElement (this.parametersDiv);
         this.selectedExporter = this.exporters[selectedIndex];
         this.selectedExporter.GenerateParametersUI (this.parametersDiv);
     }
 
     ExportFormat (model, viewer)
     {
-        if (this.selectedExporter.GetType () === OV.ExportType.Model) {
+        if (this.selectedExporter.GetType () === ExportType.Model) {
             this.selectedExporter.ExportModel (model, {
                 isMeshVisible : (meshInstanceId) => {
                     return this.callbacks.isMeshVisible (meshInstanceId);
@@ -245,7 +250,7 @@ OV.ExportDialog = class
                 }
             });
             this.eventHandler.HandleEvent ('model_exported', this.selectedExporter.GetName ());
-        } else if (this.selectedExporter.GetType () === OV.ExportType.Image) {
+        } else if (this.selectedExporter.GetType () === ExportType.Image) {
             this.selectedExporter.ExportImage (viewer);
         }
     }

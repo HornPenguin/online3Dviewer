@@ -1,3 +1,13 @@
+import { AddDiv, ShowDomElement } from "../../../source/viewer/domutils";
+import { CookieHandler } from "./cookies";
+import { CalculatePopupPositionToScreen, ShowListPopup } from "./dialogs";
+import { EventHandler } from "./eventhandler";
+import { HashHandler } from "./hashhandler";
+import { Settings } from "./settings";
+import { ThemeHandler } from "./themehandler";
+import { ThreeModelLoaderUI } from "./threemodelloaderui";
+import { Toolbar } from "./toolbar";
+
 OV.WebsiteUIState =
 {
     Undefined : 0,
@@ -11,17 +21,17 @@ OV.Website = class
     constructor (parameters)
     {
         this.parameters = parameters;
-        this.settings = new OV.Settings ();
+        this.settings = new Settings ();
         this.viewer = new OV.Viewer ();
         this.measureTool = new OV.MeasureTool ();
-        this.hashHandler = new OV.HashHandler ();
-        this.cookieHandler = new OV.CookieHandler ();
-        this.toolbar = new OV.Toolbar (this.parameters.toolbarDiv);
+        this.hashHandler = new HashHandler ();
+        this.cookieHandler = new CookieHandler ();
+        this.toolbar = new Toolbar (this.parameters.toolbarDiv);
         this.navigator = new OV.Navigator (this.parameters.navigatorDiv, this.parameters.navigatorSplitterDiv);
         this.sidebar = new OV.Sidebar (this.parameters.sidebarDiv, this.parameters.sidebarSplitterDiv, this.settings, this.measureTool);
-        this.eventHandler = new OV.EventHandler (this.parameters.eventHandler);
-        this.modelLoaderUI = new OV.ThreeModelLoaderUI ();
-        this.themeHandler = new OV.ThemeHandler ();
+        this.eventHandler = new EventHandler (this.parameters.eventHandler);
+        this.modelLoaderUI = new ThreeModelLoaderUI ();
+        this.themeHandler = new ThemeHandler ();
         this.highlightColor = new THREE.Color (0x8ec9f0);
         this.uiState = OV.WebsiteUIState.Undefined;
         this.model = null;
@@ -32,7 +42,7 @@ OV.Website = class
     {
         this.settings.LoadFromCookies (this.cookieHandler);
         this.SwitchTheme (this.settings.themeId, false);
-        this.eventHandler.HandleEvent ('theme_on_load', this.settings.themeId === OV.Theme.Light ? 'light' : 'dark');
+        this.eventHandler.HandleEvent ('theme_on_load', this.settings.themeId === Theme.Light ? 'light' : 'dark');
 
         this.InitViewer ();
         this.InitMeasureTool ();
@@ -116,17 +126,17 @@ OV.Website = class
 
         this.uiState = uiState;
         if (this.uiState === OV.WebsiteUIState.Intro) {
-            OV.ShowDomElement (this.parameters.introDiv, true);
-            OV.ShowDomElement (this.parameters.mainDiv, false);
+            ShowDomElement (this.parameters.introDiv, true);
+            ShowDomElement (this.parameters.mainDiv, false);
             ShowOnlyOnModelElements (false);
         } else if (this.uiState === OV.WebsiteUIState.Model) {
-            OV.ShowDomElement (this.parameters.introDiv, false);
-            OV.ShowDomElement (this.parameters.mainDiv, true);
+            ShowDomElement (this.parameters.introDiv, false);
+            ShowDomElement (this.parameters.mainDiv, true);
             ShowOnlyOnModelElements (true);
             this.UpdatePanelsVisibility ();
         } else if (this.uiState === OV.WebsiteUIState.Loading) {
-            OV.ShowDomElement (this.parameters.introDiv, false);
-            OV.ShowDomElement (this.parameters.mainDiv, false);
+            ShowDomElement (this.parameters.introDiv, false);
+            ShowDomElement (this.parameters.mainDiv, false);
             ShowOnlyOnModelElements (false);
         }
 
@@ -236,9 +246,9 @@ OV.Website = class
                 });
             }
         }
-        this.dialog = OV.ShowListPopup (items, {
+        this.dialog = ShowListPopup (items, {
             calculatePosition : (contentDiv) => {
-                return OV.CalculatePopupPositionToScreen (globalMouseCoordinates, contentDiv);
+                return CalculatePopupPositionToScreen (globalMouseCoordinates, contentDiv);
             },
             onClick : (index) => {
                 let clickedItem = items[index];
@@ -601,7 +611,7 @@ OV.Website = class
                 this.UpdateEdgeDisplay ();
             },
             onThemeChange : () => {
-                this.eventHandler.HandleEvent ('theme_changed', this.settings.themeId === OV.Theme.Light ? 'light' : 'dark');
+                this.eventHandler.HandleEvent ('theme_changed', this.settings.themeId === Theme.Light ? 'light' : 'dark');
                 this.SwitchTheme (this.settings.themeId, true);
             },
             onMeasureToolActivedChange : (isActivated) => {
@@ -737,9 +747,9 @@ OV.Website = class
         }
 
         let text = 'This website uses cookies to offer you better user experience. See the details at the <a target="_blank" href="info/cookies.html">Cookies Policy</a> page.';
-        let popupDiv = OV.AddDiv (document.body, 'ov_bottom_floating_panel');
-        OV.AddDiv (popupDiv, 'ov_floating_panel_text', text);
-        let acceptButton = OV.AddDiv (popupDiv, 'ov_button ov_floating_panel_button', 'Accept');
+        let popupDiv = AddDiv (document.body, 'ov_bottom_floating_panel');
+        AddDiv (popupDiv, 'ov_floating_panel_text', text);
+        let acceptButton = AddDiv (popupDiv, 'ov_button ov_floating_panel_button', 'Accept');
         acceptButton.addEventListener ('click', () => {
             this.cookieHandler.SetBoolVal ('ov_cookie_consent', true);
             popupDiv.remove ();

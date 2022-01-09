@@ -1,10 +1,12 @@
+import { AddDiv, ShowDomElement } from "../../../source/viewer/domutils";
+
 OV.Panel = class
 {
     constructor (parentDiv)
     {
         this.parentDiv = parentDiv;
-        this.panelDiv = OV.AddDiv (parentDiv);
-        OV.ShowDomElement (this.panelDiv, false);
+        this.panelDiv = AddDiv (parentDiv);
+        ShowDomElement (this.panelDiv, false);
         this.visible = false;
     }
 
@@ -25,7 +27,7 @@ OV.Panel = class
         }
 
         this.visible = show;
-        OV.ShowDomElement (this.panelDiv, this.visible);
+        ShowDomElement (this.panelDiv, this.visible);
     }
 
     Resize ()
@@ -44,8 +46,8 @@ OV.PanelSet = class
     constructor (parentDiv)
     {
         this.parentDiv = parentDiv;
-        this.menuDiv = OV.AddDiv (parentDiv, 'ov_panel_set_menu');
-        this.contentDiv = OV.AddDiv (parentDiv, 'ov_panel_set_content ov_thin_scrollbar');
+        this.menuDiv = AddDiv (parentDiv, 'ov_panel_set_menu');
+        this.contentDiv = AddDiv (parentDiv, 'ov_panel_set_content ov_thin_scrollbar');
         this.panels = [];
         this.panelButtons = [];
         this.panelsVisible = true;
@@ -97,7 +99,7 @@ OV.PanelSet = class
 
         this.panelsVisible = show;
         if (this.panelsVisible) {
-            OV.ShowDomElement (this.contentDiv, true);
+            ShowDomElement (this.contentDiv, true);
             OV.SetDomElementWidth (this.parentDiv, this.menuDiv.offsetWidth + this.panelsPrevWidth);
         } else {
             for (let panelButton of this.panelButtons) {
@@ -108,7 +110,7 @@ OV.PanelSet = class
             }
             this.panelsPrevWidth = this.contentDiv.offsetWidth;
             OV.SetDomElementWidth (this.parentDiv, this.menuDiv.offsetWidth);
-            OV.ShowDomElement (this.contentDiv, false);
+            ShowDomElement (this.contentDiv, false);
         }
 
         this.callbacks.onShowHidePanels (this.panelsVisible);

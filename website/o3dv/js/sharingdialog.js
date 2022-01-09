@@ -1,8 +1,12 @@
+import { AddDiv } from "../../../source/viewer/domutils";
+import { ShowMessageDialog } from "./dialogs";
+import { ButtonDialog } from "./modal";
+
 OV.ShowSharingDialog = function (fileList, settings, camera, eventHandler)
 {
     function AddCheckboxLine (parentDiv, text, id, onChange)
     {
-        let line = OV.AddDiv (parentDiv, 'ov_dialog_row');
+        let line = AddDiv (parentDiv, 'ov_dialog_row');
         let checkbox = OV.AddCheckbox (line, id, text, true, () => {
             onChange (checkbox.checked);
         });
@@ -39,10 +43,10 @@ OV.ShowSharingDialog = function (fileList, settings, camera, eventHandler)
     {
         let copyText = 'Copy';
         let copiedText = 'Copied';
-        let container = OV.AddDiv (parentDiv, 'ov_dialog_copyable_input');
+        let container = AddDiv (parentDiv, 'ov_dialog_copyable_input');
         let input = OV.AddDomElement (container, 'input', 'ov_dialog_text');
         input.readOnly = true;
-        let button = OV.AddDiv (container, 'ov_button outline ov_dialog_copyable_input_button', copyText);
+        let button = AddDiv (container, 'ov_button outline ov_dialog_copyable_input_button', copyText);
         button.addEventListener ('click', () => {
             OV.CopyToClipboard (getText ());
             button.innerHTML = copiedText;
@@ -55,8 +59,8 @@ OV.ShowSharingDialog = function (fileList, settings, camera, eventHandler)
 
     function AddSharingLinkTab (parentDiv, sharingLinkParams, eventHandler)
     {
-        let section = OV.AddDiv (parentDiv, 'ov_dialog_section');
-        OV.AddDiv (section, 'ov_dialog_inner_title', 'Sharing Link');
+        let section = AddDiv (parentDiv, 'ov_dialog_section');
+        AddDiv (section, 'ov_dialog_inner_title', 'Sharing Link');
         let sharingLinkInput = AddCopyableTextInput (section, () => {
             eventHandler.HandleEvent ('model_shared', 'sharing_link');
             return GetSharingLink (sharingLinkParams);
@@ -66,10 +70,10 @@ OV.ShowSharingDialog = function (fileList, settings, camera, eventHandler)
 
     function AddEmbeddingCodeTab (parentDiv, settings, embeddingCodeParams, eventHandler)
     {
-        let section = OV.AddDiv (parentDiv, 'ov_dialog_section');
+        let section = AddDiv (parentDiv, 'ov_dialog_section');
         section.style.marginTop = '20px';
-        OV.AddDiv (section, 'ov_dialog_inner_title', 'Embedding Code');
-        let optionsSection = OV.AddDiv (section, 'ov_dialog_section');
+        AddDiv (section, 'ov_dialog_inner_title', 'Embedding Code');
+        let optionsSection = AddDiv (section, 'ov_dialog_section');
         let embeddingCodeInput = AddCopyableTextInput (section, () => {
             eventHandler.HandleEvent ('model_shared', 'embedding_code');
             return GetEmbeddingCode (embeddingCodeParams);
@@ -99,7 +103,7 @@ OV.ShowSharingDialog = function (fileList, settings, camera, eventHandler)
     }
 
     if (!fileList.IsOnlyUrlSource ()) {
-        return OV.ShowMessageDialog (
+        return ShowMessageDialog (
             'Sharing Failed',
             'Sharing works only if you load files by url. Please upload your model files to a web server, open them by url, and try embedding again.',
             null
@@ -131,7 +135,7 @@ OV.ShowSharingDialog = function (fileList, settings, camera, eventHandler)
         }
     };
 
-    let dialog = new OV.ButtonDialog ();
+    let dialog = new ButtonDialog ();
     let contentDiv = dialog.Init ('Share', [
         {
             name : 'Close',

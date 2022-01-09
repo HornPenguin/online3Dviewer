@@ -1,9 +1,10 @@
-OV.Theme = {
+export const Theme =
+{
     Light : 1,
     Dark : 2
 };
 
-OV.Settings = class
+export class Settings
 {
     constructor ()
     {
@@ -13,7 +14,7 @@ OV.Settings = class
         this.showEdges = false;
         this.edgeColor = new OV.Color (0, 0, 0);
         this.edgeThreshold = 1;
-        this.themeId = OV.Theme.Light;
+        this.themeId = Theme.Light;
     }
 
     LoadFromCookies (cookieHandler)
@@ -25,7 +26,7 @@ OV.Settings = class
         this.edgeColor = cookieHandler.GetColorVal ('ov_edge_color', new OV.Color (0, 0, 0));
         this.edgeThreshold = cookieHandler.GetIntVal ('ov_edge_threshold', 1);
         this.showEdges = cookieHandler.GetBoolVal ('ov_show_edges', false);
-        this.themeId = cookieHandler.GetIntVal ('ov_theme_id', OV.Theme.Light);
+        this.themeId = cookieHandler.GetIntVal ('ov_theme_id', Theme.Light);
     }
 
     SaveToCookies (cookieHandler)

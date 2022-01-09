@@ -1,3 +1,6 @@
+import { Property, PropertyType, ClearDomElement } from "../../../source/model/property";
+import { AddDiv } from "../../../source/viewer/domutils";
+
 OV.SidebarDetailsPanel = class extends OV.SidebarPanel
 {
     constructor (parentDiv)
@@ -18,14 +21,14 @@ OV.SidebarDetailsPanel = class extends OV.SidebarPanel
     AddObject3DProperties (object3D)
     {
         this.Clear ();
-        let table = OV.AddDiv (this.contentDiv, 'ov_property_table');
+        let table = AddDiv (this.contentDiv, 'ov_property_table');
         let boundingBox = OV.GetBoundingBox (object3D);
         let size = OV.SubCoord3D (boundingBox.max, boundingBox.min);
-        this.AddProperty (table, new OV.Property (OV.PropertyType.Integer, 'Vertices', object3D.VertexCount ()));
-        this.AddProperty (table, new OV.Property (OV.PropertyType.Integer, 'Triangles', object3D.TriangleCount ()));
-        this.AddProperty (table, new OV.Property (OV.PropertyType.Number, 'Size X', size.x));
-        this.AddProperty (table, new OV.Property (OV.PropertyType.Number, 'Size Y', size.y));
-        this.AddProperty (table, new OV.Property (OV.PropertyType.Number, 'Size Z', size.z));
+        this.AddProperty (table, new Property (PropertyType.Integer, 'Vertices', object3D.VertexCount ()));
+        this.AddProperty (table, new Property (PropertyType.Integer, 'Triangles', object3D.TriangleCount ()));
+        this.AddProperty (table, new Property (PropertyType.Number, 'Size X', size.x));
+        this.AddProperty (table, new Property (PropertyType.Number, 'Size Y', size.y));
+        this.AddProperty (table, new Property (PropertyType.Number, 'Size Z', size.z));
         this.AddCalculatedProperty (table, 'Volume', () => {
             if (!OV.IsSolid (object3D)) {
                 return null;
@@ -34,17 +37,17 @@ OV.SidebarDetailsPanel = class extends OV.SidebarPanel
             if (volume === null) {
                 return null;
             }
-            return new OV.Property (OV.PropertyType.Number, null, volume);
+            return new Property (PropertyType.Number, null, volume);
         });
         this.AddCalculatedProperty (table, 'Surface', () => {
             const surfaceArea = OV.CalculateSurfaceArea (object3D);
             if (surfaceArea === null) {
                 return null;
             }
-            return new OV.Property (OV.PropertyType.Number, null, surfaceArea);
+            return new Property (PropertyType.Number, null, surfaceArea);
         });
         if (object3D.PropertyGroupCount () > 0) {
-            let customTable = OV.AddDiv (this.contentDiv, 'ov_property_table ov_property_table_custom');
+            let customTable = AddDiv (this.contentDiv, 'ov_property_table ov_property_table_custom');
             for (let i = 0; i < object3D.PropertyGroupCount (); i++) {
                 const propertyGroup = object3D.GetPropertyGroup (i);
                 this.AddPropertyGroup (customTable, propertyGroup);
@@ -65,33 +68,33 @@ OV.SidebarDetailsPanel = class extends OV.SidebarPanel
                 return;
             }
             let fileName = OV.GetFileName (map.name);
-            obj.AddProperty (table, new OV.Property (OV.PropertyType.Text, name, fileName));
+            obj.AddProperty (table, new Property (PropertyType.Text, name, fileName));
         }
 
         this.Clear ();
-        let table = OV.AddDiv (this.contentDiv, 'ov_property_table');
+        let table = AddDiv (this.contentDiv, 'ov_property_table');
         let typeString = null;
         if (material.type === OV.MaterialType.Phong) {
             typeString = 'Phong';
         } else if (material.type === OV.MaterialType.Physical) {
             typeString = 'Physical';
         }
-        this.AddProperty (table, new OV.Property (OV.PropertyType.Text, 'Source', material.isDefault ? 'Default' : 'Model'));
-        this.AddProperty (table, new OV.Property (OV.PropertyType.Text, 'Type', typeString));
+        this.AddProperty (table, new Property (PropertyType.Text, 'Source', material.isDefault ? 'Default' : 'Model'));
+        this.AddProperty (table, new Property (PropertyType.Text, 'Type', typeString));
         if (material.vertexColors) {
-            this.AddProperty (table, new OV.Property (OV.PropertyType.Text, 'Color', 'Vertex colors'));
+            this.AddProperty (table, new Property (PropertyType.Text, 'Color', 'Vertex colors'));
         } else {
-            this.AddProperty (table, new OV.Property (OV.PropertyType.Color, 'Color', material.color));
+            this.AddProperty (table, new Property (PropertyType.Color, 'Color', material.color));
             if (material.type === OV.MaterialType.Phong) {
-                this.AddProperty (table, new OV.Property (OV.PropertyType.Color, 'Ambient', material.ambient));
-                this.AddProperty (table, new OV.Property (OV.PropertyType.Color, 'Specular', material.specular));
+                this.AddProperty (table, new Property (PropertyType.Color, 'Ambient', material.ambient));
+                this.AddProperty (table, new Property (PropertyType.Color, 'Specular', material.specular));
             }
         }
         if (material.type === OV.MaterialType.Physical) {
-            this.AddProperty (table, new OV.Property (OV.PropertyType.Percent, 'Metalness', material.metalness));
-            this.AddProperty (table, new OV.Property (OV.PropertyType.Percent, 'Roughness', material.roughness));
+            this.AddProperty (table, new Property (PropertyType.Percent, 'Metalness', material.metalness));
+            this.AddProperty (table, new Property (PropertyType.Percent, 'Roughness', material.roughness));
         }
-        this.AddProperty (table, new OV.Property (OV.PropertyType.Percent, 'Opacity', material.opacity));
+        this.AddProperty (table, new Property (PropertyType.Percent, 'Opacity', material.opacity));
         AddTextureMap (this, table, 'Diffuse Map', material.diffuseMap);
         AddTextureMap (this, table, 'Bump Map', material.bumpMap);
         AddTextureMap (this, table, 'Normal Map', material.normalMap);
@@ -106,15 +109,15 @@ OV.SidebarDetailsPanel = class extends OV.SidebarPanel
 
     AddPropertyGroup (table, propertyGroup)
     {
-        let row = OV.AddDiv (table, 'ov_property_table_row group', propertyGroup.name);
+        let row = AddDiv (table, 'ov_property_table_row group', propertyGroup.name);
         row.setAttribute ('title', propertyGroup.name);
     }
 
     AddProperty (table, property)
     {
-        let row = OV.AddDiv (table, 'ov_property_table_row');
-        let nameColumn = OV.AddDiv (row, 'ov_property_table_cell ov_property_table_name', property.name + ':');
-        let valueColumn = OV.AddDiv (row, 'ov_property_table_cell ov_property_table_value');
+        let row = AddDiv (table, 'ov_property_table_row');
+        let nameColumn = AddDiv (row, 'ov_property_table_cell ov_property_table_name', property.name + ':');
+        let valueColumn = AddDiv (row, 'ov_property_table_cell ov_property_table_value');
         nameColumn.setAttribute ('title', property.name);
         this.DisplayPropertyValue (property, valueColumn);
         return row;
@@ -128,14 +131,14 @@ OV.SidebarDetailsPanel = class extends OV.SidebarPanel
 
     AddCalculatedProperty (table, name, calculateValue)
     {
-        let row = OV.AddDiv (table, 'ov_property_table_row');
-        let nameColumn = OV.AddDiv (row, 'ov_property_table_cell ov_property_table_name', name + ':');
-        let valueColumn = OV.AddDiv (row, 'ov_property_table_cell ov_property_table_value');
+        let row = AddDiv (table, 'ov_property_table_row');
+        let nameColumn = AddDiv (row, 'ov_property_table_cell ov_property_table_name', name + ':');
+        let valueColumn = AddDiv (row, 'ov_property_table_cell ov_property_table_value');
         nameColumn.setAttribute ('title', name);
 
-        let calculateButton = OV.AddDiv (valueColumn, 'ov_property_table_button', 'Calculate...');
+        let calculateButton = AddDiv (valueColumn, 'ov_property_table_button', 'Calculate...');
         calculateButton.addEventListener ('click', () => {
-            OV.ClearDomElement (valueColumn);
+            ClearDomElement (valueColumn);
             valueColumn.innerHTML = 'Please wait...';
             OV.RunTaskAsync (() => {
                 let propertyValue = calculateValue ();
@@ -150,22 +153,22 @@ OV.SidebarDetailsPanel = class extends OV.SidebarPanel
 
     DisplayPropertyValue (property, targetDiv)
     {
-        OV.ClearDomElement (targetDiv);
+        ClearDomElement (targetDiv);
         let valueText = null;
-        if (property.type === OV.PropertyType.Text) {
+        if (property.type === PropertyType.Text) {
             valueText = property.value;
-        } else if (property.type === OV.PropertyType.Integer) {
+        } else if (property.type === PropertyType.Integer) {
             valueText = property.value.toLocaleString ();
-        } else if (property.type === OV.PropertyType.Number) {
+        } else if (property.type === PropertyType.Number) {
             valueText = property.value.toLocaleString (undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
-        } else if (property.type === OV.PropertyType.Boolean) {
+        } else if (property.type === PropertyType.Boolean) {
             valueText = property.value ? 'True' : 'False';
-        } else if (property.type === OV.PropertyType.Percent) {
+        } else if (property.type === PropertyType.Percent) {
             valueText = parseInt (property.value * 100, 10).toString () + '%';
-        } else if (property.type === OV.PropertyType.Color) {
+        } else if (property.type === PropertyType.Color) {
             let hexString = '#' + OV.ColorToHexString (property.value);
             let colorCircle = OV.CreateInlineColorCircle (property.value);
             targetDiv.appendChild (colorCircle);

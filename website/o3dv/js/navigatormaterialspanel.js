@@ -1,3 +1,6 @@
+import { AddDiv } from "../../../source/viewer/domutils";
+import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from "./dialogs";
+
 OV.NavigatorMeshesPopupButton = class extends OV.NavigatorPopupButton
 {
     constructor (parentDiv)
@@ -35,9 +38,9 @@ OV.NavigatorMeshesPopupButton = class extends OV.NavigatorPopupButton
             return;
         }
 
-        this.popup = OV.ShowListPopup (meshItems, {
+        this.popup = ShowListPopup (meshItems, {
             calculatePosition : (contentDiv) => {
-                return OV.CalculatePopupPositionToElementBottomRight (this.button, contentDiv);
+                return CalculatePopupPositionToElementBottomRight (this.button, contentDiv);
             },
             onHoverStart : (index) => {
                 const meshData = this.meshInfoArray[index];
@@ -62,7 +65,7 @@ OV.NavigatorMaterialsPanel = class extends OV.NavigatorPanel
         this.callbacks = null;
         this.materialIndexToItem = new Map ();
 
-        this.popupDiv = OV.AddDiv (this.panelDiv, 'ov_navigator_info_panel');
+        this.popupDiv = AddDiv (this.panelDiv, 'ov_navigator_info_panel');
         this.meshesButton = new OV.NavigatorMeshesPopupButton (this.popupDiv);
     }
 

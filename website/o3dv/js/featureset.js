@@ -1,4 +1,4 @@
-OV.FeatureSet =
+export const FeatureSet =
 {
     ShowGrid : false,
     MeasureTool : false

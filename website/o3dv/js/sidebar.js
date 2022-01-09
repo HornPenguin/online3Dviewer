@@ -1,3 +1,6 @@
+import { ShowDomElement } from "../../../source/viewer/domutils";
+import { FeatureSet } from "./featureset";
+
 OV.Sidebar = class
 {
     constructor (mainDiv, splitterDiv, settings, measureTool)
@@ -12,7 +15,7 @@ OV.Sidebar = class
 
         this.panelSet.AddPanel (this.detailsPanel);
         this.panelSet.AddPanel (this.settingsPanel);
-        if (OV.FeatureSet.MeasureTool) {
+        if (FeatureSet.MeasureTool) {
             this.panelSet.AddPanel (this.measurePanel);
         }
         this.panelSet.ShowPanel (this.detailsPanel);
@@ -34,7 +37,7 @@ OV.Sidebar = class
 
         this.panelSet.Init ({
             onResize : () => {
-                OV.ShowDomElement (this.splitterDiv, this.panelSet.IsPanelsVisible ());
+                ShowDomElement (this.splitterDiv, this.panelSet.IsPanelsVisible ());
                 this.callbacks.onResize ();
             },
             onShowHidePanels : (show) => {

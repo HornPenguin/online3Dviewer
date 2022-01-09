@@ -1,3 +1,6 @@
+import { AddDiv, ShowDomElement, ClearDomElement } from "../../../source/viewer/domutils";
+import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from "./dialogs";
+
 OV.NavigatorMaterialsPopupButton = class extends OV.NavigatorPopupButton
 {
     constructor (parentDiv)
@@ -36,9 +39,9 @@ OV.NavigatorMaterialsPopupButton = class extends OV.NavigatorPopupButton
             return;
         }
 
-        this.popup = OV.ShowListPopup (materialItems, {
+        this.popup = ShowListPopup (materialItems, {
             calculatePosition : (contentDiv) => {
-                return OV.CalculatePopupPositionToElementBottomRight (this.button, contentDiv);
+                return CalculatePopupPositionToElementBottomRight (this.button, contentDiv);
             },
             onClick : (index) => {
                 let usedMaterial = this.materialInfoArray[index];
@@ -66,7 +69,7 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
         this.buttonsDiv = OV.CreateDiv ('ov_navigator_buttons');
         OV.InsertDomElementBefore (this.buttonsDiv, this.treeDiv);
 
-        this.popupDiv = OV.AddDiv (this.panelDiv, 'ov_navigator_info_panel');
+        this.popupDiv = AddDiv (this.panelDiv, 'ov_navigator_info_panel');
         this.materialsButton = new OV.NavigatorMaterialsPopupButton (this.popupDiv);
     }
 
@@ -92,7 +95,7 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
     Clear ()
     {
         this.ClearMeshTree ();
-        OV.ClearDomElement (this.buttonsDiv);
+        ClearDomElement (this.buttonsDiv);
         this.buttons = null;
     }
 
@@ -136,7 +139,7 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
     {
         function CreateButton (parentDiv, button, className, onClick)
         {
-            button.div = OV.AddDiv (parentDiv, 'ov_navigator_button');
+            button.div = AddDiv (parentDiv, 'ov_navigator_button');
             button.div.setAttribute ('alt', button.name);
             button.div.setAttribute ('title', button.name);
             if (className) {
@@ -158,9 +161,9 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
                 buttons.treeView.iconDiv.classList.remove ('selected');
             }
             let showExpandButtons = showTree && isHierarchical;
-            OV.ShowDomElement (buttons.separator, showExpandButtons);
-            OV.ShowDomElement (buttons.expandAll.div, showExpandButtons);
-            OV.ShowDomElement (buttons.collapseAll.div, showExpandButtons);
+            ShowDomElement (buttons.separator, showExpandButtons);
+            ShowDomElement (buttons.expandAll.div, showExpandButtons);
+            ShowDomElement (buttons.collapseAll.div, showExpandButtons);
         }
 
         function UpdateView (panel, importResult, isHierarchical)
@@ -250,7 +253,7 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
             UpdateView (this, importResult, isHierarchical);
         });
 
-        this.buttons.separator = OV.AddDiv (this.buttonsDiv, 'ov_navigator_buttons_separator');
+        this.buttons.separator = AddDiv (this.buttonsDiv, 'ov_navigator_buttons_separator');
 
         CreateButton (this.buttonsDiv, this.buttons.expandAll, null, () => {
             this.rootItem.ExpandAll (true);

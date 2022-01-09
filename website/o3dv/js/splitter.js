@@ -1,4 +1,4 @@
-OV.CreateVerticalSplitter = function (splitterDiv, callbacks)
+export function CreateVerticalSplitter (splitterDiv, callbacks)
 {
     let originalPosition = null;
 

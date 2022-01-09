@@ -1,4 +1,7 @@
-OV.ThemeHandler = class {
+import { Theme } from "./settings";
+
+export class ThemeHandler
+{
     constructor () {
         this.css = {
             '--ov_foreground_color': {},
@@ -39,9 +42,9 @@ OV.ThemeHandler = class {
     SwitchTheme (themeId)
     {
         let themeName = null;
-        if (themeId === OV.Theme.Light) {
+        if (themeId === Theme.Light) {
             themeName = 'light';
-        } else if (themeId === OV.Theme.Dark) {
+        } else if (themeId === Theme.Dark) {
             themeName = 'dark';
         } else {
             return;

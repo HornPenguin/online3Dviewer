@@ -1,11 +1,14 @@
+import { HashHandler } from "./hashhandler";
+import { ThreeModelLoaderUI } from "./threemodelloaderui";
+
 OV.Embed = class
 {
     constructor (parameters)
     {
         this.parameters = parameters;
         this.viewer = new OV.Viewer ();
-        this.hashHandler = new OV.HashHandler ();
-        this.modelLoaderUI = new OV.ThreeModelLoaderUI ();
+        this.hashHandler = new HashHandler ();
+        this.modelLoaderUI = new ThreeModelLoaderUI ();
     }
 
     Load ()

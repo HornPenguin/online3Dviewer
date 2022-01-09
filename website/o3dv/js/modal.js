@@ -1,4 +1,6 @@
-OV.Modal = class
+import { AddDiv } from "../../../source/viewer/domutils";
+
+export class Modal
 {
     constructor ()
     {
@@ -33,7 +35,7 @@ OV.Modal = class
 
     Open ()
     {
-        this.overlayDiv = OV.AddDiv (document.body, 'ov_modal_overlay');
+        this.overlayDiv = AddDiv (document.body, 'ov_modal_overlay');
         document.body.appendChild (this.modalDiv);
 
         this.resizeHandler = this.Resize.bind (this);
@@ -93,11 +95,11 @@ OV.Modal = class
     }
 };
 
-OV.Dialog = class
+export class Dialog
 {
     constructor ()
     {
-        this.modal = new OV.Modal ();
+        this.modal = new Modal ();
     }
 
     GetContentDiv ()
@@ -131,7 +133,7 @@ OV.Dialog = class
     }
 };
 
-OV.ProgressDialog = class extends OV.Dialog
+export class ProgressDialog extends Dialog
 {
     constructor ()
     {
@@ -145,8 +147,8 @@ OV.ProgressDialog = class extends OV.Dialog
         let contentDiv = this.modal.GetContentDiv ();
         contentDiv.classList.add ('ov_progress');
 
-        OV.AddDiv (contentDiv, 'ov_progress_img', '<svg><use href="assets/images/3dviewer_net_logo.svg#logo"></use></svg>');
-        this.textDiv = OV.AddDiv (contentDiv, 'ov_progress_text');
+        AddDiv (contentDiv, 'ov_progress_img', '<svg><use href="assets/images/3dviewer_net_logo.svg#logo"></use></svg>');
+        this.textDiv = AddDiv (contentDiv, 'ov_progress_text');
         this.SetText (text);
     }
 
@@ -156,7 +158,7 @@ OV.ProgressDialog = class extends OV.Dialog
     }
 };
 
-OV.ButtonDialog = class extends OV.Dialog
+export class ButtonDialog extends Dialog
 {
     constructor ()
     {
@@ -167,7 +169,7 @@ OV.ButtonDialog = class extends OV.Dialog
     {
         function AddButton (button, buttonsDiv)
         {
-            let buttonDiv = OV.AddDiv (buttonsDiv, 'ov_button ov_dialog_button', button.name);
+            let buttonDiv = AddDiv (buttonsDiv, 'ov_button ov_dialog_button', button.name);
             if (button.subClass) {
                 buttonDiv.classList.add (button.subClass);
             }
@@ -179,10 +181,10 @@ OV.ButtonDialog = class extends OV.Dialog
         let contentDiv = this.modal.GetContentDiv ();
         contentDiv.classList.add ('ov_dialog');
 
-        OV.AddDiv (contentDiv, 'ov_dialog_title', title);
-        let dialogContentDiv = OV.AddDiv (contentDiv, 'ov_dialog_content');
-        let buttonsDiv = OV.AddDiv (contentDiv, 'ov_dialog_buttons');
-        let buttonsInnerDiv = OV.AddDiv (buttonsDiv, 'ov_dialog_buttons_inner');
+        AddDiv (contentDiv, 'ov_dialog_title', title);
+        let dialogContentDiv = AddDiv (contentDiv, 'ov_dialog_content');
+        let buttonsDiv = AddDiv (contentDiv, 'ov_dialog_buttons');
+        let buttonsInnerDiv = AddDiv (buttonsDiv, 'ov_dialog_buttons_inner');
         for (let i = 0; i < buttons.length; i++) {
             AddButton (buttons[i], buttonsInnerDiv);
         }
@@ -191,7 +193,7 @@ OV.ButtonDialog = class extends OV.Dialog
     }
 };
 
-OV.PopupDialog = class extends OV.Dialog
+export class PopupDialog extends Dialog
 {
     constructor ()
     {
@@ -207,7 +209,7 @@ OV.PopupDialog = class extends OV.Dialog
     }
 };
 
-OV.ListPopup = class extends OV.PopupDialog
+export class ListPopup extends PopupDialog
 {
     constructor ()
     {
@@ -218,22 +220,22 @@ OV.ListPopup = class extends OV.PopupDialog
     Init (positionCalculator)
     {
         let contentDiv = super.Init (positionCalculator);
-        this.listDiv = OV.AddDiv (contentDiv, 'ov_popup_list ov_thin_scrollbar');
+        this.listDiv = AddDiv (contentDiv, 'ov_popup_list ov_thin_scrollbar');
         return contentDiv;
     }
 
     AddListItem (item, callbacks)
     {
-        let listItemDiv = OV.AddDiv (this.listDiv, 'ov_popup_list_item');
+        let listItemDiv = AddDiv (this.listDiv, 'ov_popup_list_item');
         if (item.icon) {
             OV.AddSvgIconElement (listItemDiv, item.icon, 'left_inline');
         }
         if (item.color) {
-            let iconDiv = OV.AddDiv (listItemDiv, 'ov_popup_list_item_icon');
+            let iconDiv = AddDiv (listItemDiv, 'ov_popup_list_item_icon');
             let colorCircle = OV.CreateInlineColorCircle (item.color);
             iconDiv.appendChild (colorCircle);
         }
-        OV.AddDiv (listItemDiv, 'ov_popup_list_item_name', item.name);
+        AddDiv (listItemDiv, 'ov_popup_list_item_name', item.name);
         listItemDiv.addEventListener ('click', callbacks.onClick);
         if (OV.IsHoverEnabled () && callbacks.onHoverStart && callbacks.onHoverStop) {
             listItemDiv.addEventListener ('mouseover', () => {

@@ -1,3 +1,6 @@
+import { AddDiv } from "../../../source/viewer/domutils";
+import { CreateVerticalSplitter } from "./splitter";
+
 OV.GetNameOrDefault = function (originalName, defaultName)
 {
     if (originalName.length > 0) {
@@ -74,7 +77,7 @@ OV.InstallTooltip = function (element, text)
 
     let tooltip = null;
     element.addEventListener ('mouseover', () => {
-        tooltip = OV.AddDiv (document.body, 'ov_tooltip', text);
+        tooltip = AddDiv (document.body, 'ov_tooltip', text);
         let offset = CalculateOffset (element, tooltip);
         tooltip.style.left = offset.left + 'px';
         tooltip.style.top = offset.top + 'px';
@@ -166,7 +169,7 @@ OV.CreateInlineColorCircle = function (color)
 OV.InstallVerticalSplitter = function (splitterDiv, resizedDiv, flipped, onResize)
 {
     let originalWidth = null;
-    OV.CreateVerticalSplitter (splitterDiv, {
+    CreateVerticalSplitter (splitterDiv, {
         onSplitStart : () => {
             originalWidth = OV.GetDomElementOuterWidth (resizedDiv);
         },

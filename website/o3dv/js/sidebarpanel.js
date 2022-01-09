@@ -1,3 +1,5 @@
+import { AddDiv, ClearDomElement } from "../../../source/viewer/domutils";
+
 OV.SidebarPanel = class extends OV.Panel
 {
     constructor (parentDiv)
@@ -5,11 +7,11 @@ OV.SidebarPanel = class extends OV.Panel
         super (parentDiv);
         this.callbacks = null;
 
-        this.titleDiv = OV.AddDiv (this.panelDiv, 'ov_sidebar_title');
-        this.contentDiv = OV.AddDiv (this.panelDiv, 'ov_sidebar_content ov_thin_scrollbar');
+        this.titleDiv = AddDiv (this.panelDiv, 'ov_sidebar_title');
+        this.contentDiv = AddDiv (this.panelDiv, 'ov_sidebar_content ov_thin_scrollbar');
 
         let panelName = this.GetName ();
-        OV.AddDiv (this.titleDiv, 'ov_sidebar_title_text', this.GetName ());
+        AddDiv (this.titleDiv, 'ov_sidebar_title_text', this.GetName ());
         this.titleDiv.setAttribute ('title', panelName);
     }
 
@@ -20,7 +22,7 @@ OV.SidebarPanel = class extends OV.Panel
 
     Clear ()
     {
-        OV.ClearDomElement (this.contentDiv);
+        ClearDomElement (this.contentDiv);
     }
 
     Init (callbacks)

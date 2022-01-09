@@ -1,3 +1,5 @@
+import { AddDiv, ShowDomElement, ClearDomElement } from "../../../source/viewer/domutils";
+
 OV.ScrollToView = function (element)
 {
     element.scrollIntoView ({
@@ -43,7 +45,7 @@ OV.TreeViewItem = class
         this.parent = null;
         this.mainElement = OV.CreateDiv ('ov_tree_item');
         this.mainElement.setAttribute ('title', this.name);
-        this.nameElement = OV.AddDiv (this.mainElement, 'ov_tree_item_name', this.name);
+        this.nameElement = AddDiv (this.mainElement, 'ov_tree_item_name', this.name);
         if (OV.IsDefined (icon)) {
             let iconElement = OV.CreateSvgIconElement (icon, 'ov_tree_item_icon');
             OV.InsertDomElementBefore (iconElement, this.nameElement);
@@ -154,10 +156,10 @@ OV.TreeViewGroupItem = class extends OV.TreeViewItem
             return;
         }
         if (this.isVisible) {
-            OV.ShowDomElement (this.mainElement, true);
+            ShowDomElement (this.mainElement, true);
             this.childrenDiv.classList.add ('ov_tree_view_children');
         } else {
-            OV.ShowDomElement (this.mainElement, false);
+            ShowDomElement (this.mainElement, false);
             this.childrenDiv.classList.remove ('ov_tree_view_children');
         }
     }
@@ -170,10 +172,10 @@ OV.TreeViewGroupItem = class extends OV.TreeViewItem
         }
         if (show) {
             OV.SetSvgIconImageElement (this.openCloseButton, this.openButtonIcon);
-            OV.ShowDomElement (this.childrenDiv, true);
+            ShowDomElement (this.childrenDiv, true);
         } else {
             OV.SetSvgIconImageElement (this.openCloseButton, this.closeButtonIcon);
-            OV.ShowDomElement (this.childrenDiv, false);
+            ShowDomElement (this.childrenDiv, false);
         }
     }
 
@@ -212,7 +214,7 @@ OV.TreeView = class
 {
     constructor (parentDiv)
     {
-        this.mainDiv = OV.AddDiv (parentDiv, 'ov_tree_view');
+        this.mainDiv = AddDiv (parentDiv, 'ov_tree_view');
         this.children = [];
     }
 
@@ -229,7 +231,7 @@ OV.TreeView = class
 
     Clear ()
     {
-        OV.ClearDomElement (this.mainDiv);
+        ClearDomElement (this.mainDiv);
         this.children = [];
     }
 };

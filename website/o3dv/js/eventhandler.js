@@ -1,4 +1,4 @@
-OV.EventHandler = class
+export class EventHandler
 {
     constructor (eventHandler)
     {

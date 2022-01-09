@@ -1,4 +1,6 @@
-OV.CookieHandler = class
+import { ParameterConverter } from "../../../source/main";
+
+export class CookieHandler
 {
     constructor ()
     {
@@ -42,7 +44,7 @@ OV.CookieHandler = class
     SetBoolVal (key, value)
     {
         this.SetStringVal (key, value ? 'true' : 'false');
-    }    
+    }
 
     GetIntVal (key, defVal)
     {
@@ -64,11 +66,11 @@ OV.CookieHandler = class
         if (stringVal === null) {
             return defVal;
         }
-        return OV.ParameterConverter.StringToColor (stringVal);
+        return ParameterConverter.StringToColor (stringVal);
     }
 
     SetColorVal (key, value)
     {
-        this.SetStringVal (key, OV.ParameterConverter.ColorToString (value));
-    }    
+        this.SetStringVal (key, ParameterConverter.ColorToString (value));
+    }
 };

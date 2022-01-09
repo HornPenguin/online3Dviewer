@@ -1,4 +1,8 @@
-OV.ThreeModelLoaderUI = class
+import { AddDiv } from "../../../source/viewer/domutils";
+import { ShowMessageDialog } from "./dialogs";
+import { ButtonDialog, ProgressDialog } from "./modal";
+
+export class ThreeModelLoaderUI
 {
     constructor ()
     {
@@ -17,7 +21,7 @@ OV.ThreeModelLoaderUI = class
             onLoadStart : () => {
                 this.CloseDialogIfOpen ();
                 callbacks.onStart ();
-                progressDialog = new OV.ProgressDialog ();
+                progressDialog = new ProgressDialog ();
                 progressDialog.Init ('Loading Model');
                 progressDialog.Show ();
             },
@@ -62,25 +66,25 @@ OV.ThreeModelLoaderUI = class
     ShowErrorDialog (importError)
     {
         if (importError.code === OV.ImportErrorCode.NoImportableFile) {
-            return OV.ShowMessageDialog (
+            return ShowMessageDialog (
                 'Something went wrong',
                 'No importable file found.',
                 importError.message
             );
         } else if (importError.code === OV.ImportErrorCode.FailedToLoadFile) {
-            return OV.ShowMessageDialog (
+            return ShowMessageDialog (
                 'Something went wrong',
                 'Failed to load file for import.',
                 importError.message
             );
         } else if (importError.code === OV.ImportErrorCode.ImportFailed) {
-            return OV.ShowMessageDialog (
+            return ShowMessageDialog (
                 'Something went wrong',
                 'Failed to import model.',
                 importError.message
             );
         } else {
-            return OV.ShowMessageDialog (
+            return ShowMessageDialog (
                 'Something went wrong',
                 'Unknown error.',
                 importError.message
@@ -90,7 +94,7 @@ OV.ThreeModelLoaderUI = class
 
     ShowFileSelectorDialog (fileNames, onSelect)
     {
-        let dialog = new OV.ButtonDialog ();
+        let dialog = new ButtonDialog ();
         let contentDiv = dialog.Init ('Select Model', [
             {
                 name : 'Cancel',
@@ -105,16 +109,16 @@ OV.ThreeModelLoaderUI = class
         });
 
         let text = 'Multiple importable models found. Select the model you would like to import from the list below.';
-        OV.AddDiv (contentDiv, 'ov_dialog_message', text);
+        AddDiv (contentDiv, 'ov_dialog_message', text);
 
-        let fileListSection = OV.AddDiv (contentDiv, 'ov_dialog_section');
-        let fileList = OV.AddDiv (fileListSection, 'ov_dialog_import_file_list ov_thin_scrollbar');
+        let fileListSection = AddDiv (contentDiv, 'ov_dialog_section');
+        let fileList = AddDiv (fileListSection, 'ov_dialog_import_file_list ov_thin_scrollbar');
 
         for (let i = 0; i < fileNames.length; i++) {
             let fileName = fileNames[i];
-            let fileLink = OV.AddDiv (fileList, 'ov_dialog_file_link');
+            let fileLink = AddDiv (fileList, 'ov_dialog_file_link');
             OV.AddSvgIconElement (fileLink, 'meshes', 'ov_file_link_img');
-            OV.AddDiv (fileLink, 'ov_dialog_file_link_text', fileName);
+            AddDiv (fileLink, 'ov_dialog_file_link_text', fileName);
             fileLink.addEventListener ('click', () => {
                 dialog.SetCloseHandler (null);
                 dialog.Hide ();

@@ -1,6 +1,9 @@
+import { AddDiv } from "../../../source/viewer/domutils";
+import { ButtonDialog } from "./modal";
+
 OV.ShowOpenUrlDialog = function (onOk)
 {
-    let dialog = new OV.ButtonDialog ();
+    let dialog = new ButtonDialog ();
     let urlsTextArea = OV.CreateDomElement ('textarea', 'ov_dialog_textarea');
     let contentDiv = dialog.Init ('Open Model from Url', [
         {
@@ -23,7 +26,7 @@ OV.ShowOpenUrlDialog = function (onOk)
         }
     ]);
     let text = 'Here you can load models based on their urls. You can add more lines if your model builds up from multiple files.';
-    OV.AddDiv (contentDiv, 'ov_dialog_section', text);
+    AddDiv (contentDiv, 'ov_dialog_section', text);
     contentDiv.appendChild (urlsTextArea);
     dialog.Show ();
     urlsTextArea.focus ();

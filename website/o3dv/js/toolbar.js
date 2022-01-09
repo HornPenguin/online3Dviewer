@@ -1,3 +1,5 @@
+import { AddDiv } from "../../../source/viewer/domutils";
+
 OV.ToolbarButton = class
 {
     constructor (image, imageTitle, onClick)
@@ -57,11 +59,11 @@ OV.ToolbarButton = class
     }
 };
 
-OV.Toolbar = class
+export class Toolbar
 {
     constructor (parentDiv)
     {
-        this.mainDiv = OV.AddDiv (parentDiv, 'ov_toolbar');
+        this.mainDiv = AddDiv (parentDiv, 'ov_toolbar');
     }
 
     AddImageButton (image, imageTitle, onClick)
@@ -108,6 +110,6 @@ OV.Toolbar = class
 
     AddSeparator ()
     {
-        return OV.AddDiv (this.mainDiv, 'ov_toolbar_separator');
+        return AddDiv (this.mainDiv, 'ov_toolbar_separator');
     }
 };

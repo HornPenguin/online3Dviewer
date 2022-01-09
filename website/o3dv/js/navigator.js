@@ -1,3 +1,5 @@
+import { ShowDomElement } from "../../../source/viewer/domutils";
+
 OV.SelectionType =
 {
     Material : 1,
@@ -64,7 +66,7 @@ OV.Navigator = class
 
         this.panelSet.Init ({
             onResize : () => {
-                OV.ShowDomElement (this.splitterDiv, this.panelSet.IsPanelsVisible ());
+                ShowDomElement (this.splitterDiv, this.panelSet.IsPanelsVisible ());
                 this.callbacks.onResize ();
             },
             onShowHidePanels : (show) => {

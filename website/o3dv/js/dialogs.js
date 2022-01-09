@@ -1,6 +1,9 @@
-OV.ShowMessageDialog = function (title, message, subMessage)
+import { AddDiv } from "../../../source/viewer/domutils";
+import { ButtonDialog, ListPopup } from "./modal";
+
+export function ShowMessageDialog (title, message, subMessage)
 {
-    let dialog = new OV.ButtonDialog ();
+    let dialog = new ButtonDialog ();
     let contentDiv = dialog.Init (title, [
         {
             name : 'OK',
@@ -9,21 +12,21 @@ OV.ShowMessageDialog = function (title, message, subMessage)
             }
         }
     ]);
-    OV.AddDiv (contentDiv, 'ov_dialog_message', message);
+    AddDiv (contentDiv, 'ov_dialog_message', message);
     if (subMessage !== null) {
-        OV.AddDiv (contentDiv, 'ov_dialog_submessage', subMessage);
+        AddDiv (contentDiv, 'ov_dialog_submessage', subMessage);
     }
     dialog.Show ();
     return dialog;
 };
 
-OV.ShowListPopup = function (items, callbacks)
+export function ShowListPopup (items, callbacks)
 {
     if (items.length === 0) {
         return null;
     }
 
-    let popup = new OV.ListPopup ();
+    let popup = new ListPopup ();
     popup.Init (() => {
         return callbacks.calculatePosition (popup.GetContentDiv ());
     });
@@ -50,7 +53,7 @@ OV.ShowListPopup = function (items, callbacks)
     return popup;
 };
 
-OV.CalculatePopupPositionToElementBottomRight = function (elementDiv, contentDiv)
+export function CalculatePopupPositionToElementBottomRight (elementDiv, contentDiv)
 {
     let offset = elementDiv.getBoundingClientRect ();
     return {
@@ -59,7 +62,7 @@ OV.CalculatePopupPositionToElementBottomRight = function (elementDiv, contentDiv
     };
 };
 
-OV.CalculatePopupPositionToScreen = function (globalMouseCoordinates, contentDiv)
+export function CalculatePopupPositionToScreen (globalMouseCoordinates, contentDiv)
 {
     let windowWidth = window.innerWidth;
     let windowHeight = window.innerHeight;

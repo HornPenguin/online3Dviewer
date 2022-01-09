@@ -1,3 +1,5 @@
+import { AddDiv, ShowDomElement, ClearDomElement } from "../../../source/viewer/domutils";
+
 OV.SidebarMeasurePanel = class extends OV.SidebarPanel
 {
     constructor (parentDiv, measureTool)
@@ -24,7 +26,7 @@ OV.SidebarMeasurePanel = class extends OV.SidebarPanel
         super.Init (callbacks);
 
         let isActive = false;
-        let activateButton = OV.AddDiv (this.contentDiv, 'ov_button ov_sidebar_button', 'Activate');
+        let activateButton = AddDiv (this.contentDiv, 'ov_button ov_sidebar_button', 'Activate');
         activateButton.addEventListener ('click', () => {
             isActive = !isActive;
             if (isActive) {
@@ -37,19 +39,19 @@ OV.SidebarMeasurePanel = class extends OV.SidebarPanel
             this.callbacks.onActivatedChange (isActive);
         });
 
-        this.helpSection = OV.AddDiv (this.contentDiv, 'ov_sidebar_section');
-        this.resultSection = OV.AddDiv (this.contentDiv, 'ov_sidebar_section');
+        this.helpSection = AddDiv (this.contentDiv, 'ov_sidebar_section');
+        this.resultSection = AddDiv (this.contentDiv, 'ov_sidebar_section');
 
         this.helpSection.innerHTML = this.GetDefaultHelpText ();
     }
 
     UpdateMeasureTool ()
     {
-        OV.ClearDomElement (this.helpSection);
-        OV.ClearDomElement (this.resultSection);
+        ClearDomElement (this.helpSection);
+        ClearDomElement (this.resultSection);
 
-        OV.ShowDomElement (this.helpSection, true);
-        OV.ShowDomElement (this.resultSection, false);
+        ShowDomElement (this.helpSection, true);
+        ShowDomElement (this.resultSection, false);
 
         if (this.measureTool.IsActive ()) {
             let markerCount = this.measureTool.GetMarkerCount ();
@@ -58,36 +60,36 @@ OV.SidebarMeasurePanel = class extends OV.SidebarPanel
             } else if (markerCount === 1) {
                 this.helpSection.innerHTML = 'Click on another model point to see the results.';
             } else if (markerCount === 2) {
-                OV.ShowDomElement (this.helpSection, false);
-                OV.ShowDomElement (this.resultSection, true);
+                ShowDomElement (this.helpSection, false);
+                ShowDomElement (this.resultSection, true);
 
                 let calculatedValues = this.measureTool.Calculate ();
 
-                OV.AddDiv (this.resultSection, 'ov_sidebar_measure_name', 'Distance of points');
+                AddDiv (this.resultSection, 'ov_sidebar_measure_name', 'Distance of points');
                 let pointsDistanceStr = calculatedValues.pointsDistance.toLocaleString (undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 4
                 });
-                OV.AddDiv (this.resultSection, 'ov_sidebar_measure_value', pointsDistanceStr);
+                AddDiv (this.resultSection, 'ov_sidebar_measure_value', pointsDistanceStr);
 
-                OV.AddDiv (this.resultSection, 'ov_sidebar_measure_name', 'Distance of parallel faces');
+                AddDiv (this.resultSection, 'ov_sidebar_measure_name', 'Distance of parallel faces');
                 if (calculatedValues.parallelFacesDistance !== null) {
                     let facesDistanceStr = calculatedValues.parallelFacesDistance.toLocaleString (undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 4
                     });
-                    OV.AddDiv (this.resultSection, 'ov_sidebar_measure_value', facesDistanceStr);
+                    AddDiv (this.resultSection, 'ov_sidebar_measure_value', facesDistanceStr);
                 } else {
-                    OV.AddDiv (this.resultSection, 'ov_sidebar_measure_value', 'Faces are not parallel');
+                    AddDiv (this.resultSection, 'ov_sidebar_measure_value', 'Faces are not parallel');
                 }
 
-                OV.AddDiv (this.resultSection, 'ov_sidebar_measure_name', 'Angle of faces');
+                AddDiv (this.resultSection, 'ov_sidebar_measure_name', 'Angle of faces');
                 let facesAngleDegree = calculatedValues.facesAngle * OV.RadDeg;
                 let facesAngleStr = facesAngleDegree.toLocaleString (undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 4
                 });
-                OV.AddDiv (this.resultSection, 'ov_sidebar_measure_value', facesAngleStr + '°');
+                AddDiv (this.resultSection, 'ov_sidebar_measure_value', facesAngleStr + '°');
 
             }
         } else {
