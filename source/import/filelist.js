@@ -1,5 +1,5 @@
-import { RunTasks } from "../core/taskrunner";
-import { FileSource, GetFileExtension, GetFileName, ReadFile, RequestUrl } from "../io/fileutils";
+import { RunTasks } from '../core/taskrunner.js';
+import { FileFormat, FileSource, GetFileExtension, GetFileName, ReadFile, RequestUrl } from '../io/fileutils.js';
 
 export class File
 {
@@ -29,7 +29,7 @@ export class File
     {
         this.content = content;
     }
-};
+}
 
 export class FileList
 {
@@ -141,4 +141,4 @@ export class FileList
             complete ();
         });
     }
-};
+}

@@ -1,8 +1,8 @@
-import { Coord2D, CoordDistance2D, SubCoord2D } from "../geometry/coord2d";
-import { CoordDistance3D, CoordIsEqual3D, CrossVector3D, SubCoord3D, VectorAngle3D } from "../geometry/coord3d";
-import { DegRad, IsGreater, IsLower, IsZero } from "../geometry/geometry";
-import { ParabolicTweenFunction, TweenCoord3D } from "../geometry/tween";
-import { GetDomElementClientCoordinates } from "./domutils";
+import { Coord2D, CoordDistance2D, SubCoord2D } from '../geometry/coord2d.js';
+import { CoordDistance3D, CoordIsEqual3D, CrossVector3D, SubCoord3D, VectorAngle3D } from '../geometry/coord3d.js';
+import { DegRad, IsGreater, IsLower, IsZero } from '../geometry/geometry.js';
+import { ParabolicTweenFunction, TweenCoord3D } from '../geometry/tween.js';
+import { GetDomElementClientCoordinates } from './domutils.js';
 
 export class Camera
 {
@@ -21,12 +21,12 @@ export class Camera
             this.up.Clone ()
         );
     }
-};
+}
 
 export function CameraIsEqual3D (a, b)
 {
 	return CoordIsEqual3D (a.eye, b.eye) && CoordIsEqual3D (a.center, b.center) && CoordIsEqual3D (a.up, b.up);
-};
+}
 
 export class MouseInteraction
 {
@@ -95,7 +95,7 @@ export class MouseInteraction
 	{
 		return GetDomElementClientCoordinates (canvas, ev.clientX, ev.clientY);
 	}
-};
+}
 
 export class TouchInteraction
 {
@@ -199,7 +199,7 @@ export class TouchInteraction
 		);
 		return distance;
 	}
-};
+}
 
 export class ClickDetector
 {
@@ -247,7 +247,7 @@ export class ClickDetector
 	{
 		return this.isClick;
 	}
-};
+}
 
 export const NavigationType =
 {
@@ -605,4 +605,4 @@ export class Navigation
 			this.onContext (globalCoords, localCoords);
 		}
 	}
-};
+}

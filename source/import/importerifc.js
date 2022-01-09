@@ -1,14 +1,15 @@
-import { Coord3D } from "../geometry/coord3d";
-import { Direction } from "../geometry/geometry";
-import { Matrix } from "../geometry/matrix";
-import { Transformation } from "../geometry/transformation";
-import { LoadExternalLibrary } from "../io/externallibs";
-import { ColorFromFloatComponents, IntegerToHexString } from "../model/color";
-import { PhongMaterial } from "../model/material";
-import { Mesh } from "../model/mesh";
-import { Property, PropertyGroup, PropertyType } from "../model/property";
-import { Triangle } from "../model/triangle";
-import { ImporterBase } from "./importerbase";
+import { Coord3D } from '../geometry/coord3d.js';
+import { Direction } from '../geometry/geometry.js';
+import { Matrix } from '../geometry/matrix.js';
+import { Transformation } from '../geometry/transformation.js';
+import { LoadExternalLibrary } from '../io/externallibs.js';
+import { ColorFromFloatComponents, IntegerToHexString } from '../model/color.js';
+import { PhongMaterial } from '../model/material.js';
+import { Mesh } from '../model/mesh.js';
+import { Property, PropertyGroup, PropertyType } from '../model/property.js';
+import { Triangle } from '../model/triangle.js';
+import { ImporterBase } from './importerbase.js';
+import { UpdateMaterialTransparency } from './importerutils.js';
 
 export class ImporterIfc extends ImporterBase
 {
@@ -250,4 +251,4 @@ export class ImporterIfc extends ImporterBase
         }
         return resultString;
     }
-};
+}

@@ -1,7 +1,7 @@
-import { BinaryWriter } from "../io/binarywriter";
-import { FileFormat } from "../io/fileutils";
-import { TextWriter } from "../io/textwriter";
-import { ExportedFile, ExporterBase } from "./exporterbase";
+import { BinaryWriter } from '../io/binarywriter.js';
+import { FileFormat } from '../io/fileutils.js';
+import { TextWriter } from '../io/textwriter.js';
+import { ExportedFile, ExporterBase } from './exporterbase.js';
 
 export class ExporterStl extends ExporterBase
 {
@@ -87,4 +87,4 @@ export class ExporterStl extends ExporterBase
 
 		stlFile.SetBufferContent (stlWriter.GetBuffer ());
 	}
-};
+}

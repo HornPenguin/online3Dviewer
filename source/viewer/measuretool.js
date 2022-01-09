@@ -1,4 +1,4 @@
-import { BigEps, IsEqualEps } from "../geometry/geometry";
+import { BigEps, IsEqualEps } from '../geometry/geometry.js';
 
 export class MeasureTool
 {
@@ -121,4 +121,4 @@ export class MeasureTool
         faceNormal.applyMatrix4 (normalMatrix);
         return faceNormal;
     }
-};
+}

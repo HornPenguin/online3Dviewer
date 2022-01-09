@@ -1,4 +1,4 @@
-import { ModelObject3D } from "./object";
+import { ModelObject3D } from './object.js';
 
 export class Mesh extends ModelObject3D
 {
@@ -169,4 +169,4 @@ export class Mesh extends ModelObject3D
 
         return cloned;
     }
-};
+}

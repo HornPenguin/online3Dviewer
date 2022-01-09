@@ -1,9 +1,9 @@
-import { IsDefined } from "../core/core";
-import { ImportErrorCode, ImportSettings } from "../import/importer";
-import { FileSource, TransformFileHostUrls } from "../io/fileutils";
-import { ParameterConverter } from "../parameters/parameterlist";
-import { ThreeModelLoader } from "../threejs/threemodelloader";
-import { Viewer } from "./viewer";
+import { IsDefined } from '../core/core.js';
+import { ImportErrorCode, ImportSettings } from '../import/importer.js';
+import { FileSource, TransformFileHostUrls } from '../io/fileutils.js';
+import { ParameterConverter } from '../parameters/parameterlist.js';
+import { ThreeModelLoader } from '../threejs/threemodelloader.js';
+import { Viewer } from './viewer.js';
 
 export class EmbeddedViewer
 {
@@ -121,14 +121,14 @@ export class EmbeddedViewer
         let height = this.parentElement.clientHeight;
         this.viewer.Resize (width, height);
     }
-};
+}
 
 export function Init3DViewerElement (parentElement, modelUrls, parameters)
 {
     let viewer = new EmbeddedViewer (parentElement, parameters);
     viewer.LoadModelFromUrls (modelUrls);
     return viewer;
-};
+}
 
 export function Init3DViewerElements (onReady)
 {
@@ -194,4 +194,4 @@ export function Init3DViewerElements (onReady)
             onReady (viewerElements);
         }
     });
-};
+}

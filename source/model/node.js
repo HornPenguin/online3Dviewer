@@ -1,4 +1,4 @@
-import { Transformation } from "../geometry/transformation";
+import { Transformation } from '../geometry/transformation.js';
 
 export const NodeType =
 {
@@ -19,7 +19,7 @@ export class NodeIdGenerator
         this.nextId += 1;
         return id;
     }
-};
+}
 
 export class Node
 {
@@ -175,4 +175,4 @@ export class Node
             childNode.EnumerateMeshIndices (processor);
         }
     }
-};
+}

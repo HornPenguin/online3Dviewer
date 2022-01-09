@@ -89,4 +89,4 @@ export class BinaryWriter
         this.dataView.setFloat64 (this.position, val, this.isLittleEndian);
         this.position = this.position + 8;
     }
-};
+}

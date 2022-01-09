@@ -26,7 +26,7 @@ export function GetFileName (filePath)
 		fileName = fileName.substr (0, firstParamIndex);
 	}
 	return decodeURI (fileName);
-};
+}
 
 export function GetFileExtension (filePath)
 {
@@ -37,7 +37,7 @@ export function GetFileExtension (filePath)
 	}
 	let extension = fileName.substr (firstPoint + 1);
 	return extension.toLowerCase ();
-};
+}
 
 export function RequestUrl (url, format)
 {
@@ -67,7 +67,7 @@ export function RequestUrl (url, format)
 
 		request.send (null);
 	});
-};
+}
 
 export function ReadFile (file, format)
 {
@@ -92,7 +92,7 @@ export function ReadFile (file, format)
 			reject ();
 		}
 	});
-};
+}
 
 export function TransformFileHostUrls (urls)
 {
@@ -115,4 +115,4 @@ export function TransformFileHostUrls (urls)
             urls[i] = url;
         }
     }
-};
+}

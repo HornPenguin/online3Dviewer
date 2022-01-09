@@ -44,7 +44,7 @@ export class Object3D
     {
 
     }
-};
+}
 
 export class ModelObject3D extends Object3D
 {
@@ -80,4 +80,4 @@ export class ModelObject3D extends Object3D
     {
         return this.propertyGroups[index];
     }
-};
+}

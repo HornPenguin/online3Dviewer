@@ -1,6 +1,6 @@
-import { Importer } from "../import/importer";
-import { ConvertModelToThreeObject, ModelToThreeConversionOutput, ModelToThreeConversionParams } from "./threeconverter";
-import { ConvertColorToThreeColor, HasHighpDriverIssue } from "./threeutils";
+import { Importer } from '../import/importer.js';
+import { ConvertModelToThreeObject, ModelToThreeConversionOutput, ModelToThreeConversionParams } from './threeconverter.js';
+import { ConvertColorToThreeColor, HasHighpDriverIssue } from './threeutils.js';
 
 export class ThreeModelLoader
 {
@@ -75,4 +75,4 @@ export class ThreeModelLoader
             this.defaultMaterial.color = ConvertColorToThreeColor (defaultColor);
         }
     }
-};
+}

@@ -1,16 +1,16 @@
-import { ValueOrDefault } from "../core/core";
-import { ArrayToCoord3D, Coord3D } from "../geometry/coord3d";
-import { Direction } from "../geometry/geometry";
-import { Matrix } from "../geometry/matrix";
-import { ArrayToQuaternion, Quaternion } from "../geometry/quaternion";
-import { Transformation } from "../geometry/transformation";
-import { ArrayBufferToUtf8String } from "../io/bufferutils";
-import { ArrayToColor } from "../model/color";
-import { GenerateCuboid, GenerateCylinder, GeneratePlatonicSolid, GenerateSphere, GeneratorParams } from "../model/generator";
-import { PhysicalMaterial } from "../model/material";
-import { Node, NodeType } from "../model/node";
-import { Property, PropertyGroup, PropertyType } from "../model/property";
-import { ImporterBase } from "./importerbase";
+import { ValueOrDefault } from '../core/core.js';
+import { ArrayToCoord3D, Coord3D } from '../geometry/coord3d.js';
+import { Direction } from '../geometry/geometry.js';
+import { Matrix } from '../geometry/matrix.js';
+import { ArrayToQuaternion, Quaternion } from '../geometry/quaternion.js';
+import { Transformation } from '../geometry/transformation.js';
+import { ArrayBufferToUtf8String } from '../io/bufferutils.js';
+import { ArrayToColor } from '../model/color.js';
+import { GenerateCuboid, GenerateCylinder, GeneratePlatonicSolid, GenerateSphere, GeneratorParams } from '../model/generator.js';
+import { PhysicalMaterial } from '../model/material.js';
+import { Node, NodeType } from '../model/node.js';
+import { Property, PropertyGroup, PropertyType } from '../model/property.js';
+import { ImporterBase } from './importerbase.js';
 
 export class ImporterO3dv extends ImporterBase
 {
@@ -185,4 +185,4 @@ export class ImporterO3dv extends ImporterBase
         const matrix = new Matrix ().ComposeTRS (translation, rotation, scale);
         return new Transformation (matrix);
     }
-};
+}

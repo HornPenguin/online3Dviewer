@@ -1,4 +1,4 @@
-import { IsLower } from "../geometry/geometry";
+import { IsLower } from '../geometry/geometry.js';
 
 export function NameFromLine (line, startIndex, commentChar)
 {
@@ -8,7 +8,7 @@ export function NameFromLine (line, startIndex, commentChar)
 		name = name.substr (0, commentStart);
 	}
 	return name.trim ();
-};
+}
 
 export function ParametersFromLine (line, commentChar)
 {
@@ -19,7 +19,7 @@ export function ParametersFromLine (line, commentChar)
 		}
 	}
 	return line.split (/\s+/u);
-};
+}
 
 export function ReadLines (str, onLine)
 {
@@ -39,12 +39,12 @@ export function ReadLines (str, onLine)
 		next = str.indexOf ('\n', cursor);
 	}
 	LineFound (str.substr (cursor), onLine);
-};
+}
 
 export function IsPowerOfTwo (x)
 {
 	return (x & (x - 1)) === 0;
-};
+}
 
 export function NextPowerOfTwo (x)
 {
@@ -53,7 +53,7 @@ export function NextPowerOfTwo (x)
 	}
 	let npot = Math.pow (2, Math.ceil (Math.log (x) / Math.log (2)));
 	return parseInt (npot, 10);
-};
+}
 
 export function UpdateMaterialTransparency (material)
 {
@@ -61,4 +61,4 @@ export function UpdateMaterialTransparency (material)
 	if (IsLower (material.opacity, 1.0)) {
 		material.transparent = true;
 	}
-};
+}

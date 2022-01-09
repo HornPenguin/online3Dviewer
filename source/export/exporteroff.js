@@ -1,6 +1,6 @@
-import { FileFormat } from "../io/fileutils";
-import { TextWriter } from "../io/textwriter";
-import { ExportedFile, ExporterBase } from "./exporterbase";
+import { FileFormat } from '../io/fileutils.js';
+import { TextWriter } from '../io/textwriter.js';
+import { ExportedFile, ExporterBase } from './exporterbase.js';
 
 export class ExporterOff extends ExporterBase
 {
@@ -35,4 +35,4 @@ export class ExporterOff extends ExporterBase
 		offFile.SetTextContent (offWriter.GetText ());
 		onFinish ();
 	}
-};
+}

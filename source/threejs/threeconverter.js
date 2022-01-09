@@ -1,9 +1,9 @@
-import { RunTasksBatch } from "../core/taskrunner";
-import { IsEqual } from "../geometry/geometry";
-import { MaterialType } from "../model/material";
-import { MeshInstanceId } from "../model/meshinstance";
-import { GetMeshType, MeshType } from "../model/meshutils";
-import { ConvertColorToThreeColor, GetShadingType, ShadingType } from "./threeutils";
+import { RunTasksBatch } from '../core/taskrunner.js';
+import { IsEqual } from '../geometry/geometry.js';
+import { MaterialType } from '../model/material.js';
+import { MeshInstanceId } from '../model/meshinstance.js';
+import { GetMeshType, MeshType } from '../model/meshutils.js';
+import { ConvertColorToThreeColor, GetShadingType, ShadingType } from './threeutils.js';
 
 export class ModelToThreeConversionParams
 {
@@ -11,7 +11,7 @@ export class ModelToThreeConversionParams
 	{
 		this.forceMediumpForMaterials = false;
 	}
-};
+}
 
 export class ModelToThreeConversionOutput
 {
@@ -19,7 +19,7 @@ export class ModelToThreeConversionOutput
 	{
 		this.defaultMaterial = null;
 	}
-};
+}
 
 export class ThreeConversionStateHandler
 {
@@ -55,7 +55,7 @@ export class ThreeConversionStateHandler
 			this.callbacks.onModelLoaded (this.threeObject);
 		}
 	}
-};
+}
 
 export class ThreeNodeTree
 {
@@ -89,7 +89,7 @@ export class ThreeNodeTree
 	{
 		return this.meshInstances;
 	}
-};
+}
 
 export function ConvertModelToThreeObject (model, params, output, callbacks)
 {
@@ -357,4 +357,4 @@ export function ConvertModelToThreeObject (model, params, output, callbacks)
 
 	let threeObject = new THREE.Object3D ();
 	ConvertNodeHierarchy (threeObject, model, modelThreeMaterials, stateHandler);
-};
+}

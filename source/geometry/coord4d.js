@@ -12,4 +12,4 @@ export class Coord4D
 	{
 		return new Coord4D (this.x, this.y, this.z, this.w);
 	}
-};
+}

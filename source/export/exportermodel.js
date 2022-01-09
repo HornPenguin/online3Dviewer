@@ -1,6 +1,6 @@
-import { CopyObjectAttributes } from "../core/core";
-import { Transformation } from "../geometry/transformation";
-import { CalculateTriangleNormal, TransformMesh } from "../model/meshutils";
+import { CopyObjectAttributes } from '../core/core.js';
+import { Transformation } from '../geometry/transformation.js';
+import { CalculateTriangleNormal, TransformMesh } from '../model/meshutils.js';
 
 export class ExporterSettings
 {
@@ -13,7 +13,7 @@ export class ExporterSettings
 
         CopyObjectAttributes (settings, this);
     }
-};
+}
 
 export class ExporterModel
 {
@@ -118,4 +118,4 @@ export class ExporterModel
             });
         });
     }
-};
+}

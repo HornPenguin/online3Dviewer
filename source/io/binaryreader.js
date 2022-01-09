@@ -106,4 +106,4 @@ export class BinaryReader
         this.position = this.position + 8;
         return result;
     }
-};
+}

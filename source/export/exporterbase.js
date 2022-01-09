@@ -1,4 +1,4 @@
-import { ArrayBufferToUtf8String, Utf8StringToArrayBuffer } from "../io/bufferutils";
+import { ArrayBufferToUtf8String, Utf8StringToArrayBuffer } from '../io/bufferutils.js';
 
 export class ExportedFile
 {
@@ -39,7 +39,7 @@ export class ExportedFile
 	{
 		this.content = content;
 	}
-};
+}
 
 export class ExporterBase
 {
@@ -83,4 +83,4 @@ export class ExporterBase
 		}
 		return originalName;
 	}
-};
+}

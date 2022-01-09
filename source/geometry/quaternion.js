@@ -7,12 +7,12 @@ export class Quaternion
 		this.z = z;
         this.w = w;
 	}
-};
+}
 
 export function ArrayToQuaternion (arr)
 {
 	return new Quaternion (arr[0], arr[1], arr[2], arr[3]);
-};
+}
 
 export function QuaternionFromAxisAngle (axis, angle)
 {
@@ -25,4 +25,4 @@ export function QuaternionFromAxisAngle (axis, angle)
 		axis.z * s,
 		Math.cos (a)
 	);
-};
+}

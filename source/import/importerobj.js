@@ -1,13 +1,13 @@
-import { Coord2D } from "../geometry/coord2d";
-import { Coord3D } from "../geometry/coord3d";
-import { Direction } from "../geometry/geometry";
-import { ArrayBufferToUtf8String } from "../io/bufferutils";
-import { ColorFromFloatComponents } from "../model/color";
-import { PhongMaterial, TextureMap } from "../model/material";
-import { Mesh } from "../model/mesh";
-import { Triangle } from "../model/triangle";
-import { ImporterBase } from "./importerbase";
-import { NameFromLine, ParametersFromLine, ReadLines, UpdateMaterialTransparency } from "./importerutils";
+import { Coord2D } from '../geometry/coord2d.js';
+import { Coord3D } from '../geometry/coord3d.js';
+import { Direction } from '../geometry/geometry.js';
+import { ArrayBufferToUtf8String } from '../io/bufferutils.js';
+import { ColorFromFloatComponents } from '../model/color.js';
+import { PhongMaterial, TextureMap } from '../model/material.js';
+import { Mesh } from '../model/mesh.js';
+import { Triangle } from '../model/triangle.js';
+import { ImporterBase } from './importerbase.js';
+import { NameFromLine, ParametersFromLine, ReadLines, UpdateMaterialTransparency } from './importerutils.js';
 
 export class ObjMeshConverter
 {
@@ -59,7 +59,7 @@ export class ObjMeshConverter
             return localIndex;
         }
     }
-};
+}
 
 export class ImporterObj extends ImporterBase
 {
@@ -381,4 +381,4 @@ export class ImporterObj extends ImporterBase
             this.currentMeshConverter.AddTriangle (triangle);
         }
     }
-};
+}

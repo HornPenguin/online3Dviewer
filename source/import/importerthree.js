@@ -1,14 +1,14 @@
-import { WaitWhile } from "../core/taskrunner";
-import { Direction } from "../geometry/geometry";
-import { Matrix } from "../geometry/matrix";
-import { Transformation } from "../geometry/transformation";
-import { Base64DataURIToArrayBuffer, CreateObjectUrl, GetFileExtensionFromMimeType } from "../io/bufferutils";
-import { LoadExternalLibrary } from "../io/externallibs";
-import { GetFileExtension, GetFileName } from "../io/fileutils";
-import { PhongMaterial, TextureMap } from "../model/material";
-import { Node, NodeType } from "../model/node";
-import { ConvertThreeColorToColor, ConvertThreeGeometryToMesh } from "../threejs/threeutils";
-import { ImporterBase } from "./importerbase";
+import { WaitWhile } from '../core/taskrunner.js';
+import { Direction } from '../geometry/geometry.js';
+import { Matrix } from '../geometry/matrix.js';
+import { Transformation } from '../geometry/transformation.js';
+import { Base64DataURIToArrayBuffer, CreateObjectUrl, GetFileExtensionFromMimeType } from '../io/bufferutils.js';
+import { LoadExternalLibrary } from '../io/externallibs.js';
+import { GetFileExtension, GetFileName } from '../io/fileutils.js';
+import { PhongMaterial, TextureMap } from '../model/material.js';
+import { Node, NodeType } from '../model/node.js';
+import { ConvertThreeColorToColor, ConvertThreeGeometryToMesh } from '../threejs/threeutils.js';
+import { ImporterBase } from './importerbase.js';
 
 export class ImporterThreeBase extends ImporterBase
 {
@@ -287,7 +287,7 @@ export class ImporterThreeBase extends ImporterBase
 
         return material;
     }
-};
+}
 
 export class ImporterThreeFbx extends ImporterThreeBase
 {
@@ -325,7 +325,7 @@ export class ImporterThreeFbx extends ImporterThreeBase
     {
         return loadedObject;
     }
-};
+}
 
 export class ImporterThreeDae extends ImporterThreeBase
 {
@@ -362,7 +362,7 @@ export class ImporterThreeDae extends ImporterThreeBase
     {
         return loadedObject.scene;
     }
-};
+}
 
 export class ImporterThreeWrl extends ImporterThreeBase
 {
@@ -414,7 +414,7 @@ export class ImporterThreeWrl extends ImporterThreeBase
         }
         return isVisible;
     }
-};
+}
 
 export class ImporterThree3mf extends ImporterThreeBase
 {
@@ -450,4 +450,4 @@ export class ImporterThree3mf extends ImporterThreeBase
     {
         return loadedObject;
     }
-};
+}

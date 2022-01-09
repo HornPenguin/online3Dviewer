@@ -1,17 +1,18 @@
-import { ArrayToCoord3D, Coord3D } from "../geometry/coord3d";
-import { DegRad, Direction, IsNegative } from "../geometry/geometry";
-import { Matrix } from "../geometry/matrix";
-import { ArrayToQuaternion } from "../geometry/quaternion";
-import { Transformation } from "../geometry/transformation";
-import { BinaryReader } from "../io/binaryreader";
-import { Color, ColorComponentFromFloat } from "../model/color";
-import { PhongMaterial, TextureMap } from "../model/material";
-import { Mesh } from "../model/mesh";
-import { FlipMeshTrianglesOrientation, TransformMesh } from "../model/meshutils";
-import { Node, NodeType } from "../model/node";
-import { Triangle } from "../model/triangle";
-import { ImporterBase } from "./importerbase";
-import { UpdateMaterialTransparency } from "./importerutils";
+import { Coord2D } from '../geometry/coord2d.js';
+import { ArrayToCoord3D, Coord3D } from '../geometry/coord3d.js';
+import { DegRad, Direction, IsNegative } from '../geometry/geometry.js';
+import { Matrix } from '../geometry/matrix.js';
+import { ArrayToQuaternion } from '../geometry/quaternion.js';
+import { Transformation } from '../geometry/transformation.js';
+import { BinaryReader } from '../io/binaryreader.js';
+import { Color, ColorComponentFromFloat } from '../model/color.js';
+import { PhongMaterial, TextureMap } from '../model/material.js';
+import { Mesh } from '../model/mesh.js';
+import { FlipMeshTrianglesOrientation, TransformMesh } from '../model/meshutils.js';
+import { Node, NodeType } from '../model/node.js';
+import { Triangle } from '../model/triangle.js';
+import { ImporterBase } from './importerbase.js';
+import { UpdateMaterialTransparency } from './importerutils.js';
 
 export const CHUNK3DS =
 {
@@ -73,7 +74,7 @@ export class Importer3dsNode
         this.rotations = [];
         this.scales = [];
     }
-};
+}
 
 export class Importer3dsNodeList
 {
@@ -98,7 +99,7 @@ export class Importer3dsNodeList
     {
         return this.nodes;
     }
-};
+}
 
 export class Importer3ds extends ImporterBase
 {
@@ -663,4 +664,4 @@ export class Importer3ds extends ImporterBase
     {
         reader.Skip (length - 6);
     }
-};
+}

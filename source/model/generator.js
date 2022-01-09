@@ -1,8 +1,8 @@
-import { Coord2D } from "../geometry/coord2d";
-import { Coord3D } from "../geometry/coord3d";
-import { IsZero } from "../geometry/geometry";
-import { Mesh } from "./mesh";
-import { Triangle } from "./triangle";
+import { Coord2D } from '../geometry/coord2d.js';
+import { Coord3D } from '../geometry/coord3d.js';
+import { IsZero } from '../geometry/geometry.js';
+import { Mesh } from './mesh.js';
+import { Triangle } from './triangle.js';
 
 export class GeneratorParams
 {
@@ -23,7 +23,7 @@ export class GeneratorParams
         this.material = material;
         return this;
     }
-};
+}
 
 export class Generator
 {
@@ -106,7 +106,7 @@ export class Generator
             );
         }
     }
-};
+}
 
 export class GeneratorHelper
 {
@@ -162,7 +162,7 @@ export class GeneratorHelper
             );
         }
     }
-};
+}
 
 export function GenerateCuboid (genParams, xSize, ySize, zSize)
 {
@@ -176,7 +176,7 @@ export function GenerateCuboid (genParams, xSize, ySize, zSize)
     let helper = new GeneratorHelper (generator);
     helper.GenerateExtrude (vertices, zSize, null);
     return generator.GetMesh ();
-};
+}
 
 export function GenerateCylinder (genParams, radius, height, segments, smooth)
 {
@@ -202,7 +202,7 @@ export function GenerateCylinder (genParams, radius, height, segments, smooth)
     let helper = new GeneratorHelper (generator);
     helper.GenerateExtrude (baseVertices, height, smooth ? 1 : null);
     return generator.GetMesh ();
-};
+}
 
 export function GenerateSphere (genParams, radius, segments, smooth)
 {
@@ -250,7 +250,7 @@ export function GenerateSphere (genParams, radius, segments, smooth)
     generator.ResetCurve ();
 
     return generator.GetMesh ();
-};
+}
 
 export function GeneratePlatonicSolid (genParams, type, radius)
 {
@@ -384,4 +384,4 @@ export function GeneratePlatonicSolid (genParams, type, radius)
         generator.AddTriangle (7, 10, 11);
     }
     return generator.GetMesh ();
-};
+}

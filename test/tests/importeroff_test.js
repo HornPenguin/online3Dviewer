@@ -1,11 +1,16 @@
-var assert = require ('assert');
+import * as assert from 'assert';
+import * as OV from '../../tools/engine_main.js';
+
 var testFiles = require ('../utils/testfiles.js');
 var testUtils = require ('../utils/testutils.js');
+
+export default function suite ()
+{
 
 describe ('Off Importer', function () {
     it ('single_triangle.off', function (done) {
         testFiles.ImportOffFile ('single_triangle.off', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObject (model), {
                 name : '',
                 materials : [
@@ -31,7 +36,7 @@ describe ('Off Importer', function () {
 
     it ('two_triangles.off', function (done) {
         testFiles.ImportOffFile ('two_triangles.off', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObject (model), {
                 name : '',
                 materials : [
@@ -63,7 +68,7 @@ describe ('Off Importer', function () {
 
     it ('single_rectangle.off', function (done) {
         testFiles.ImportOffFile ('single_rectangle.off', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObject (model), {
                 name : '',
                 materials : [
@@ -95,7 +100,7 @@ describe ('Off Importer', function () {
 
     it ('single_triangle_with_comments.off', function (done) {
         testFiles.ImportOffFile ('single_triangle_with_comments.off', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObject (model), {
                 name : '',
                 materials : [
@@ -122,7 +127,7 @@ describe ('Off Importer', function () {
 
     it ('cube.off', function (done) {
         testFiles.ImportOffFile ('cube.off', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObjectSimple (model), {
                 name : '',
                 materials : [
@@ -147,3 +152,5 @@ describe ('Off Importer', function () {
         });
     });
 });
+
+}

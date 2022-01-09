@@ -1,11 +1,11 @@
-import { Coord3D } from "../geometry/coord3d";
-import { Direction, IsPositive } from "../geometry/geometry";
-import { BinaryReader } from "../io/binaryreader";
-import { ArrayBufferToUtf8String } from "../io/bufferutils";
-import { Mesh } from "../model/mesh";
-import { Triangle } from "../model/triangle";
-import { ImporterBase } from "./importerbase";
-import { NameFromLine, ParametersFromLine, ReadLines } from "./importerutils";
+import { Coord3D } from '../geometry/coord3d.js';
+import { Direction, IsPositive } from '../geometry/geometry.js';
+import { BinaryReader } from '../io/binaryreader.js';
+import { ArrayBufferToUtf8String } from '../io/bufferutils.js';
+import { Mesh } from '../model/mesh.js';
+import { Triangle } from '../model/triangle.js';
+import { ImporterBase } from './importerbase.js';
+import { NameFromLine, ParametersFromLine, ReadLines } from './importerutils.js';
 
 export class ImporterStl extends ImporterBase
 {
@@ -171,4 +171,4 @@ export class ImporterStl extends ImporterBase
             this.mesh.AddTriangle (triangle);
         }
     }
-};
+}

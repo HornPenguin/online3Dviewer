@@ -1,5 +1,5 @@
-import { Direction } from "../geometry/geometry";
-import { ImporterThreeBase } from "./importerthree";
+import { Direction } from '../geometry/geometry.js';
+import { ImporterThreeBase } from './importerthree.js';
 
 export class ImporterThreeSvg extends ImporterThreeBase
 {
@@ -88,4 +88,4 @@ export class ImporterThreeSvg extends ImporterThreeBase
         }
         return object;
     }
-};
+}

@@ -1,13 +1,13 @@
-import { Coord3D } from "../geometry/coord3d";
-import { Direction } from "../geometry/geometry";
-import { BinaryReader } from "../io/binaryreader";
-import { ArrayBufferToUtf8String } from "../io/bufferutils";
-import { Color, IntegerToHexString } from "../model/color";
-import { PhongMaterial } from "../model/material";
-import { Mesh } from "../model/mesh";
-import { Triangle } from "../model/triangle";
-import { ImporterBase } from "./importerbase";
-import { ParametersFromLine, ReadLines, UpdateMaterialTransparency } from "./importerutils";
+import { Coord3D } from '../geometry/coord3d.js';
+import { Direction } from '../geometry/geometry.js';
+import { BinaryReader } from '../io/binaryreader.js';
+import { ArrayBufferToUtf8String } from '../io/bufferutils.js';
+import { Color, IntegerToHexString } from '../model/color.js';
+import { PhongMaterial } from '../model/material.js';
+import { Mesh } from '../model/mesh.js';
+import { Triangle } from '../model/triangle.js';
+import { ImporterBase } from './importerbase.js';
+import { ParametersFromLine, ReadLines, UpdateMaterialTransparency } from './importerutils.js';
 
 export const PlyHeaderCheckResult =
 {
@@ -101,7 +101,7 @@ export class PlyHeader
 
         return PlyHeaderCheckResult.Ok;
     }
-};
+}
 
 export class PlyMaterialHandler
 {
@@ -132,7 +132,7 @@ export class PlyMaterialHandler
             return materialIndex;
         }
     }
-};
+}
 
 export class ImporterPly extends ImporterBase
 {
@@ -429,4 +429,4 @@ export class ImporterPly extends ImporterBase
             }
         }
     }
-};
+}

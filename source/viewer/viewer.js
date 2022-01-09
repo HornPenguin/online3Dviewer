@@ -1,10 +1,10 @@
-import { Coord3D, CoordDistance3D, SubCoord3D } from "../geometry/coord3d";
-import { Direction } from "../geometry/geometry";
-import { ColorToHexString } from "../model/color";
-import { ShadingType } from "../threejs/threeutils";
-import { GetDomElementInnerDimensions } from "./domutils";
-import { CameraIsEqual3D, Navigation } from "./navigation";
-import { ViewerExtraGeometry, ViewerGeometry } from "./viewergeometry";
+import { Coord3D, CoordDistance3D, SubCoord3D } from '../geometry/coord3d.js';
+import { Direction } from '../geometry/geometry.js';
+import { ColorToHexString } from '../model/color.js';
+import { ShadingType } from '../threejs/threeutils.js';
+import { GetDomElementInnerDimensions } from './domutils.js';
+import { Camera, CameraIsEqual3D, Navigation } from './navigation.js';
+import { ViewerExtraGeometry, ViewerGeometry } from './viewergeometry.js';
 
 export function GetDefaultCamera (direction)
 {
@@ -28,7 +28,7 @@ export function GetDefaultCamera (direction)
         );
     }
     return null;
-};
+}
 
 export function TraverseThreeObject (object, processor)
 {
@@ -41,7 +41,7 @@ export function TraverseThreeObject (object, processor)
         }
     }
     return true;
-};
+}
 
 export function GetShadingTypeOfObject (mainObject)
 {
@@ -60,7 +60,7 @@ export function GetShadingTypeOfObject (mainObject)
         return true;
     });
     return shadingType;
-};
+}
 
 export class UpVector
 {
@@ -112,7 +112,7 @@ export class UpVector
         newCamera.up.MultiplyScalar (-1.0);
         return newCamera;
     }
-};
+}
 
 export class ShadingModel
 {
@@ -178,7 +178,7 @@ export class ShadingModel
         }
         return material;
     }
-};
+}
 
 export class Viewer
 {
@@ -556,4 +556,4 @@ export class Viewer
         this.ResizeRenderer (originalSize.width, originalSize.height);
         return url;
     }
-};
+}

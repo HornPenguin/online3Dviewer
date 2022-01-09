@@ -1,10 +1,10 @@
-import { Exporter3dm } from "./exporter3dm";
-import { ExporterGltf } from "./exportergltf";
-import { ExporterModel } from "./exportermodel";
-import { ExporterObj } from "./exporterobj";
-import { ExporterOff } from "./exporteroff";
-import { ExporterPly } from "./exporterply";
-import { ExporterStl } from "./exporterstl";
+import { Exporter3dm } from './exporter3dm.js';
+import { ExporterGltf } from './exportergltf.js';
+import { ExporterModel } from './exportermodel.js';
+import { ExporterObj } from './exporterobj.js';
+import { ExporterOff } from './exporteroff.js';
+import { ExporterPly } from './exporterply.js';
+import { ExporterStl } from './exporterstl.js';
 
 export class Exporter
 {
@@ -49,4 +49,4 @@ export class Exporter
             }
         });
     }
-};
+}

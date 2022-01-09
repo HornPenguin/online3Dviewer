@@ -1,7 +1,7 @@
-import { BoundingBoxCalculator3D } from "../geometry/box3d";
-import { Octree } from "../geometry/octree";
-import { GetMeshType, MeshType } from "./meshutils";
-import { Topology } from "./topology";
+import { BoundingBoxCalculator3D } from '../geometry/box3d.js';
+import { Octree } from '../geometry/octree.js';
+import { GetMeshType, MeshType } from './meshutils.js';
+import { Topology } from './topology.js';
 
 export function IsModelEmpty (model)
 {
@@ -12,7 +12,7 @@ export function IsModelEmpty (model)
         }
     });
     return isEmpty;
-};
+}
 
 export function GetBoundingBox (object3D)
 {
@@ -21,7 +21,7 @@ export function GetBoundingBox (object3D)
         calculator.AddPoint (vertex);
     });
     return calculator.GetBox ();
-};
+}
 
 export function GetTopology (object3D)
 {
@@ -46,7 +46,7 @@ export function GetTopology (object3D)
         topology.AddTriangle (v0Index, v1Index, v2Index);
     });
     return topology;
-};
+}
 
 export function IsSolid (object3D)
 {
@@ -90,7 +90,7 @@ export function IsSolid (object3D)
         }
     }
     return true;
-};
+}
 
 export function HasDefaultMaterial (model)
 {
@@ -101,7 +101,7 @@ export function HasDefaultMaterial (model)
         }
     }
     return false;
-};
+}
 
 export function ReplaceDefaultMaterialColor (model, color)
 {
@@ -111,4 +111,4 @@ export function ReplaceDefaultMaterialColor (model, color)
             material.color = color;
         }
     }
-};
+}

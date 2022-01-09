@@ -1,19 +1,19 @@
-import { RunTaskAsync } from "../core/taskrunner";
-import { CreateObjectUrl, RevokeObjectUrl } from "../io/bufferutils";
-import { LoadExternalLibrary } from "../io/externallibs";
-import { FileSource, GetFileName } from "../io/fileutils";
-import { Color } from "../model/color";
-import { File, FileList } from "./filelist";
-import { Importer3dm } from "./importer3dm";
-import { Importer3ds } from "./importer3ds";
-import { ImporterGltf } from "./importergltf";
-import { ImporterIfc } from "./importerifc";
-import { ImporterO3dv } from "./importero3dv";
-import { ImporterObj } from "./importerobj";
-import { ImporterOff } from "./importeroff";
-import { ImporterPly } from "./importerply";
-import { ImporterStl } from "./importerstl";
-import { ImporterThree3mf, ImporterThreeDae, ImporterThreeFbx, ImporterThreeWrl } from "./importerthree";
+import { RunTaskAsync } from '../core/taskrunner.js';
+import { CreateObjectUrl, RevokeObjectUrl } from '../io/bufferutils.js';
+import { LoadExternalLibrary } from '../io/externallibs.js';
+import { FileSource, GetFileName } from '../io/fileutils.js';
+import { Color } from '../model/color.js';
+import { File, FileList } from './filelist.js';
+import { Importer3dm } from './importer3dm.js';
+import { Importer3ds } from './importer3ds.js';
+import { ImporterGltf } from './importergltf.js';
+import { ImporterIfc } from './importerifc.js';
+import { ImporterO3dv } from './importero3dv.js';
+import { ImporterObj } from './importerobj.js';
+import { ImporterOff } from './importeroff.js';
+import { ImporterPly } from './importerply.js';
+import { ImporterStl } from './importerstl.js';
+import { ImporterThree3mf, ImporterThreeDae, ImporterThreeFbx, ImporterThreeWrl } from './importerthree.js';
 
 export class ImportSettings
 {
@@ -21,7 +21,7 @@ export class ImportSettings
     {
         this.defaultColor = new Color (200, 200, 200);
     }
-};
+}
 
 export const ImportErrorCode =
 {
@@ -38,7 +38,7 @@ export class ImportError
         this.code = code;
         this.message = message;
     }
-};
+}
 
 export class ImportResult
 {
@@ -50,7 +50,7 @@ export class ImportResult
         this.usedFiles = null;
         this.missingFiles = null;
     }
-};
+}
 
 export class ImporterFileAccessor
 {
@@ -89,7 +89,7 @@ export class ImporterFileAccessor
         this.textureBuffers.set (fileName, buffer);
         return buffer;
     }
-};
+}
 
 export class Importer
 {
@@ -336,4 +336,4 @@ export class Importer
             });
         }
     }
-};
+}

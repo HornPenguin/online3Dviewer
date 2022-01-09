@@ -1,10 +1,10 @@
-import { Coord3D } from "../geometry/coord3d";
-import { Direction } from "../geometry/geometry";
-import { ArrayBufferToUtf8String } from "../io/bufferutils";
-import { Mesh } from "../model/mesh";
-import { Triangle } from "../model/triangle";
-import { ImporterBase } from "./importerbase";
-import { ParametersFromLine, ReadLines } from "./importerutils";
+import { Coord3D } from '../geometry/coord3d.js';
+import { Direction } from '../geometry/geometry.js';
+import { ArrayBufferToUtf8String } from '../io/bufferutils.js';
+import { Mesh } from '../model/mesh.js';
+import { Triangle } from '../model/triangle.js';
+import { ImporterBase } from './importerbase.js';
+import { ParametersFromLine, ReadLines } from './importerutils.js';
 
 export class ImporterOff extends ImporterBase
 {
@@ -105,4 +105,4 @@ export class ImporterOff extends ImporterBase
             return;
         }
     }
-};
+}

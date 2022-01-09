@@ -1,6 +1,6 @@
-import { Box3D } from "./box3d";
-import { Coord3D, CoordIsEqual3D } from "./coord3d";
-import { IsGreaterOrEqual, IsLowerOrEqual } from "./geometry";
+import { Box3D } from './box3d.js';
+import { Coord3D, CoordIsEqual3D } from './coord3d.js';
+import { IsGreaterOrEqual, IsLowerOrEqual } from './geometry.js';
 
 export class OctreeNode
 {
@@ -127,7 +127,7 @@ export class OctreeNode
             IsLowerOrEqual (point.z, this.boundingBox.max.z);
         return isEqual;
     }
-};
+}
 
 export class Octree
 {
@@ -157,4 +157,4 @@ export class Octree
     {
         return this.rootNode.FindPoint (point);
     }
-};
+}

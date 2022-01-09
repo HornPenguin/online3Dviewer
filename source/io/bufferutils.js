@@ -2,7 +2,7 @@ export function ArrayBufferToUtf8String (buffer)
 {
 	let decoder = new TextDecoder ('utf-8');
 	return decoder.decode (buffer);
-};
+}
 
 export function ArrayBufferToAsciiString (buffer)
 {
@@ -12,7 +12,7 @@ export function ArrayBufferToAsciiString (buffer)
 		text += String.fromCharCode (bufferView[i]);
 	}
 	return text;
-};
+}
 
 export function AsciiStringToArrayBuffer (str)
 {
@@ -22,14 +22,14 @@ export function AsciiStringToArrayBuffer (str)
 		bufferView[i] = str.charCodeAt (i);
 	}
 	return buffer;
-};
+}
 
 export function Utf8StringToArrayBuffer (str)
 {
 	let encoder = new TextEncoder ();
 	let uint8Array = encoder.encode (str);
 	return uint8Array.buffer;
-};
+}
 
 export function Base64DataURIToArrayBuffer (uri)
 {
@@ -60,7 +60,7 @@ export function Base64DataURIToArrayBuffer (uri)
 		mimeType : mimeType,
 		buffer : buffer
 	};
-};
+}
 
 export function GetFileExtensionFromMimeType (mimeType)
 {
@@ -72,23 +72,23 @@ export function GetFileExtensionFromMimeType (mimeType)
 		return '';
 	}
 	return mimeParts[mimeParts.length - 1];
-};
+}
 
 export function CreateObjectUrl (content)
 {
 	let blob = new Blob ([content]);
 	let url = URL.createObjectURL (blob);
 	return url;
-};
+}
 
 export function CreateObjectUrlWithMimeType (content, mimeType)
 {
 	let blob = new Blob ([content], { type : mimeType });
 	let url = URL.createObjectURL (blob);
 	return url;
-};
+}
 
 export function RevokeObjectUrl (url)
 {
 	URL.revokeObjectURL (url);
-};
+}

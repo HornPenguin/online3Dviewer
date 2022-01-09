@@ -18,12 +18,12 @@ export class Color
     {
         return new Color (this.r, this.g, this.b);
     }
-};
+}
 
 export function ColorComponentFromFloat (component)
 {
     return parseInt (Math.round (component * 255.0), 10);
-};
+}
 
 export function ColorFromFloatComponents (r, g, b)
 {
@@ -32,7 +32,7 @@ export function ColorFromFloatComponents (r, g, b)
         ColorComponentFromFloat (g),
         ColorComponentFromFloat (b)
     );
-};
+}
 
 export function SRGBToLinear (component)
 {
@@ -41,7 +41,7 @@ export function SRGBToLinear (component)
     } else {
         return Math.pow (component * 0.9478672986 + 0.0521327014, 2.4);
     }
-};
+}
 
 export function LinearToSRGB (component)
 {
@@ -50,7 +50,7 @@ export function LinearToSRGB (component)
     } else {
         return 1.055 * (Math.pow (component, 0.41666)) - 0.055;
     }
-};
+}
 
 export function IntegerToHexString (intVal)
 {
@@ -59,7 +59,7 @@ export function IntegerToHexString (intVal)
         result = '0' + result;
     }
     return result;
-};
+}
 
 export function ColorToHexString (color)
 {
@@ -67,7 +67,7 @@ export function ColorToHexString (color)
     let g = IntegerToHexString (color.g);
     let b = IntegerToHexString (color.b);
     return r + g + b;
-};
+}
 
 export function HexStringToColor (hexString)
 {
@@ -79,14 +79,14 @@ export function HexStringToColor (hexString)
     let g = parseInt (hexString.substr (2, 2), 16);
     let b = parseInt (hexString.substr (4, 2), 16);
     return new Color (r, g, b);
-};
+}
 
 export function ArrayToColor (arr)
 {
 	return new Color (arr[0], arr[1], arr[2]);
-};
+}
 
 export function ColorIsEqual (a, b)
 {
 	return a.r === b.r && a.g === b.g && a.b === b.b;
-};
+}

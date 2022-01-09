@@ -1,4 +1,4 @@
-import { Coord3D } from "./coord3d";
+import { Coord3D } from './coord3d.js';
 
 export class Box3D
 {
@@ -26,7 +26,7 @@ export class Box3D
             (this.min.z + this.max.z) / 2.0
         );
     }
-};
+}
 
 export class BoundingBoxCalculator3D
 {
@@ -57,4 +57,4 @@ export class BoundingBoxCalculator3D
         this.box.max.z = Math.max (this.box.max.z, point.z);
         this.isValid = true;
     }
-};
+}

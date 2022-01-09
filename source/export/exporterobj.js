@@ -1,7 +1,7 @@
-import { FileFormat, GetFileName } from "../io/fileutils";
-import { TextWriter } from "../io/textwriter";
-import { MaterialType } from "../model/material";
-import { ExportedFile, ExporterBase } from "./exporterbase";
+import { FileFormat, GetFileName } from '../io/fileutils.js';
+import { TextWriter } from '../io/textwriter.js';
+import { MaterialType } from '../model/material.js';
+import { ExportedFile, ExporterBase } from './exporterbase.js';
 
 export class ExporterObj extends ExporterBase
 {
@@ -121,4 +121,4 @@ export class ExporterObj extends ExporterBase
     {
         return '# exported by https://3dviewer.net';
     }
-};
+}

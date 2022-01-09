@@ -1,4 +1,4 @@
-import { IsEqual } from "./geometry";
+import { IsEqual } from './geometry.js';
 
 export class Coord3D
 {
@@ -68,27 +68,32 @@ export class Coord3D
 	{
 		return new Coord3D (this.x, this.y, this.z);
 	}
-};
+}
 
 export function CoordIsEqual3D (a, b)
 {
 	return IsEqual (a.x, b.x) && IsEqual (a.y, b.y) && IsEqual (a.z, b.z);
-};
+}
 
 export function AddCoord3D (a, b)
 {
 	return new Coord3D (a.x + b.x, a.y + b.y, a.z + b.z);
-};
+}
 
 export function SubCoord3D (a, b)
 {
 	return new Coord3D (a.x - b.x, a.y - b.y, a.z - b.z);
-};
+}
 
 export function CoordDistance3D (a, b)
 {
 	return Math.sqrt ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z));
-};
+}
+
+export function DotVector3D (a, b)
+{
+	return a.x * b.x + a.y * b.y + a.z * b.z;
+}
 
 export function VectorAngle3D (a, b)
 {
@@ -99,12 +104,7 @@ export function VectorAngle3D (a, b)
 	}
 	let product = DotVector3D (aDirection, bDirection);
 	return Math.acos (product);
-};
-
-export function DotVector3D (a, b)
-{
-	return a.x * b.x + a.y * b.y + a.z * b.z;
-};
+}
 
 export function CrossVector3D (a, b)
 {
@@ -113,14 +113,14 @@ export function CrossVector3D (a, b)
 	result.y = a.z * b.x - a.x * b.z;
 	result.z = a.x * b.y - a.y * b.x;
 	return result;
-};
+}
 
 export function VectorLength3D (x, y, z)
 {
 	return Math.sqrt (x * x + y * y + z * z);
-};
+}
 
 export function ArrayToCoord3D (arr)
 {
 	return new Coord3D (arr[0], arr[1], arr[2]);
-};
+}

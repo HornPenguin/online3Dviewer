@@ -1,4 +1,4 @@
-import { CoordDistance3D, CrossVector3D, DotVector3D } from "../geometry/coord3d";
+import { CoordDistance3D, CrossVector3D, DotVector3D } from '../geometry/coord3d.js';
 
 export function GetTriangleArea (v0, v1, v2)
 {
@@ -11,12 +11,12 @@ export function GetTriangleArea (v0, v1, v2)
         return 0.0;
     }
     return Math.sqrt (areaSquare);
-};
+}
 
 export function GetTetrahedronSignedVolume (v0, v1, v2)
 {
     return DotVector3D (v0, CrossVector3D (v1, v2)) / 6.0;
-};
+}
 
 export function CalculateVolume (object3D)
 {
@@ -25,7 +25,7 @@ export function CalculateVolume (object3D)
         volume += GetTetrahedronSignedVolume (v0, v1, v2);
     });
     return volume;
-};
+}
 
 export function CalculateSurfaceArea (object3D)
 {
@@ -34,4 +34,4 @@ export function CalculateSurfaceArea (object3D)
         surface += GetTriangleArea (v0, v1, v2);
     });
     return surface;
-};
+}

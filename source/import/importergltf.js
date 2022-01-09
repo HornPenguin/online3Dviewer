@@ -1,20 +1,20 @@
-import { Coord2D } from "../geometry/coord2d";
-import { ArrayToCoord3D, Coord3D } from "../geometry/coord3d";
-import { Coord4D } from "../geometry/coord4d";
-import { Direction } from "../geometry/geometry";
-import { Matrix } from "../geometry/matrix";
-import { ArrayToQuaternion } from "../geometry/quaternion";
-import { Transformation } from "../geometry/transformation";
-import { BinaryReader } from "../io/binaryreader";
-import { ArrayBufferToUtf8String, Base64DataURIToArrayBuffer, CreateObjectUrlWithMimeType, GetFileExtensionFromMimeType } from "../io/bufferutils";
-import { LoadExternalLibrary } from "../io/externallibs";
-import { Color, ColorComponentFromFloat, ColorFromFloatComponents, LinearToSRGB } from "../model/color";
-import { PhongMaterial, PhysicalMaterial, TextureMap } from "../model/material";
-import { Mesh } from "../model/mesh";
-import { Node, NodeType } from "../model/node";
-import { Property, PropertyGroup, PropertyType } from "../model/property";
-import { Triangle } from "../model/triangle";
-import { ImporterBase } from "./importerbase";
+import { Coord2D } from "../geometry/coord2d.js";
+import { ArrayToCoord3D, Coord3D } from "../geometry/coord3d.js";
+import { Coord4D } from "../geometry/coord4d.js";
+import { Direction } from "../geometry/geometry.js";
+import { Matrix } from "../geometry/matrix.js";
+import { ArrayToQuaternion } from "../geometry/quaternion.js";
+import { Transformation } from "../geometry/transformation.js";
+import { BinaryReader } from "../io/binaryreader.js";
+import { ArrayBufferToUtf8String, Base64DataURIToArrayBuffer, CreateObjectUrlWithMimeType, GetFileExtensionFromMimeType } from "../io/bufferutils.js";
+import { LoadExternalLibrary } from "../io/externallibs.js";
+import { Color, ColorComponentFromFloat, ColorFromFloatComponents, LinearToSRGB } from "../model/color.js";
+import { PhongMaterial, PhysicalMaterial, TextureMap } from "../model/material.js";
+import { Mesh } from "../model/mesh.js";
+import { Node, NodeType } from "../model/node.js";
+import { Property, PropertyGroup, PropertyType } from "../model/property.js";
+import { Triangle } from "../model/triangle.js";
+import { ImporterBase } from "./importerbase.js";
 
 export const GltfComponentType =
 {

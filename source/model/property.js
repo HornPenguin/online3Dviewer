@@ -16,7 +16,7 @@ export class Property
         this.name = name;
         this.value = value;
     }
-};
+}
 
 export class PropertyGroup
 {
@@ -40,4 +40,4 @@ export class PropertyGroup
     {
         return this.properties[index];
     }
-};
+}

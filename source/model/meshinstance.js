@@ -1,5 +1,5 @@
-import { TransformMesh } from "./meshutils";
-import { ModelObject3D } from "./object";
+import { TransformMesh } from './meshutils.js';
+import { ModelObject3D } from './object.js';
 
 export class MeshInstanceId
 {
@@ -18,7 +18,7 @@ export class MeshInstanceId
     {
         return this.nodeId.toString () + ':' + this.meshIndex.toString ();
     }
-};
+}
 
 export class MeshInstance extends ModelObject3D
 {
@@ -125,4 +125,4 @@ export class MeshInstance extends ModelObject3D
         TransformMesh (transformed, transformation);
         return transformed;
     }
-};
+}

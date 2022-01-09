@@ -1,10 +1,10 @@
-import { BinaryWriter } from "../io/binarywriter";
-import { Utf8StringToArrayBuffer } from "../io/bufferutils";
-import { FileFormat, GetFileExtension, GetFileName } from "../io/fileutils";
-import { Color, SRGBToLinear } from "../model/color";
-import { MaterialType } from "../model/material";
-import { ConvertMeshToMeshBuffer } from "../model/meshbuffer";
-import { ExportedFile, ExporterBase } from "./exporterbase";
+import { BinaryWriter } from '../io/binarywriter.js';
+import { Utf8StringToArrayBuffer } from '../io/bufferutils.js';
+import { FileFormat, GetFileExtension, GetFileName } from '../io/fileutils.js';
+import { Color, SRGBToLinear } from '../model/color.js';
+import { MaterialType } from '../model/material.js';
+import { ConvertMeshToMeshBuffer } from '../model/meshbuffer.js';
+import { ExportedFile, ExporterBase } from './exporterbase.js';
 
 export class ExporterGltf extends ExporterBase
 {
@@ -483,4 +483,4 @@ export class ExporterGltf extends ExporterBase
             ExportMaterial (this, mainJson, material, addTexture);
         }
     }
-};
+}

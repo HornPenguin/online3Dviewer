@@ -1,6 +1,6 @@
-import { IsEqual } from "../geometry/geometry";
-import { Color } from "../model/color";
-import { ConvertColorToThreeColor } from "../threejs/threeutils";
+import { IsEqual } from '../geometry/geometry.js';
+import { Color } from '../model/color.js';
+import { ConvertColorToThreeColor } from '../threejs/threeutils.js';
 
 export function SetThreeMeshPolygonOffset (mesh, offset)
 {
@@ -17,7 +17,7 @@ export function SetThreeMeshPolygonOffset (mesh, offset)
     if (mesh.userData.threeMaterials) {
         SetMaterialsPolygonOffset (mesh.userData.threeMaterials, offset);
     }
-};
+}
 
 export class ViewerGeometry
 {
@@ -310,7 +310,7 @@ export class ViewerGeometry
 
         return null;
     }
-};
+}
 
 export class ViewerExtraGeometry
 {
@@ -342,4 +342,4 @@ export class ViewerExtraGeometry
         this.scene.remove (this.mainObject);
         this.mainObject = null;
     }
-};
+}

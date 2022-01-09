@@ -1,6 +1,6 @@
-import { Coord2D, CoordIsEqual2D } from "../geometry/coord2d";
-import { IsEqual } from "../geometry/geometry";
-import { Color, ColorIsEqual } from "./color";
+import { Coord2D, CoordIsEqual2D } from '../geometry/coord2d.js';
+import { IsEqual } from '../geometry/geometry.js';
+import { Color, ColorIsEqual } from './color.js';
 
 export class TextureMap
 {
@@ -55,7 +55,7 @@ export class TextureMap
         }
         return true;
     }
-};
+}
 
 export function TextureMapIsEqual (aTex, bTex)
 {
@@ -65,7 +65,7 @@ export function TextureMapIsEqual (aTex, bTex)
         return false;
     }
     return aTex.IsEqual (bTex);
-};
+}
 
 export const MaterialType =
 {
@@ -105,7 +105,7 @@ export class MaterialBase
         }
         return true;
     }
-};
+}
 
 export class FaceMaterial extends MaterialBase
 {
@@ -177,7 +177,7 @@ export class FaceMaterial extends MaterialBase
             enumerator (this.emissiveMap);
         }
     }
-};
+}
 
 export class PhongMaterial extends FaceMaterial
 {
@@ -218,7 +218,7 @@ export class PhongMaterial extends FaceMaterial
             enumerator (this.specularMap);
         }
     }
-};
+}
 
 export class PhysicalMaterial extends FaceMaterial
 {
@@ -255,7 +255,7 @@ export class PhysicalMaterial extends FaceMaterial
             enumerator (this.metalnessMap);
         }
     }
-};
+}
 
 export function TextureIsEqual (a, b)
 {
@@ -278,4 +278,4 @@ export function TextureIsEqual (a, b)
         return false;
     }
     return true;
-};
+}

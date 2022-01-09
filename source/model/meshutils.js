@@ -1,6 +1,6 @@
-import { Coord3D, CrossVector3D, SubCoord3D } from "../geometry/coord3d";
-import { Matrix } from "../geometry/matrix";
-import { Transformation } from "../geometry/transformation";
+import { Coord3D, CrossVector3D, SubCoord3D } from '../geometry/coord3d.js';
+import { Matrix } from '../geometry/matrix.js';
+import { Transformation } from '../geometry/transformation.js';
 
 export const MeshType =
 {
@@ -14,7 +14,7 @@ export function GetMeshType (mesh)
         return MeshType.TriangleMesh;
     }
     return MeshType.Empty;
-};
+}
 
 export function CalculateTriangleNormal (v0, v1, v2)
 {
@@ -23,7 +23,7 @@ export function CalculateTriangleNormal (v0, v1, v2)
     let normal = CrossVector3D (v, w);
     normal.Normalize ();
     return normal;
-};
+}
 
 export function TransformMesh (mesh, transformation)
 {
@@ -51,7 +51,7 @@ export function TransformMesh (mesh, transformation)
             normal.z = transformed.z;
         }
     }
-};
+}
 
 export function FlipMeshTrianglesOrientation (mesh)
 {
@@ -61,4 +61,4 @@ export function FlipMeshTrianglesOrientation (mesh)
         triangle.v1 = triangle.v2;
         triangle.v2 = tmp;
     }
-};
+}

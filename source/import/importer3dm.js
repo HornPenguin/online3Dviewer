@@ -1,14 +1,14 @@
-import { Direction } from "../geometry/geometry";
-import { Matrix } from "../geometry/matrix";
-import { Transformation } from "../geometry/transformation";
-import { LoadExternalLibrary } from "../io/externallibs";
-import { PhongMaterial, PhysicalMaterial } from "../model/material";
-import { TransformMesh } from "../model/meshutils";
-import { IsModelEmpty } from "../model/modelutils";
-import { Property, PropertyGroup, PropertyType } from "../model/property";
-import { ConvertThreeGeometryToMesh } from "../threejs/threeutils";
-import { ImporterBase } from "./importerbase";
-import { UpdateMaterialTransparency } from "./importerutils";
+import { Direction } from '../geometry/geometry.js';
+import { Matrix } from '../geometry/matrix.js';
+import { Transformation } from '../geometry/transformation.js';
+import { LoadExternalLibrary } from '../io/externallibs.js';
+import { PhongMaterial, PhysicalMaterial } from '../model/material.js';
+import { TransformMesh } from '../model/meshutils.js';
+import { IsModelEmpty } from '../model/modelutils.js';
+import { Property, PropertyGroup, PropertyType } from '../model/property.js';
+import { ConvertThreeGeometryToMesh } from '../threejs/threeutils.js';
+import { ImporterBase } from './importerbase.js';
+import { UpdateMaterialTransparency } from './importerutils.js';
 
 export class Importer3dm extends ImporterBase
 {
@@ -297,4 +297,4 @@ export class Importer3dm extends ImporterBase
 		let rhinoMaterial = GetRhinoMaterial (this.rhino, rhinoObject, rhinoInstanceReferences);
 		return FindMatchingMaterial (this.model, rhinoMaterial);
 	}
-};
+}

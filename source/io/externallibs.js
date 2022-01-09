@@ -26,4 +26,4 @@ export function LoadExternalLibrary (libName)
         };
         document.head.appendChild (scriptElement);
     });
-};
+}

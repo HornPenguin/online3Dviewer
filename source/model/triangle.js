@@ -96,4 +96,4 @@ export class Triangle
         cloned.SetCurve (this.curve);
         return cloned;
     }
-};
+}

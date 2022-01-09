@@ -1,8 +1,8 @@
-import { CopyObjectAttributes } from "../core/core";
-import { AddCoord3D, Coord3D, CoordIsEqual3D } from "../geometry/coord3d";
-import { Color } from "./color";
-import { PhongMaterial } from "./material";
-import { CalculateTriangleNormal, GetMeshType, MeshType } from "./meshutils";
+import { CopyObjectAttributes } from '../core/core.js';
+import { AddCoord3D, Coord3D, CoordIsEqual3D } from '../geometry/coord3d.js';
+import { Color } from './color.js';
+import { PhongMaterial } from './material.js';
+import { CalculateTriangleNormal, GetMeshType, MeshType } from './meshutils.js';
 
 export class ModelFinalizer
 {
@@ -214,13 +214,13 @@ export class ModelFinalizer
     {
         this.defaultMaterialIndex = null;
     }
-};
+}
 
 export function FinalizeModel (model, params)
 {
     let finalizer = new ModelFinalizer (params);
     finalizer.Finalize (model);
-};
+}
 
 export function CheckModel (model)
 {
@@ -375,4 +375,4 @@ export function CheckModel (model)
     }
 
     return true;
-};
+}

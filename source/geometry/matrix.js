@@ -1,7 +1,7 @@
-import { Quaternion } from "./quaternion";
-import { Coord3D, VectorLength3D } from "./coord3d";
-import { IsEqual, IsNegative } from "./geometry";
-import { QuaternionFromAxisAngle } from "./quaternion";
+import { Quaternion } from './quaternion.js';
+import { Coord3D, VectorLength3D } from './coord3d.js';
+import { IsEqual, IsNegative } from './geometry.js';
+import { QuaternionFromAxisAngle } from './quaternion.js';
 
 export class Matrix
 {
@@ -404,7 +404,7 @@ export class Matrix
 
         return new Matrix (result);
     }
-};
+}
 
 export function MatrixIsEqual (a, b)
 {
@@ -416,4 +416,4 @@ export function MatrixIsEqual (a, b)
         }
     }
     return true;
-};
+}

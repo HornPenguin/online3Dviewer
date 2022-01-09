@@ -1,7 +1,7 @@
-import { Direction } from "../geometry/geometry";
-import { Model } from "../model/model";
-import { FinalizeModel } from "../model/modelfinalization";
-import { IsModelEmpty } from "../model/modelutils";
+import { Direction } from '../geometry/geometry.js';
+import { Model } from '../model/model.js';
+import { FinalizeModel } from '../model/modelfinalization.js';
+import { IsModelEmpty } from '../model/modelutils.js';
 
 export class ImporterBase
 {
@@ -112,4 +112,4 @@ export class ImporterBase
     {
         return this.message;
     }
-};
+}

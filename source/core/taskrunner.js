@@ -53,26 +53,26 @@ export class TaskRunner
             }
         }
     }
-};
+}
 
 export function RunTaskAsync (task)
 {
     setTimeout (() => {
         task ();
     }, 0);
-};
+}
 
 export function RunTasks (count, callbacks)
 {
     let taskRunner = new TaskRunner ();
     taskRunner.Run (count, callbacks);
-};
+}
 
 export function RunTasksBatch (count, batchCount, callbacks)
 {
     let taskRunner = new TaskRunner ();
     taskRunner.RunBatch (count, batchCount, callbacks);
-};
+}
 
 export function WaitWhile (expression)
 {
@@ -85,4 +85,4 @@ export function WaitWhile (expression)
         }
     }
     Waiter (expression);
-};
+}

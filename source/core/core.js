@@ -1,12 +1,7 @@
-OV =
-{
-
-};
-
 export function IsDefined (val)
 {
     return val !== undefined && val !== null;
-};
+}
 
 export function ValueOrDefault (val, def)
 {
@@ -14,7 +9,7 @@ export function ValueOrDefault (val, def)
         return def;
     }
     return val;
-};
+}
 
 export function CopyObjectAttributes (src, dest)
 {
@@ -26,4 +21,4 @@ export function CopyObjectAttributes (src, dest)
             dest[attribute] = src[attribute];
         }
     }
-};
+}

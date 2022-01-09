@@ -1,6 +1,6 @@
-import { MeshInstance, MeshInstanceId } from "./meshinstance";
-import { Node } from "./node";
-import { ModelObject3D } from "./object";
+import { MeshInstance, MeshInstanceId } from './meshinstance.js';
+import { Node } from './node.js';
+import { ModelObject3D } from './object.js';
 
 export class Model extends ModelObject3D
 {
@@ -192,4 +192,4 @@ export class Model extends ModelObject3D
             meshInstance.EnumerateTriangleVertices (onTriangleVertices);
         });
     }
-};
+}

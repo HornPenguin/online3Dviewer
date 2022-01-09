@@ -1,8 +1,8 @@
-import { LoadExternalLibrary } from "../io/externallibs";
-import { FileFormat } from "../io/fileutils";
-import { MaterialType } from "../model/material";
-import { ConvertMeshToMeshBuffer } from "../model/meshbuffer";
-import { ExportedFile, ExporterBase } from "./exporterbase";
+import { LoadExternalLibrary } from '../io/externallibs.js';
+import { FileFormat } from '../io/fileutils.js';
+import { MaterialType } from '../model/material.js';
+import { ConvertMeshToMeshBuffer } from '../model/meshbuffer.js';
+import { ExportedFile, ExporterBase } from './exporterbase.js';
 
 export class Exporter3dm extends ExporterBase
 {
@@ -103,4 +103,4 @@ export class Exporter3dm extends ExporterBase
         rhinoFile.SetBufferContent (rhinoDocBuffer);
 		onFinish ();
     }
-};
+}

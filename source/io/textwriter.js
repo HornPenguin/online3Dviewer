@@ -38,4 +38,4 @@ export class TextWriter
 	{
 		this.text += str;
 	}
-};
+}

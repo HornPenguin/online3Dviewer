@@ -1,6 +1,6 @@
-import { Coord2D, CoordIsEqual2D } from "../geometry/coord2d";
-import { CoordIsEqual3D } from "../geometry/coord3d";
-import { Color, ColorIsEqual } from "./color";
+import { Coord2D, CoordIsEqual2D } from '../geometry/coord2d.js';
+import { CoordIsEqual3D } from '../geometry/coord3d.js';
+import { Color, ColorIsEqual } from './color.js';
 
 export class MeshPrimitiveBuffer
 {
@@ -36,7 +36,7 @@ export class MeshPrimitiveBuffer
         let numberCount = this.vertices.length + this.colors.length + this.normals.length + this.uvs.length;
         return indexCount * indexTypeSize + numberCount * numberTypeSize;
     }
-};
+}
 
 export class MeshBuffer
 {
@@ -64,7 +64,7 @@ export class MeshBuffer
         }
         return byteLength;
     }
-};
+}
 
 export function ConvertMeshToMeshBuffer (mesh)
 {
@@ -230,4 +230,4 @@ export function ConvertMeshToMeshBuffer (mesh)
     }
 
     return meshBuffer;
-};
+}

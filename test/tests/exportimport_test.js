@@ -1,5 +1,9 @@
-var assert = require ('assert');
+import * as assert from 'assert';
+import * as OV from '../../tools/engine_main.js';
 var testUtils = require ('../utils/testutils.js');
+
+export default function suite ()
+{
 
 function CreateTestModel ()
 {
@@ -138,8 +142,8 @@ function CheckSingleMeshModel (model, model2)
 
     let modelBounds = OV.GetBoundingBox (model);
     let model2Bounds = OV.GetBoundingBox (model2);
-    assert (OV.CoordIsEqual3D (modelBounds.min, model2Bounds.min));
-    assert (OV.CoordIsEqual3D (modelBounds.max, model2Bounds.max));
+    assert.ok (OV.CoordIsEqual3D (modelBounds.min, model2Bounds.min));
+    assert.ok (OV.CoordIsEqual3D (modelBounds.max, model2Bounds.max));
 }
 
 function CheckModel (model, model2)
@@ -150,8 +154,8 @@ function CheckModel (model, model2)
 
     let modelBounds = OV.GetBoundingBox (model);
     let model2Bounds = OV.GetBoundingBox (model2);
-    assert (OV.CoordIsEqual3D (modelBounds.min, model2Bounds.min));
-    assert (OV.CoordIsEqual3D (modelBounds.max, model2Bounds.max));
+    assert.ok (OV.CoordIsEqual3D (modelBounds.min, model2Bounds.min));
+    assert.ok (OV.CoordIsEqual3D (modelBounds.max, model2Bounds.max));
 }
 
 describe ('Export-Import Test', function () {
@@ -245,3 +249,5 @@ describe ('Export-Import Vertex Colors Test', function () {
         });
     });
 });
+
+}

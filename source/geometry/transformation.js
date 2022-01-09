@@ -1,5 +1,5 @@
-import { Coord3D } from "./coord3d";
-import { Matrix, MatrixIsEqual } from "./matrix";
+import { Coord3D } from './coord3d.js';
+import { Matrix, MatrixIsEqual } from './matrix.js';
 
 export class Transformation
 {
@@ -53,9 +53,9 @@ export class Transformation
         const clonedMatrix = this.matrix.Clone ();
         return new Transformation (clonedMatrix);
     }
-};
+}
 
 export function TransformationIsEqual (a, b)
 {
     return MatrixIsEqual (a.GetMatrix (), b.GetMatrix ());
-};
+}

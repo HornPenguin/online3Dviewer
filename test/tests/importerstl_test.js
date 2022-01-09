@@ -1,11 +1,16 @@
-var assert = require ('assert');
+import * as assert from 'assert';
+import * as OV from '../../tools/engine_main.js';
+
 var testFiles = require ('../utils/testfiles.js');
 var testUtils = require ('../utils/testutils.js');
+
+export default function suite ()
+{
 
 describe ('Stl Importer', function() {
     it ('single_triangle.stl', function (done) {
         testFiles.ImportStlFile ('single_triangle.stl', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObject (model), {
                 name : '',
                 materials : [
@@ -31,7 +36,7 @@ describe ('Stl Importer', function() {
 
     it ('single_triangle_with_comments.stl', function (done) {
         testFiles.ImportStlFile ('single_triangle_with_comments.stl', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObject (model), {
                 name : '',
                 materials : [
@@ -57,7 +62,7 @@ describe ('Stl Importer', function() {
 
     it ('single_triangle_no_normal.stl', function (done) {
         testFiles.ImportStlFile ('single_triangle_no_normal.stl', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObject (model), {
                 name : '',
                 materials : [
@@ -83,7 +88,7 @@ describe ('Stl Importer', function() {
 
     it ('two_triangles.stl', function (done) {
         testFiles.ImportStlFile ('two_triangles.stl', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObject (model), {
                 name : '',
                 materials : [
@@ -115,7 +120,7 @@ describe ('Stl Importer', function() {
 
     it ('stl_ascii.stl', function (done) {
         testFiles.ImportStlFile ('stl_ascii.stl', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObjectSimple (model), {
                 name : '',
                 materials : [
@@ -142,7 +147,7 @@ describe ('Stl Importer', function() {
 
     it ('stl_binary.stl', function (done) {
         testFiles.ImportStlFile ('stl_binary.stl', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObjectSimple (model), {
                 name : '',
                 materials : [
@@ -170,7 +175,7 @@ describe ('Stl Importer', function() {
 
     it ('cube_meshlab_ascii.stl', function (done) {
         testFiles.ImportStlFile ('cube_meshlab_ascii.stl', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObjectSimple (model), {
                 name : '',
                 materials : [
@@ -197,7 +202,7 @@ describe ('Stl Importer', function() {
 
     it ('cube_meshlab_binary.stl', function (done) {
         testFiles.ImportStlFile ('cube_meshlab_binary.stl', function (model) {
-            assert (OV.CheckModel (model));
+            assert.ok (OV.CheckModel (model));
             assert.deepStrictEqual (testUtils.ModelToObjectSimple (model), {
                 name : '',
                 materials : [
@@ -222,3 +227,5 @@ describe ('Stl Importer', function() {
         });
     });
 });
+
+}

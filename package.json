@@ -4,6 +4,7 @@
 	"version": "0.8.4",
 	"repository": "github:kovacsv/Online3DViewer",
 	"license": "MIT",
+	"type": "module",
 	"devDependencies": {
 		"clean-css-cli": "^5.5.0",
 		"docdash": "^1.2.0",
@@ -54,7 +55,8 @@
 			"WebIFC": "readonly"
 		},
 		"parserOptions": {
-			"ecmaVersion": 12
+			"ecmaVersion": 12,
+			"sourceType": "module"
 		},
 		"rules": {
 			"semi": "error",

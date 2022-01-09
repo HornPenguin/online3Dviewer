@@ -1,6 +1,6 @@
-import { Coord3D } from "../geometry/coord3d";
-import { Color } from "../model/color";
-import { Camera } from "../viewer/navigation";
+import { Coord3D } from '../geometry/coord3d.js';
+import { Color } from '../model/color.js';
+import { Camera } from '../viewer/navigation.js';
 
 export let ParameterConverter =
 {
@@ -189,7 +189,7 @@ export class ParameterListBuilder
     {
         return this.paramList;
     }
-};
+}
 
 export class ParameterListParser
 {
@@ -249,21 +249,21 @@ export class ParameterListParser
         }
         return null;
     }
-};
+}
 
 export function CreateUrlBuilder ()
 {
     return new ParameterListBuilder ('$');
-};
+}
 
 export function CreateUrlParser (urlParams)
 {
     return new ParameterListParser (urlParams, '$');
-};
+}
 
 export function CreateModelUrlParameters (urls)
 {
     let builder = CreateUrlBuilder ();
     builder.AddModelUrls (urls);
     return builder.GetParameterList ();
-};
+}

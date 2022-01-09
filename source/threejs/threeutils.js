@@ -2,12 +2,12 @@
 // all materials rendered as black. This hack renders a single plane with red material and
 // it checks if it's really red. If it's not, then probably there is a driver issue.
 
-import { Coord2D } from "../geometry/coord2d";
-import { Coord3D } from "../geometry/coord3d";
-import { ColorFromFloatComponents } from "../model/color";
-import { MaterialType } from "../model/material";
-import { Mesh } from "../model/mesh";
-import { Triangle } from "../model/triangle";
+import { Coord2D } from '../geometry/coord2d.js';
+import { Coord3D } from '../geometry/coord3d.js';
+import { ColorFromFloatComponents } from '../model/color.js';
+import { MaterialType } from '../model/material.js';
+import { Mesh } from '../model/mesh.js';
+import { Triangle } from '../model/triangle.js';
 
 // https://github.com/kovacsv/Online3DViewer/issues/69
 export function HasHighpDriverIssue ()
@@ -61,7 +61,7 @@ export function HasHighpDriverIssue ()
         return true;
     }
     return false;
-};
+}
 
 export const ShadingType =
 {
@@ -86,12 +86,12 @@ export function GetShadingType (model)
     } else {
         return ShadingType.Physical;
     }
-};
+}
 
 export function ConvertThreeColorToColor (threeColor)
 {
     return ColorFromFloatComponents (threeColor.r, threeColor.g, threeColor.b);
-};
+}
 
 export function ConvertColorToThreeColor (color)
 {
@@ -100,7 +100,7 @@ export function ConvertColorToThreeColor (color)
         color.g / 255.0,
         color.b / 255.0
     );
-};
+}
 
 export function ConvertThreeGeometryToMesh (threeGeometry, materialIndex)
 {
@@ -176,4 +176,4 @@ export function ConvertThreeGeometryToMesh (threeGeometry, materialIndex)
     }
 
     return mesh;
-};
+}

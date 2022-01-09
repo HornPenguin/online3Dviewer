@@ -5,7 +5,7 @@ export class TopologyVertex
         this.edges = [];
         this.triangles = [];
     }
-};
+}
 
 export class TopologyEdge
 {
@@ -15,7 +15,7 @@ export class TopologyEdge
         this.vertex2 = vertex2;
         this.triangles = [];
     }
-};
+}
 
 export class TopologyTriangleEdge
 {
@@ -24,7 +24,7 @@ export class TopologyTriangleEdge
         this.edge = edge;
         this.reversed = reversed;
     }
-};
+}
 
 export class TopologyTriangle
 {
@@ -34,7 +34,7 @@ export class TopologyTriangle
         this.triEdge2 = null;
         this.triEdge3 = null;
     }
-};
+}
 
 export class Topology
 {
@@ -135,4 +135,4 @@ export class Topology
         this.edges.push (new TopologyEdge (startVertex, endVertex));
         return edgeIndex;
     }
-};
+}
