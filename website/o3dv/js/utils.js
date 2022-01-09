@@ -1,7 +1,7 @@
-import { AddDiv } from "../../../source/viewer/domutils";
+import { AddDiv, CreateDiv, AddDomElement, GetDomElementOuterWidth, SetDomElementOuterWidth } from "../../../source/viewer/domutils";
 import { CreateVerticalSplitter } from "./splitter";
 
-OV.GetNameOrDefault = function (originalName, defaultName)
+export function GetNameOrDefault (originalName, defaultName)
 {
     if (originalName.length > 0) {
         return originalName;
@@ -9,43 +9,43 @@ OV.GetNameOrDefault = function (originalName, defaultName)
     return defaultName;
 };
 
-OV.GetNodeName = function (originalName)
+export function GetNodeName (originalName)
 {
-    return OV.GetNameOrDefault (originalName, 'No Name');
+    return GetNameOrDefault (originalName, 'No Name');
 };
 
-OV.GetMeshName = function (originalName)
+export function GetMeshName (originalName)
 {
-    return OV.GetNameOrDefault (originalName, 'No Name');
+    return GetNameOrDefault (originalName, 'No Name');
 };
 
-OV.GetMaterialName = function (originalName)
+export function GetMaterialName (originalName)
 {
-    return OV.GetNameOrDefault (originalName, 'No Name');
+    return GetNameOrDefault (originalName, 'No Name');
 };
 
-OV.IsHoverEnabled = function ()
+export function IsHoverEnabled ()
 {
     return window.matchMedia ('(hover: hover)').matches;
 };
 
-OV.AddSmallWidthChangeEventListener = function (onChange)
+export function AddSmallWidthChangeEventListener (onChange)
 {
     let mediaQuery = window.matchMedia ('(max-width: 800px)');
     mediaQuery.addEventListener ('change', onChange);
 };
 
-OV.IsSmallWidth = function ()
+export function IsSmallWidth ()
 {
     return window.matchMedia ('(max-width: 800px)').matches;
 };
 
-OV.IsSmallHeight = function ()
+export function IsSmallHeight ()
 {
     return window.matchMedia ('(max-height: 800px)').matches;
 };
 
-OV.InstallTooltip = function (element, text)
+export function InstallTooltip (element, text)
 {
     function CalculateOffset (element, tooltip)
     {
@@ -71,7 +71,7 @@ OV.InstallTooltip = function (element, text)
         };
     }
 
-    if (!OV.IsHoverEnabled ()) {
+    if (!IsHoverEnabled ()) {
         return;
     }
 
@@ -87,7 +87,7 @@ OV.InstallTooltip = function (element, text)
     });
 };
 
-OV.CopyToClipboard = function (text)
+export function CopyToClipboard (text)
 {
     let input = document.createElement ('input');
     input.style.position = 'absolute';
@@ -100,7 +100,7 @@ OV.CopyToClipboard = function (text)
     document.body.removeChild (input);
 };
 
-OV.DownloadUrlAsFile = function (url, fileName)
+export function DownloadUrlAsFile (url, fileName)
 {
     let link = document.createElement ('a');
     link.href = url;
@@ -110,48 +110,48 @@ OV.DownloadUrlAsFile = function (url, fileName)
     document.body.removeChild (link);
 };
 
-OV.DownloadArrayBufferAsFile = function (arrayBuffer, fileName)
+export function DownloadArrayBufferAsFile (arrayBuffer, fileName)
 {
     let url = OV.CreateObjectUrl (arrayBuffer);
-    OV.DownloadUrlAsFile (url, fileName);
+    DownloadUrlAsFile (url, fileName);
 };
 
-OV.CreateSvgIconElement = function (iconName, className)
+export function CreateSvgIconElement (iconName, className)
 {
-    let iconDiv = OV.CreateDiv ('ov_svg_icon');
+    let iconDiv = CreateDiv ('ov_svg_icon');
     if (className) {
         iconDiv.classList.add (className);
     }
-    OV.AddDomElement (iconDiv, 'i', 'icon icon-' + iconName);
+    AddDomElement (iconDiv, 'i', 'icon icon-' + iconName);
     return iconDiv;
 };
 
-OV.AddSvgIconElement = function (parentElement, iconName, className)
+export function AddSvgIconElement (parentElement, iconName, className)
 {
-    let iconDiv = OV.CreateSvgIconElement (iconName, className);
+    let iconDiv = CreateSvgIconElement (iconName, className);
     parentElement.appendChild (iconDiv);
     return iconDiv;
 };
 
-OV.SetSvgIconImageElement = function (iconElement, iconName)
+export function SetSvgIconImageElement (iconElement, iconName)
 {
     let iconDiv = iconElement.firstChild;
     iconDiv.className = 'icon icon-' + iconName;
 };
 
-OV.CreateHeaderButton = function (parentElement, iconName, title, link)
+export function CreateHeaderButton (parentElement, iconName, title, link)
 {
     let buttonLink = OV.CreateDomElement ('a');
     buttonLink.setAttribute ('href', link);
     buttonLink.setAttribute ('target', '_blank');
     buttonLink.setAttribute ('rel', 'noopener noreferrer');
-    OV.InstallTooltip (buttonLink, title);
-    OV.AddSvgIconElement (buttonLink, iconName, 'header_button');
+    InstallTooltip (buttonLink, title);
+    AddSvgIconElement (buttonLink, iconName, 'header_button');
     parentElement.appendChild (buttonLink);
     return buttonLink;
 };
 
-OV.CreateInlineColorCircle = function (color)
+export function CreateInlineColorCircle (color)
 {
     let hexString = '#' + OV.ColorToHexString (color);
     let darkerColor = new OV.Color (
@@ -160,18 +160,18 @@ OV.CreateInlineColorCircle = function (color)
         Math.max (0, color.b - 50)
     );
     let darkerColorHexString = '#' + OV.ColorToHexString (darkerColor);
-    let circleDiv = OV.CreateDiv ('ov_color_circle');
+    let circleDiv = CreateDiv ('ov_color_circle');
     circleDiv.style.background = hexString;
     circleDiv.style.border = '1px solid ' + darkerColorHexString;
     return circleDiv;
 };
 
-OV.InstallVerticalSplitter = function (splitterDiv, resizedDiv, flipped, onResize)
+export function InstallVerticalSplitter (splitterDiv, resizedDiv, flipped, onResize)
 {
     let originalWidth = null;
     CreateVerticalSplitter (splitterDiv, {
         onSplitStart : () => {
-            originalWidth = OV.GetDomElementOuterWidth (resizedDiv);
+            originalWidth = GetDomElementOuterWidth (resizedDiv);
         },
         onSplit : (xDiff) => {
             const minWidth = 280;
@@ -187,13 +187,13 @@ OV.InstallVerticalSplitter = function (splitterDiv, resizedDiv, flipped, onResiz
             } else if (newWidth > maxWidth)  {
                 newWidth = maxWidth;
             }
-            OV.SetDomElementOuterWidth (resizedDiv, newWidth);
+            SetDomElementOuterWidth (resizedDiv, newWidth);
             onResize ();
         }
     });
 };
 
-OV.GetFilesFromDataTransfer = function (dataTransfer, onReady)
+export function GetFilesFromDataTransfer (dataTransfer, onReady)
 {
     async function GetFileEntriesFromDirectory (dirEntry, fileEntries)
     {

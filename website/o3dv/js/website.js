@@ -1,14 +1,23 @@
-import { AddDiv, ShowDomElement } from "../../../source/viewer/domutils";
+import { TransformFileHostUrls } from "../../../source/io/fileutils";
+import { Viewer } from "../../../source/viewer/viewer";
+import { MeasureTool } from "../../../source/viewer/measuretool";
+import { AddDiv, AddDomElement, ShowDomElement, SetDomElementOuterHeight } from "../../../source/viewer/domutils";
 import { CookieHandler } from "./cookies";
 import { CalculatePopupPositionToScreen, ShowListPopup } from "./dialogs";
 import { EventHandler } from "./eventhandler";
 import { HashHandler } from "./hashhandler";
+import { Navigator, Selection, SelectionType } from "./navigator";
 import { Settings } from "./settings";
+import { Sidebar } from "./sidebar";
 import { ThemeHandler } from "./themehandler";
 import { ThreeModelLoaderUI } from "./threemodelloaderui";
 import { Toolbar } from "./toolbar";
+import { ExportDialog } from "./exportdialog";
+import { AddSmallWidthChangeEventListener, GetFilesFromDataTransfer, IsSmallWidth } from "./utils";
+import { ShowOpenUrlDialog } from "./openurldialog";
+import { ShowSharingDialog } from "./sharingdialog";
 
-OV.WebsiteUIState =
+export const WebsiteUIState =
 {
     Undefined : 0,
     Intro : 1,
@@ -16,24 +25,24 @@ OV.WebsiteUIState =
     Loading : 3
 };
 
-OV.Website = class
+export class Website
 {
     constructor (parameters)
     {
         this.parameters = parameters;
         this.settings = new Settings ();
-        this.viewer = new OV.Viewer ();
-        this.measureTool = new OV.MeasureTool ();
+        this.viewer = new Viewer ();
+        this.measureTool = new MeasureTool ();
         this.hashHandler = new HashHandler ();
         this.cookieHandler = new CookieHandler ();
         this.toolbar = new Toolbar (this.parameters.toolbarDiv);
-        this.navigator = new OV.Navigator (this.parameters.navigatorDiv, this.parameters.navigatorSplitterDiv);
-        this.sidebar = new OV.Sidebar (this.parameters.sidebarDiv, this.parameters.sidebarSplitterDiv, this.settings, this.measureTool);
+        this.navigator = new Navigator (this.parameters.navigatorDiv, this.parameters.navigatorSplitterDiv);
+        this.sidebar = new Sidebar (this.parameters.sidebarDiv, this.parameters.sidebarSplitterDiv, this.settings, this.measureTool);
         this.eventHandler = new EventHandler (this.parameters.eventHandler);
         this.modelLoaderUI = new ThreeModelLoaderUI ();
         this.themeHandler = new ThemeHandler ();
         this.highlightColor = new THREE.Color (0x8ec9f0);
-        this.uiState = OV.WebsiteUIState.Undefined;
+        this.uiState = WebsiteUIState.Undefined;
         this.model = null;
         this.dialog = null;
     }
@@ -57,12 +66,12 @@ OV.Website = class
         this.viewer.SetContextMenuHandler (this.OnModelContextMenu.bind (this));
 
         this.Resize ();
-        this.SetUIState (OV.WebsiteUIState.Intro);
+        this.SetUIState (WebsiteUIState.Intro);
 
         this.hashHandler.SetEventListener (this.OnHashChange.bind (this));
         this.OnHashChange ();
 
-        OV.AddSmallWidthChangeEventListener (() => {
+        AddSmallWidthChangeEventListener (() => {
             this.OnSmallWidthChanged ();
         });
 
@@ -80,7 +89,7 @@ OV.Website = class
         let navigatorWidth = 0;
         let sidebarWidth = 0;
         let safetyMargin = 0;
-        if (!OV.IsSmallWidth ()) {
+        if (!IsSmallWidth ()) {
             navigatorWidth = this.navigator.GetWidth ();
             sidebarWidth = this.sidebar.GetWidth ();
             safetyMargin = 1;
@@ -94,7 +103,7 @@ OV.Website = class
         }
         let contentHeight = windowHeight - headerHeight;
 
-        OV.SetDomElementOuterHeight (this.parameters.introDiv, contentHeight);
+        SetDomElementOuterHeight (this.parameters.introDiv, contentHeight);
         this.navigator.Resize (contentHeight);
         this.sidebar.Resize (contentHeight);
         this.viewer.Resize (contentWidth - safetyMargin, contentHeight);
@@ -102,7 +111,7 @@ OV.Website = class
 
     OnSmallWidthChanged ()
     {
-        if (this.uiState === OV.WebsiteUIState.Model) {
+        if (this.uiState === WebsiteUIState.Model) {
             this.UpdatePanelsVisibility ();
         }
     }
@@ -125,16 +134,16 @@ OV.Website = class
         }
 
         this.uiState = uiState;
-        if (this.uiState === OV.WebsiteUIState.Intro) {
+        if (this.uiState === WebsiteUIState.Intro) {
             ShowDomElement (this.parameters.introDiv, true);
             ShowDomElement (this.parameters.mainDiv, false);
             ShowOnlyOnModelElements (false);
-        } else if (this.uiState === OV.WebsiteUIState.Model) {
+        } else if (this.uiState === WebsiteUIState.Model) {
             ShowDomElement (this.parameters.introDiv, false);
             ShowDomElement (this.parameters.mainDiv, true);
             ShowOnlyOnModelElements (true);
             this.UpdatePanelsVisibility ();
-        } else if (this.uiState === OV.WebsiteUIState.Loading) {
+        } else if (this.uiState === WebsiteUIState.Loading) {
             ShowDomElement (this.parameters.introDiv, false);
             ShowDomElement (this.parameters.mainDiv, false);
             ShowOnlyOnModelElements (false);
@@ -186,7 +195,7 @@ OV.Website = class
         if (meshUserData === null) {
             this.navigator.SetSelection (null);
         } else {
-            this.navigator.SetSelection (new OV.Selection (OV.SelectionType.Mesh, meshUserData.originalMeshId));
+            this.navigator.SetSelection (new Selection (SelectionType.Mesh, meshUserData.originalMeshId));
         }
     }
 
@@ -264,7 +273,7 @@ OV.Website = class
             if (urls === null) {
                 return;
             }
-            OV.TransformFileHostUrls (urls);
+            TransformFileHostUrls (urls);
             let importSettings = new OV.ImportSettings ();
             importSettings.defaultColor = this.settings.defaultColor;
             let defaultColor = this.hashHandler.GetDefaultColorFromHash ();
@@ -275,7 +284,7 @@ OV.Website = class
             this.LoadModelFromUrlList (urls, importSettings);
         } else {
             this.ClearModel ();
-            this.SetUIState (OV.WebsiteUIState.Intro);
+            this.SetUIState (WebsiteUIState.Intro);
         }
     }
 
@@ -367,12 +376,12 @@ OV.Website = class
         this.modelLoaderUI.LoadModel (files, fileSource, settings, {
             onStart : () =>
             {
-                this.SetUIState (OV.WebsiteUIState.Loading);
+                this.SetUIState (WebsiteUIState.Loading);
                 this.ClearModel ();
             },
             onFinish : (importResult, threeObject) =>
             {
-                this.SetUIState (OV.WebsiteUIState.Model);
+                this.SetUIState (WebsiteUIState.Model);
                 this.OnModelLoaded (importResult, threeObject);
                 let importedExtension = OV.GetFileExtension (importResult.mainFile);
                 this.eventHandler.HandleEvent ('model_loaded', importedExtension);
@@ -383,7 +392,7 @@ OV.Website = class
             },
             onError : (importError) =>
             {
-                this.SetUIState (OV.WebsiteUIState.Intro);
+                this.SetUIState (WebsiteUIState.Intro);
                 let extensions = [];
                 let importer = this.modelLoaderUI.GetImporter ();
                 let fileList = importer.GetFileList ().GetFiles ();
@@ -442,7 +451,7 @@ OV.Website = class
 
     InitViewer ()
     {
-        let canvas = OV.AddDomElement (this.parameters.viewerDiv, 'canvas');
+        let canvas = AddDomElement (this.parameters.viewerDiv, 'canvas');
         this.viewer.Init (canvas);
         this.viewer.SetGridSettings (this.settings.showGrid);
         this.viewer.SetEdgeSettings (this.settings.showEdges, this.settings.edgeColor, this.settings.edgeThreshold);
@@ -512,7 +521,7 @@ OV.Website = class
             this.OpenFileBrowserDialog ();
         });
         AddButton (this.toolbar, 'open_url', 'Open model from a url', [], () => {
-            this.dialog = OV.ShowOpenUrlDialog ((urls) => {
+            this.dialog = ShowOpenUrlDialog ((urls) => {
                 if (urls.length > 0) {
                     this.hashHandler.SetModelFilesToHash (urls);
                 }
@@ -541,7 +550,7 @@ OV.Website = class
         });
         AddSeparator (this.toolbar, ['only_full_width', 'only_on_model']);
         AddButton (this.toolbar, 'export', 'Export model', ['only_full_width', 'only_on_model'], () => {
-            let exportDialog = new OV.ExportDialog ({
+            let exportDialog = new ExportDialog ({
                 isMeshVisible : (meshInstanceId) => {
                     return this.navigator.IsMeshVisible (meshInstanceId);
                 },
@@ -552,7 +561,7 @@ OV.Website = class
             exportDialog.Show (this.model, this.viewer);
         });
         AddButton (this.toolbar, 'share', 'Share model', ['only_full_width', 'only_on_model'], () => {
-            this.dialog = OV.ShowSharingDialog (importer.GetFileList (), this.settings, this.viewer.GetCamera (), this.eventHandler);
+            this.dialog = ShowSharingDialog (importer.GetFileList (), this.settings, this.viewer.GetCamera (), this.eventHandler);
         });
 
         this.parameters.fileInput.addEventListener ('change', (ev) => {
@@ -578,7 +587,7 @@ OV.Website = class
         window.addEventListener ('drop', (ev) => {
             ev.stopPropagation ();
             ev.preventDefault ();
-            OV.GetFilesFromDataTransfer (ev.dataTransfer, (files) => {
+            GetFilesFromDataTransfer (ev.dataTransfer, (files) => {
                 if (files.length > 0) {
                     this.eventHandler.HandleEvent ('model_load_started', 'drop');
                     this.LoadModelFromFileList (files);

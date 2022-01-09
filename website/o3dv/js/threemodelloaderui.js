@@ -1,6 +1,7 @@
 import { AddDiv } from "../../../source/viewer/domutils";
 import { ShowMessageDialog } from "./dialogs";
 import { ButtonDialog, ProgressDialog } from "./modal";
+import { AddSvgIconElement } from "./utils";
 
 export class ThreeModelLoaderUI
 {
@@ -117,7 +118,7 @@ export class ThreeModelLoaderUI
         for (let i = 0; i < fileNames.length; i++) {
             let fileName = fileNames[i];
             let fileLink = AddDiv (fileList, 'ov_dialog_file_link');
-            OV.AddSvgIconElement (fileLink, 'meshes', 'ov_file_link_img');
+            AddSvgIconElement (fileLink, 'meshes', 'ov_file_link_img');
             AddDiv (fileLink, 'ov_dialog_file_link_text', fileName);
             fileLink.addEventListener ('click', () => {
                 dialog.SetCloseHandler (null);

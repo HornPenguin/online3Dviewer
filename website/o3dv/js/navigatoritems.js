@@ -1,4 +1,6 @@
-OV.NavigatorItemRecurse =
+import { TreeViewButton, TreeViewButtonItem, TreeViewGroupButtonItem, TreeViewSingleItem } from "./treeview";
+
+export const NavigatorItemRecurse =
 {
     No : 0,
     Parents : 1,
@@ -6,7 +8,7 @@ OV.NavigatorItemRecurse =
     All : 3
 };
 
-OV.MaterialItem = class extends OV.TreeViewSingleItem
+export class MaterialItem extends TreeViewSingleItem
 {
     constructor (name, materialIndex, callbacks)
     {
@@ -17,7 +19,7 @@ OV.MaterialItem = class extends OV.TreeViewSingleItem
     }
 };
 
-OV.MeshItem = class extends OV.TreeViewButtonItem
+export class MeshItem extends TreeViewButtonItem
 {
     constructor (name, icon, meshInstanceId, callbacks)
     {
@@ -26,13 +28,13 @@ OV.MeshItem = class extends OV.TreeViewButtonItem
         this.meshInstanceId = meshInstanceId;
         this.visible = true;
 
-        this.fitToWindowButton = new OV.TreeViewButton ('fit');
+        this.fitToWindowButton = new TreeViewButton ('fit');
         this.fitToWindowButton.OnClick (() => {
             callbacks.onFitToWindow (this.meshInstanceId);
         });
         this.AppendButton (this.fitToWindowButton);
 
-        this.showHideButton = new OV.TreeViewButton ('visible');
+        this.showHideButton = new TreeViewButton ('visible');
         this.showHideButton.OnClick (() => {
             callbacks.onShowHide (this.meshInstanceId);
         });
@@ -64,16 +66,16 @@ OV.MeshItem = class extends OV.TreeViewButtonItem
         } else {
             this.showHideButton.SetImage ('hidden');
         }
-        if (recurse === OV.NavigatorItemRecurse.Parents) {
-            if (this.parent instanceof OV.NodeItem) {
+        if (recurse === NavigatorItemRecurse.Parents) {
+            if (this.parent instanceof NodeItem) {
                 let parentIsVisible = this.parent.CalculateIsVisible ();
-                this.parent.SetVisible (parentIsVisible, OV.NavigatorItemRecurse.Parents);
+                this.parent.SetVisible (parentIsVisible, NavigatorItemRecurse.Parents);
             }
         }
     }
 };
 
-OV.NodeItem = class extends OV.TreeViewGroupButtonItem
+export class NodeItem extends TreeViewGroupButtonItem
 {
     constructor (name, nodeId, callbacks)
     {
@@ -82,13 +84,13 @@ OV.NodeItem = class extends OV.TreeViewGroupButtonItem
         this.callbacks = callbacks;
         this.visible = true;
 
-        this.fitToWindowButton = new OV.TreeViewButton ('fit');
+        this.fitToWindowButton = new TreeViewButton ('fit');
         this.fitToWindowButton.OnClick (() => {
             this.callbacks.onFitToWindow (nodeId);
         });
         this.AppendButton (this.fitToWindowButton);
 
-        this.showHideButton = new OV.TreeViewButton ('visible');
+        this.showHideButton = new TreeViewButton ('visible');
         this.showHideButton.OnClick (() => {
             this.callbacks.onShowHide (nodeId);
         });
@@ -109,7 +111,7 @@ OV.NodeItem = class extends OV.TreeViewGroupButtonItem
     {
         let isVisible = false;
         for (let child of this.children) {
-            if (child instanceof OV.NodeItem || child instanceof OV.MeshItem) {
+            if (child instanceof NodeItem || child instanceof MeshItem) {
                 if (child.IsVisible ()) {
                     isVisible = true;
                     break;
@@ -133,17 +135,17 @@ OV.NodeItem = class extends OV.TreeViewGroupButtonItem
         if (OV.IsDefined (this.callbacks.onVisibilityChanged)) {
             this.callbacks.onVisibilityChanged (this.visible);
         }
-        if (recurse === OV.NavigatorItemRecurse.Children || recurse === OV.NavigatorItemRecurse.All) {
+        if (recurse === NavigatorItemRecurse.Children || recurse === NavigatorItemRecurse.All) {
             for (let child of this.children) {
-                if (child instanceof OV.NodeItem || child instanceof OV.MeshItem) {
-                    child.SetVisible (this.visible, OV.NavigatorItemRecurse.Children);
+                if (child instanceof NodeItem || child instanceof MeshItem) {
+                    child.SetVisible (this.visible, NavigatorItemRecurse.Children);
                 }
             }
         }
-        if (recurse === OV.NavigatorItemRecurse.Parents || recurse === OV.NavigatorItemRecurse.All) {
-            if (this.parent instanceof OV.NodeItem) {
+        if (recurse === NavigatorItemRecurse.Parents || recurse === NavigatorItemRecurse.All) {
+            if (this.parent instanceof NodeItem) {
                 let parentIsVisible = this.parent.CalculateIsVisible ();
-                this.parent.SetVisible (parentIsVisible, OV.NavigatorItemRecurse.Parents);
+                this.parent.SetVisible (parentIsVisible, NavigatorItemRecurse.Parents);
             }
         }
     }
@@ -151,9 +153,9 @@ OV.NodeItem = class extends OV.TreeViewGroupButtonItem
     EnumerateMeshItems (processor)
     {
         for (let child of this.children) {
-            if (child instanceof OV.NodeItem) {
+            if (child instanceof NodeItem) {
                 child.EnumerateMeshItems (processor);
-            } else if (child instanceof OV.MeshItem) {
+            } else if (child instanceof MeshItem) {
                 processor (child);
             }
         }

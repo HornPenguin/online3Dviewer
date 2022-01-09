@@ -1,6 +1,7 @@
 import { AddDiv, ShowDomElement, ClearDomElement } from "../../../source/viewer/domutils";
+import { SidebarPanel } from "./sidebarpanel";
 
-OV.SidebarMeasurePanel = class extends OV.SidebarPanel
+export class SidebarMeasurePanel extends SidebarPanel
 {
     constructor (parentDiv, measureTool)
     {

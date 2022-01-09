@@ -1,7 +1,7 @@
 import { AddDiv } from "../../../source/viewer/domutils";
 import { ButtonDialog } from "./modal";
 
-OV.ShowOpenUrlDialog = function (onOk)
+export function ShowOpenUrlDialog (onOk)
 {
     let dialog = new ButtonDialog ();
     let urlsTextArea = OV.CreateDomElement ('textarea', 'ov_dialog_textarea');

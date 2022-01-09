@@ -1,6 +1,7 @@
-import { AddDiv, ShowDomElement, ClearDomElement } from "../../../source/viewer/domutils";
+import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, InsertDomElementAfter } from "../../../source/viewer/domutils";
+import { CreateSvgIconElement, SetSvgIconImageElement } from "./utils";
 
-OV.ScrollToView = function (element)
+export function ScrollToView (element)
 {
     element.scrollIntoView ({
         behavior : 'smooth',
@@ -8,19 +9,19 @@ OV.ScrollToView = function (element)
     });
 };
 
-OV.TreeViewButton = class
+export class TreeViewButton
 {
     constructor (imagePath)
     {
         this.imagePath = imagePath;
-        this.mainElement = OV.CreateSvgIconElement (this.imagePath, 'ov_tree_item_button');
+        this.mainElement = CreateSvgIconElement (this.imagePath, 'ov_tree_item_button');
         this.mainElement.setAttribute ('src', this.imagePath);
     }
 
     SetImage (imagePath)
     {
         this.imagePath = imagePath;
-        OV.SetSvgIconImageElement (this.mainElement, this.imagePath);
+        SetSvgIconImageElement (this.mainElement, this.imagePath);
     }
 
     OnClick (clickHandler)
@@ -37,18 +38,18 @@ OV.TreeViewButton = class
     }
 };
 
-OV.TreeViewItem = class
+export class TreeViewItem
 {
     constructor (name, icon)
     {
         this.name = name;
         this.parent = null;
-        this.mainElement = OV.CreateDiv ('ov_tree_item');
+        this.mainElement = CreateDiv ('ov_tree_item');
         this.mainElement.setAttribute ('title', this.name);
         this.nameElement = AddDiv (this.mainElement, 'ov_tree_item_name', this.name);
         if (OV.IsDefined (icon)) {
-            let iconElement = OV.CreateSvgIconElement (icon, 'ov_tree_item_icon');
-            OV.InsertDomElementBefore (iconElement, this.nameElement);
+            let iconElement = CreateSvgIconElement (icon, 'ov_tree_item_icon');
+            InsertDomElementBefore (iconElement, this.nameElement);
         }
     }
 
@@ -70,7 +71,7 @@ OV.TreeViewItem = class
     }
 };
 
-OV.TreeViewSingleItem = class extends OV.TreeViewItem
+export class TreeViewSingleItem extends TreeViewItem
 {
     constructor (name, icon)
     {
@@ -85,11 +86,11 @@ OV.TreeViewSingleItem = class extends OV.TreeViewItem
             this.mainElement.classList.add ('selected');
             let parent = this.parent;
             if (parent === null) {
-                OV.ScrollToView (this.mainElement);
+                ScrollToView (this.mainElement);
             } else {
                 while (parent !== null) {
                     parent.ShowChildren (true);
-                    OV.ScrollToView (this.mainElement);
+                    ScrollToView (this.mainElement);
                     parent = parent.parent;
                 }
             }
@@ -99,13 +100,13 @@ OV.TreeViewSingleItem = class extends OV.TreeViewItem
     }
 };
 
-OV.TreeViewButtonItem = class extends OV.TreeViewSingleItem
+export class TreeViewButtonItem extends TreeViewSingleItem
 {
     constructor (name, icon)
     {
         super (name, icon);
-        this.buttonsDiv = OV.CreateDiv ('ov_tree_item_button_container');
-        OV.InsertDomElementBefore (this.buttonsDiv, this.nameElement);
+        this.buttonsDiv = CreateDiv ('ov_tree_item_button_container');
+        InsertDomElementBefore (this.buttonsDiv, this.nameElement);
     }
 
     AppendButton (button)
@@ -114,7 +115,7 @@ OV.TreeViewButtonItem = class extends OV.TreeViewSingleItem
     }
 };
 
-OV.TreeViewGroupItem = class extends OV.TreeViewItem
+export class TreeViewGroupItem extends TreeViewItem
 {
     constructor (name, icon)
     {
@@ -128,7 +129,7 @@ OV.TreeViewGroupItem = class extends OV.TreeViewItem
         this.closeButtonIcon = 'arrow_right';
 
         this.openCloseButton = OV.CreateSvgIconElement (this.openButtonIcon, 'ov_tree_item_icon');
-        OV.InsertDomElementBefore (this.openCloseButton, this.nameElement);
+        InsertDomElementBefore (this.openCloseButton, this.nameElement);
     }
 
     AddChild (child)
@@ -142,7 +143,7 @@ OV.TreeViewGroupItem = class extends OV.TreeViewItem
     ExpandAll (expand)
     {
         for (let child of this.children) {
-            if (child instanceof OV.TreeViewGroupItem) {
+            if (child instanceof TreeViewGroupItem) {
                 child.ShowChildren (expand);
                 child.ExpandAll (expand);
             }
@@ -171,10 +172,10 @@ OV.TreeViewGroupItem = class extends OV.TreeViewItem
             return;
         }
         if (show) {
-            OV.SetSvgIconImageElement (this.openCloseButton, this.openButtonIcon);
+            SetSvgIconImageElement (this.openCloseButton, this.openButtonIcon);
             ShowDomElement (this.childrenDiv, true);
         } else {
-            OV.SetSvgIconImageElement (this.openCloseButton, this.closeButtonIcon);
+            SetSvgIconImageElement (this.openCloseButton, this.closeButtonIcon);
             ShowDomElement (this.childrenDiv, false);
         }
     }
@@ -182,8 +183,8 @@ OV.TreeViewGroupItem = class extends OV.TreeViewItem
     CreateChildrenDiv ()
     {
         if (this.childrenDiv === null) {
-            this.childrenDiv = OV.CreateDiv ('ov_tree_view_children');
-            OV.InsertDomElementAfter (this.childrenDiv, this.mainElement);
+            this.childrenDiv = CreateDiv ('ov_tree_view_children');
+            InsertDomElementAfter (this.childrenDiv, this.mainElement);
             this.Show (this.isVisible);
             this.ShowChildren (this.isChildrenVisible);
             this.OnClick ((ev) => {
@@ -195,13 +196,13 @@ OV.TreeViewGroupItem = class extends OV.TreeViewItem
     }
 };
 
-OV.TreeViewGroupButtonItem = class extends OV.TreeViewGroupItem
+export class TreeViewGroupButtonItem extends TreeViewGroupItem
 {
     constructor (name, icon)
     {
         super (name, icon);
-        this.buttonsDiv = OV.CreateDiv ('ov_tree_item_button_container');
-        OV.InsertDomElementBefore (this.buttonsDiv, this.nameElement);
+        this.buttonsDiv = CreateDiv ('ov_tree_item_button_container');
+        InsertDomElementBefore (this.buttonsDiv, this.nameElement);
     }
 
     AppendButton (button)
@@ -210,7 +211,7 @@ OV.TreeViewGroupButtonItem = class extends OV.TreeViewGroupItem
     }
 };
 
-OV.TreeView = class
+export class TreeView
 {
     constructor (parentDiv)
     {

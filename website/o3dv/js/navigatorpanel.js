@@ -1,6 +1,9 @@
 import { AddDiv } from "../../../source/viewer/domutils";
+import { Panel } from "./panelset";
+import { TreeView } from "./treeview";
+import { AddSvgIconElement } from "./utils";
 
-OV.NavigatorPopupButton = class
+export class NavigatorPopupButton
 {
     constructor (parentDiv)
     {
@@ -10,7 +13,7 @@ OV.NavigatorPopupButton = class
 
         this.button = AddDiv (this.parentDiv, 'ov_navigator_info_button');
         this.buttonText = AddDiv (this.button, 'ov_navigator_info_button_text');
-        OV.AddSvgIconElement (this.button, 'arrow_right', 'ov_navigator_info_button_icon');
+        AddSvgIconElement (this.button, 'arrow_right', 'ov_navigator_info_button_icon');
         this.button.addEventListener ('click', () => {
             this.OnButtonClick ();
         });
@@ -35,7 +38,7 @@ OV.NavigatorPopupButton = class
     }
 };
 
-OV.NavigatorPanel = class extends OV.Panel
+export class NavigatorPanel extends Panel
 {
     constructor (parentDiv)
     {
@@ -44,7 +47,7 @@ OV.NavigatorPanel = class extends OV.Panel
 
         this.titleDiv = AddDiv (this.panelDiv, 'ov_navigator_tree_title');
         this.treeDiv = AddDiv (this.panelDiv, 'ov_navigator_tree_panel ov_thin_scrollbar');
-        this.treeView = new OV.TreeView (this.treeDiv);
+        this.treeView = new TreeView (this.treeDiv);
 
         let panelName = this.GetName ();
         this.titleDiv.innerHTML = panelName;

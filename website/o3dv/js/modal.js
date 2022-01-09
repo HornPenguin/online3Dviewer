@@ -1,10 +1,11 @@
-import { AddDiv } from "../../../source/viewer/domutils";
+import { AddDiv, CreateDiv } from "../../../source/viewer/domutils";
+import { AddSvgIconElement, CreateInlineColorCircle, IsHoverEnabled } from "./utils";
 
 export class Modal
 {
     constructor ()
     {
-        this.modalDiv = OV.CreateDiv ('ov_modal');
+        this.modalDiv = CreateDiv ('ov_modal');
         this.overlayDiv = null;
         this.resizeHandler = null;
         this.positionCalculator = null;
@@ -228,16 +229,16 @@ export class ListPopup extends PopupDialog
     {
         let listItemDiv = AddDiv (this.listDiv, 'ov_popup_list_item');
         if (item.icon) {
-            OV.AddSvgIconElement (listItemDiv, item.icon, 'left_inline');
+            AddSvgIconElement (listItemDiv, item.icon, 'left_inline');
         }
         if (item.color) {
             let iconDiv = AddDiv (listItemDiv, 'ov_popup_list_item_icon');
-            let colorCircle = OV.CreateInlineColorCircle (item.color);
+            let colorCircle = CreateInlineColorCircle (item.color);
             iconDiv.appendChild (colorCircle);
         }
         AddDiv (listItemDiv, 'ov_popup_list_item_name', item.name);
         listItemDiv.addEventListener ('click', callbacks.onClick);
-        if (OV.IsHoverEnabled () && callbacks.onHoverStart && callbacks.onHoverStop) {
+        if (IsHoverEnabled () && callbacks.onHoverStart && callbacks.onHoverStop) {
             listItemDiv.addEventListener ('mouseover', () => {
                 callbacks.onHoverStart ();
             });

@@ -1,21 +1,26 @@
-import { ShowDomElement } from "../../../source/viewer/domutils";
+import { ShowDomElement, SetDomElementHeight, GetDomElementOuterWidth, SetDomElementOuterHeight } from "../../../source/viewer/domutils";
+import { NavigatorFilesPanel } from "./navigatorfilespanel";
+import { NavigatorMaterialsPanel } from "./navigatormaterialspanel";
+import { NavigatorMeshesPanel } from "./navigatormeshespanel";
+import { PanelSet } from "./panelset";
+import { InstallVerticalSplitter } from "./utils";
 
-OV.SelectionType =
+export const SelectionType =
 {
     Material : 1,
     Mesh : 2
 };
 
-OV.Selection = class
+export class Selection
 {
     constructor (type, data)
     {
         this.type = type;
         this.materialIndex = null;
         this.meshInstanceId = null;
-        if (this.type === OV.SelectionType.Material) {
+        if (this.type === SelectionType.Material) {
             this.materialIndex = data;
-        } else if (this.type === OV.SelectionType.Mesh) {
+        } else if (this.type === SelectionType.Mesh) {
             this.meshInstanceId = data;
         }
     }
@@ -25,29 +30,29 @@ OV.Selection = class
         if (this.type !== rhs.type) {
             return false;
         }
-        if (this.type === OV.SelectionType.Material) {
+        if (this.type === SelectionType.Material) {
             return this.materialIndex === rhs.materialIndex;
-        } else if (this.type === OV.SelectionType.Mesh) {
+        } else if (this.type === SelectionType.Mesh) {
             return this.meshInstanceId.IsEqual (rhs.meshInstanceId);
         }
     }
 };
 
-OV.Navigator = class
+export class Navigator
 {
     constructor (mainDiv, splitterDiv)
     {
         this.mainDiv = mainDiv;
         this.splitterDiv = splitterDiv;
 
-        this.panelSet = new OV.PanelSet (mainDiv);
+        this.panelSet = new PanelSet (mainDiv);
         this.callbacks = null;
         this.selection = null;
         this.tempSelectedMeshId = null;
 
-        this.filesPanel = new OV.NavigatorFilesPanel (this.panelSet.GetContentDiv ());
-        this.materialsPanel = new OV.NavigatorMaterialsPanel (this.panelSet.GetContentDiv ());
-        this.meshesPanel = new OV.NavigatorMeshesPanel (this.panelSet.GetContentDiv ());
+        this.filesPanel = new NavigatorFilesPanel (this.panelSet.GetContentDiv ());
+        this.materialsPanel = new NavigatorMaterialsPanel (this.panelSet.GetContentDiv ());
+        this.meshesPanel = new NavigatorMeshesPanel (this.panelSet.GetContentDiv ());
 
         this.panelSet.AddPanel (this.filesPanel);
         this.panelSet.AddPanel (this.materialsPanel);
@@ -82,20 +87,20 @@ OV.Navigator = class
 
         this.materialsPanel.Init ({
             onMaterialSelected : (materialIndex) => {
-                this.SetSelection (new OV.Selection (OV.SelectionType.Material, materialIndex));
+                this.SetSelection (new Selection (SelectionType.Material, materialIndex));
             },
             onMeshTemporarySelected : (meshInstanceId) => {
                 this.tempSelectedMeshId = meshInstanceId;
                 this.callbacks.updateMeshesSelection ();
             },
             onMeshSelected : (meshInstanceId) => {
-                this.SetSelection (new OV.Selection (OV.SelectionType.Mesh, meshInstanceId));
+                this.SetSelection (new Selection (SelectionType.Mesh, meshInstanceId));
             }
         });
 
         this.meshesPanel.Init ({
             onMeshSelected : (meshId) => {
-                this.SetSelection (new OV.Selection (OV.SelectionType.Mesh, meshId));
+                this.SetSelection (new Selection (SelectionType.Mesh, meshId));
             },
             onMeshShowHide : (meshId) => {
                 this.ToggleMeshVisibility (meshId);
@@ -110,21 +115,21 @@ OV.Navigator = class
                 this.FitNodeToWindow (nodeId);
             },
             onMaterialSelected : (materialIndex) => {
-                this.SetSelection (new OV.Selection (OV.SelectionType.Material, materialIndex));
+                this.SetSelection (new Selection (SelectionType.Material, materialIndex));
             },
             onViewTypeChanged : () => {
                 this.SetSelection (null);
             }
         });
 
-        OV.InstallVerticalSplitter (this.splitterDiv, this.mainDiv, false, () => {
+        InstallVerticalSplitter (this.splitterDiv, this.mainDiv, false, () => {
             this.callbacks.onResize ();
         });
     }
 
     GetWidth ()
     {
-        let navigatorWidth = OV.GetDomElementOuterWidth (this.mainDiv);
+        let navigatorWidth = GetDomElementOuterWidth (this.mainDiv);
         let splitterWidth = 0;
         if (this.panelSet.IsPanelsVisible ()) {
             splitterWidth = this.splitterDiv.offsetWidth;
@@ -134,8 +139,8 @@ OV.Navigator = class
 
     Resize (height)
     {
-        OV.SetDomElementOuterHeight (this.mainDiv, height);
-        OV.SetDomElementHeight (this.splitterDiv, height);
+        SetDomElementOuterHeight (this.mainDiv, height);
+        SetDomElementHeight (this.splitterDiv, height);
         this.panelSet.Resize ();
     }
 
@@ -201,7 +206,7 @@ OV.Navigator = class
         if (this.tempSelectedMeshId !== null) {
             return this.tempSelectedMeshId;
         }
-        if (this.selection === null || this.selection.type !== OV.SelectionType.Mesh) {
+        if (this.selection === null || this.selection.type !== SelectionType.Mesh) {
             return null;
         }
         return this.selection.meshInstanceId;
@@ -211,12 +216,12 @@ OV.Navigator = class
     {
         function SetEntitySelection (navigator, selection, select)
         {
-            if (selection.type === OV.SelectionType.Material) {
+            if (selection.type === SelectionType.Material) {
                 if (select && navigator.panelSet.IsPanelsVisible ()) {
                     navigator.panelSet.ShowPanel (navigator.materialsPanel);
                 }
                 navigator.materialsPanel.SelectMaterialItem (selection.materialIndex, select);
-            } else if (selection.type === OV.SelectionType.Mesh) {
+            } else if (selection.type === SelectionType.Mesh) {
                 if (select && navigator.panelSet.IsPanelsVisible ()) {
                     navigator.panelSet.ShowPanel (navigator.meshesPanel);
                 }
@@ -255,9 +260,9 @@ OV.Navigator = class
         if (this.selection === null) {
             this.callbacks.onModelSelected ();
         } else {
-            if (this.selection.type === OV.SelectionType.Material) {
+            if (this.selection.type === SelectionType.Material) {
                 this.callbacks.onMaterialSelected (this.selection.materialIndex);
-            } else if (this.selection.type === OV.SelectionType.Mesh) {
+            } else if (this.selection.type === SelectionType.Mesh) {
                 this.callbacks.onMeshSelected (this.selection.meshInstanceId);
             }
         }
@@ -269,9 +274,9 @@ OV.Navigator = class
         let materialIndex = null;
         let meshInstanceId = null;
         if (this.selection !== null) {
-            if (this.selection.type === OV.SelectionType.Material) {
+            if (this.selection.type === SelectionType.Material) {
                 materialIndex = this.selection.materialIndex;
-            } else if (this.selection.type === OV.SelectionType.Mesh) {
+            } else if (this.selection.type === SelectionType.Mesh) {
                 meshInstanceId = this.selection.meshInstanceId;
             }
         }

@@ -135,21 +135,6 @@ export function SetDomElementOuterHeight (element, height)
     SetDomElementHeight (element, height - GetDomElementExternalHeight (style));
 }
 
-export function AddRadioButton (parentElement, name, id, text, onChange)
-{
-    let label = AddDomElement (parentElement, 'label');
-    label.setAttribute ('for', id);
-    let radio = AddDomElement (label, 'input', 'ov_radio_button');
-    radio.setAttribute ('type', 'radio');
-    radio.setAttribute ('id', id);
-    radio.setAttribute ('name', name);
-    AddDomElement (label, 'span', null, text);
-    if (onChange) {
-        radio.addEventListener ('change', onChange);
-    }
-    return radio;
-}
-
 export function AddCheckbox (parentElement, id, text, isChecked, onChange)
 {
     let label = AddDomElement (parentElement, 'label');

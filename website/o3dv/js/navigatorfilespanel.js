@@ -1,4 +1,8 @@
-OV.NavigatorFilesPanel = class extends OV.NavigatorPanel
+import { SetDomElementHeight, GetDomElementOuterHeight } from "../../../source/viewer/domutils";
+import { NavigatorPanel } from "./navigatorpanel";
+import { TreeViewButton, TreeViewButtonItem, TreeViewGroupItem, TreeViewSingleItem } from "./treeview";
+
+export class NavigatorFilesPanel extends NavigatorPanel
 {
     constructor (parentDiv)
     {
@@ -17,9 +21,9 @@ OV.NavigatorFilesPanel = class extends OV.NavigatorPanel
 
     Resize ()
     {
-        let titleHeight = OV.GetDomElementOuterHeight (this.titleDiv);
+        let titleHeight = GetDomElementOuterHeight (this.titleDiv);
         let height = this.parentDiv.offsetHeight;
-        OV.SetDomElementHeight (this.treeDiv, height - titleHeight);
+        SetDomElementHeight (this.treeDiv, height - titleHeight);
     }
 
     Clear ()
@@ -34,31 +38,31 @@ OV.NavigatorFilesPanel = class extends OV.NavigatorPanel
         const missingFiles = importResult.missingFiles;
 
         if (missingFiles.length > 0) {
-            let missingFilesItem = new OV.TreeViewGroupItem ('Missing Files', null);
+            let missingFilesItem = new TreeViewGroupItem ('Missing Files', null);
             missingFilesItem.ShowChildren (true);
             this.treeView.AddChild (missingFilesItem);
             for (let i = 0; i < missingFiles.length; i++) {
                 let file = missingFiles[i];
-                let item = new OV.TreeViewButtonItem (file);
-                let browseButton = new OV.TreeViewButton ('open');
+                let item = new TreeViewButtonItem (file);
+                let browseButton = new TreeViewButton ('open');
                 browseButton.OnClick (() => {
                     this.callbacks.onFileBrowseButtonClicked ();
                 });
                 item.AppendButton (browseButton);
                 missingFilesItem.AddChild (item);
             }
-            let filesItem = new OV.TreeViewGroupItem ('Available Files', null);
+            let filesItem = new TreeViewGroupItem ('Available Files', null);
             filesItem.ShowChildren (true);
             this.treeView.AddChild (filesItem);
             for (let i = 0; i < usedFiles.length; i++) {
                 let file = usedFiles[i];
-                let item = new OV.TreeViewSingleItem (file);
+                let item = new TreeViewSingleItem (file);
                 filesItem.AddChild (item);
             }
         } else {
             for (let i = 0; i < usedFiles.length; i++) {
                 let file = usedFiles[i];
-                let item = new OV.TreeViewSingleItem (file);
+                let item = new TreeViewSingleItem (file);
                 this.treeView.AddChild (item);
             }
         }

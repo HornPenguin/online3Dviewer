@@ -1,7 +1,9 @@
 import { Property, PropertyType, ClearDomElement } from "../../../source/model/property";
-import { AddDiv } from "../../../source/viewer/domutils";
+import { AddDiv, AddDomElement } from "../../../source/viewer/domutils";
+import { SidebarPanel } from "./sidebarpanel";
+import { CreateInlineColorCircle } from "./utils";
 
-OV.SidebarDetailsPanel = class extends OV.SidebarPanel
+export class SidebarDetailsPanel extends SidebarPanel
 {
     constructor (parentDiv)
     {
@@ -170,9 +172,9 @@ OV.SidebarDetailsPanel = class extends OV.SidebarPanel
             valueText = parseInt (property.value * 100, 10).toString () + '%';
         } else if (property.type === PropertyType.Color) {
             let hexString = '#' + OV.ColorToHexString (property.value);
-            let colorCircle = OV.CreateInlineColorCircle (property.value);
+            let colorCircle = CreateInlineColorCircle (property.value);
             targetDiv.appendChild (colorCircle);
-            OV.AddDomElement (targetDiv, 'span', null, hexString);
+            AddDomElement (targetDiv, 'span', null, hexString);
         }
         if (valueText !== null) {
             targetDiv.innerHTML = valueText;

@@ -1,7 +1,10 @@
-import { AddDiv } from "../../../source/viewer/domutils";
+import { AddDiv, SetDomElementHeight, GetDomElementOuterHeight } from "../../../source/viewer/domutils";
 import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from "./dialogs";
+import { MaterialItem } from "./navigatoritems";
+import { NavigatorPanel, NavigatorPopupButton } from "./navigatorpanel";
+import { GetMaterialName, GetMeshName } from "./utils";
 
-OV.NavigatorMeshesPopupButton = class extends OV.NavigatorPopupButton
+export class NavigatorMeshesPopupButton extends NavigatorPopupButton
 {
     constructor (parentDiv)
     {
@@ -30,7 +33,7 @@ OV.NavigatorMeshesPopupButton = class extends OV.NavigatorPopupButton
         for (let i = 0; i < this.meshInfoArray.length; i++) {
             let meshInfo = this.meshInfoArray[i];
             meshItems.push ({
-                name : OV.GetMeshName (meshInfo.name)
+                name : GetMeshName (meshInfo.name)
             });
         }
 
@@ -57,7 +60,7 @@ OV.NavigatorMeshesPopupButton = class extends OV.NavigatorPopupButton
     }
 };
 
-OV.NavigatorMaterialsPanel = class extends OV.NavigatorPanel
+export class NavigatorMaterialsPanel extends NavigatorPanel
 {
     constructor (parentDiv)
     {
@@ -66,7 +69,7 @@ OV.NavigatorMaterialsPanel = class extends OV.NavigatorPanel
         this.materialIndexToItem = new Map ();
 
         this.popupDiv = AddDiv (this.panelDiv, 'ov_navigator_info_panel');
-        this.meshesButton = new OV.NavigatorMeshesPopupButton (this.popupDiv);
+        this.meshesButton = new NavigatorMeshesPopupButton (this.popupDiv);
     }
 
     GetName ()
@@ -81,10 +84,10 @@ OV.NavigatorMaterialsPanel = class extends OV.NavigatorPanel
 
     Resize ()
     {
-        let titleHeight = OV.GetDomElementOuterHeight (this.titleDiv);
-        let popupHeight = OV.GetDomElementOuterHeight (this.popupDiv);
+        let titleHeight = GetDomElementOuterHeight (this.titleDiv);
+        let popupHeight = GetDomElementOuterHeight (this.popupDiv);
         let height = this.parentDiv.offsetHeight;
-        OV.SetDomElementHeight (this.treeDiv, height - titleHeight - popupHeight);
+        SetDomElementHeight (this.treeDiv, height - titleHeight - popupHeight);
     }
 
     Clear ()
@@ -113,8 +116,8 @@ OV.NavigatorMaterialsPanel = class extends OV.NavigatorPanel
         const model = importResult.model;
         for (let materialIndex = 0; materialIndex < model.MaterialCount (); materialIndex++) {
             let material = model.GetMaterial (materialIndex);
-            let materialName = OV.GetMaterialName (material.name);
-            let materialItem = new OV.MaterialItem (materialName, materialIndex, {
+            let materialName = GetMaterialName (material.name);
+            let materialItem = new MaterialItem (materialName, materialIndex, {
                 onSelected : (materialIndex) => {
                     this.callbacks.onMaterialSelected (materialIndex);
                 }

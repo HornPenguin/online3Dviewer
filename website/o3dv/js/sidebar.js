@@ -1,17 +1,22 @@
-import { ShowDomElement } from "../../../source/viewer/domutils";
+import { ShowDomElement, SetDomElementWidth, SetDomElementHeight, GetDomElementOuterWidth, SetDomElementOuterHeight } from "../../../source/viewer/domutils";
 import { FeatureSet } from "./featureset";
+import { PanelSet } from "./panelset";
+import { SidebarDetailsPanel } from "./sidebardetailspanel";
+import { SidebarMeasurePanel } from "./sidebarmeasurepanel";
+import { SidebarSettingsPanel } from "./sidebarsettingspanel";
+import { InstallVerticalSplitter } from "./utils";
 
-OV.Sidebar = class
+export class Sidebar
 {
     constructor (mainDiv, splitterDiv, settings, measureTool)
     {
         this.mainDiv = mainDiv;
         this.splitterDiv = splitterDiv;
-        this.panelSet = new OV.PanelSet (mainDiv);
+        this.panelSet = new PanelSet (mainDiv);
 
-        this.detailsPanel = new OV.SidebarDetailsPanel (this.panelSet.GetContentDiv ());
-        this.settingsPanel = new OV.SidebarSettingsPanel (this.panelSet.GetContentDiv (), settings);
-        this.measurePanel = new OV.SidebarMeasurePanel (this.panelSet.GetContentDiv (), measureTool);
+        this.detailsPanel = new SidebarDetailsPanel (this.panelSet.GetContentDiv ());
+        this.settingsPanel = new SidebarSettingsPanel (this.panelSet.GetContentDiv (), settings);
+        this.measurePanel = new SidebarMeasurePanel (this.panelSet.GetContentDiv (), measureTool);
 
         this.panelSet.AddPanel (this.detailsPanel);
         this.panelSet.AddPanel (this.settingsPanel);
@@ -69,7 +74,7 @@ OV.Sidebar = class
             }
         });
 
-        OV.InstallVerticalSplitter (this.splitterDiv, this.mainDiv, true, () => {
+        InstallVerticalSplitter (this.splitterDiv, this.mainDiv, true, () => {
             this.callbacks.onResize ();
         });
     }
@@ -86,14 +91,14 @@ OV.Sidebar = class
 
     Resize (height)
     {
-        OV.SetDomElementOuterHeight (this.mainDiv, height);
-        OV.SetDomElementHeight (this.splitterDiv, height);
+        SetDomElementOuterHeight (this.mainDiv, height);
+        SetDomElementHeight (this.splitterDiv, height);
         this.panelSet.Resize ();
     }
 
     GetWidth ()
     {
-        let sidebarWidth = OV.GetDomElementOuterWidth (this.mainDiv);
+        let sidebarWidth = GetDomElementOuterWidth (this.mainDiv);
         let splitterWidth = 0;
         if (this.panelSet.IsPanelsVisible ()) {
              splitterWidth = this.splitterDiv.offsetWidth;
@@ -104,7 +109,7 @@ OV.Sidebar = class
     DecreaseWidth (diff)
     {
         let oldWidth = this.mainDiv.offsetWidth;
-        OV.SetDomElementWidth (this.mainDiv, oldWidth - diff);
+        SetDomElementWidth (this.mainDiv, oldWidth - diff);
     }
 
     Clear ()

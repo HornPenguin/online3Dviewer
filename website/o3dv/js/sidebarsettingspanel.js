@@ -1,8 +1,10 @@
-import { AddDiv, ShowDomElement } from "../../../source/viewer/domutils";
+import { Color, ColorToHexString } from "../../../source/model/color";
+import { AddDiv, AddDomElement, AddRangeSlider, AddToggle, ShowDomElement, GetDomElementOuterHeight, SetDomElementOuterHeight } from "../../../source/viewer/domutils";
 import { FeatureSet } from "./featureset";
 import { Settings, Theme } from "./settings";
+import { SidebarPanel } from "./sidebarpanel";
 
-OV.AddColorPicker = function (parentDiv, defaultColor, predefinedColors, onChange)
+export function AddColorPicker (parentDiv, defaultColor, predefinedColors, onChange)
 {
     let pickr = Pickr.create ({
         el : parentDiv,
@@ -10,7 +12,7 @@ OV.AddColorPicker = function (parentDiv, defaultColor, predefinedColors, onChang
         position : 'left-start',
         swatches : predefinedColors,
         comparison : false,
-        default : '#' + OV.ColorToHexString (defaultColor),
+        default : '#' + ColorToHexString (defaultColor),
         components : {
             preview : false,
             opacity : false,
@@ -29,7 +31,7 @@ OV.AddColorPicker = function (parentDiv, defaultColor, predefinedColors, onChang
     });
     pickr.on ('change', (color, source, instance) => {
         let rgbaColor = color.toRGBA ();
-        let ovColor = new OV.Color (
+        let ovColor = new Color (
             parseInt (rgbaColor[0], 10),
             parseInt (rgbaColor[1], 10),
             parseInt (rgbaColor[2], 10)
@@ -39,7 +41,7 @@ OV.AddColorPicker = function (parentDiv, defaultColor, predefinedColors, onChang
     return pickr;
 };
 
-OV.SettingsColorSection = class
+export class SettingsColorSection
 {
     constructor (parentDiv)
     {
@@ -54,7 +56,7 @@ OV.SettingsColorSection = class
         let titleDiv = AddDiv (this.contentDiv, 'ov_sidebar_subtitle');
         let colorInput = AddDiv (titleDiv, 'ov_color_picker');
         AddDiv (titleDiv, 'ov_sidebar_subtitle', title);
-        this.pickr = OV.AddColorPicker (colorInput, color, predefinedColors, (color) => {
+        this.pickr = AddColorPicker (colorInput, color, predefinedColors, (color) => {
             onChange (color);
         });
         AddDiv (this.contentDiv, 'ov_sidebar_settings_padded', description);
@@ -70,7 +72,7 @@ OV.SettingsColorSection = class
         if (this.pickr === null) {
             return;
         }
-        this.pickr.setColor ('#' + OV.ColorToHexString (color));
+        this.pickr.setColor ('#' + ColorToHexString (color));
     }
 
     Clear ()
@@ -82,7 +84,7 @@ OV.SettingsColorSection = class
     }
 };
 
-OV.SettingsGridDisplaySection = class
+export class SettingsGridDisplaySection
 {
     constructor (parentDiv)
     {
@@ -95,7 +97,7 @@ OV.SettingsGridDisplaySection = class
         let contentDiv = AddDiv (this.parentDiv, 'ov_sidebar_settings_content');
         let titleDiv = AddDiv (contentDiv, 'ov_sidebar_subtitle');
 
-        this.showGridToggle = OV.AddToggle (titleDiv, 'ov_sidebar_subtitle_toggle');
+        this.showGridToggle = AddToggle (titleDiv, 'ov_sidebar_subtitle_toggle');
         this.showGridToggle.OnChange (() => {
             onChange (this.showGridToggle.GetStatus ());
         });
@@ -112,7 +114,7 @@ OV.SettingsGridDisplaySection = class
     }
 };
 
-OV.SettingsEdgeDisplaySection = class
+export class SettingsEdgeDisplaySection
 {
     constructor (parentDiv)
     {
@@ -129,7 +131,7 @@ OV.SettingsEdgeDisplaySection = class
         let contentDiv = AddDiv (this.parentDiv, 'ov_sidebar_settings_content');
         let titleDiv = AddDiv (contentDiv, 'ov_sidebar_subtitle');
 
-        this.edgeDisplayToggle = OV.AddToggle (titleDiv, 'ov_sidebar_subtitle_toggle');
+        this.edgeDisplayToggle = AddToggle (titleDiv, 'ov_sidebar_subtitle_toggle');
         AddDiv (titleDiv, 'ov_sidebar_subtitle_text', 'Show Edges');
 
         this.edgeSettingsDiv = AddDiv (contentDiv, 'ov_sidebar_settings_padded');
@@ -142,15 +144,15 @@ OV.SettingsEdgeDisplaySection = class
         let predefinedEdgeColors = ['#ffffff', '#e3e3e3', '#c9c9c9', '#898989', '#5f5f5f', '#494949', '#383838', '#0f0f0f'];
 
         let colorInput = AddDiv (edgeColorRow, 'ov_color_picker');
-        this.pickr = OV.AddColorPicker (colorInput, edgeColor, predefinedEdgeColors, (color) => {
+        this.pickr = AddColorPicker (colorInput, edgeColor, predefinedEdgeColors, (color) => {
             callbacks.onEdgeColorChange (color);
         });
         AddDiv (edgeColorRow, null, 'Edge Color');
 
         let thresholdRow = AddDiv (this.edgeSettingsDiv, 'ov_sidebar_settings_row large');
-        this.thresholdSlider = OV.AddRangeSlider (thresholdRow, 0, 90);
+        this.thresholdSlider = AddRangeSlider (thresholdRow, 0, 90);
         this.thresholdSlider.setAttribute ('title', 'Edge Angle Threshold');
-        this.thresholdSliderValue = OV.AddDomElement (thresholdRow, 'span', 'ov_slider_label');
+        this.thresholdSliderValue = AddDomElement (thresholdRow, 'span', 'ov_slider_label');
         this.thresholdSlider.addEventListener ('input', () => {
             this.thresholdSliderValue.innerHTML = this.thresholdSlider.value;
         });
@@ -173,7 +175,7 @@ OV.SettingsEdgeDisplaySection = class
         this.edgeDisplayToggle.SetStatus (showEdges);
         this.ShowEdgeSettings (showEdges);
 
-        this.pickr.setColor ('#' + OV.ColorToHexString (edgeColor));
+        this.pickr.setColor ('#' + ColorToHexString (edgeColor));
         this.thresholdSlider.value = edgeThreshold;
         this.thresholdSliderValue.innerHTML = edgeThreshold;
     }
@@ -192,7 +194,7 @@ OV.SettingsEdgeDisplaySection = class
     }
 };
 
-OV.SettingsThemeSection = class
+export class SettingsThemeSection
 {
     constructor (parentDiv)
     {
@@ -205,7 +207,7 @@ OV.SettingsThemeSection = class
         let contentDiv = AddDiv (this.parentDiv, 'ov_sidebar_settings_content');
         let titleDiv = AddDiv (contentDiv, 'ov_sidebar_subtitle');
 
-        this.darkModeToggle = OV.AddToggle (titleDiv, 'ov_sidebar_subtitle_toggle');
+        this.darkModeToggle = AddToggle (titleDiv, 'ov_sidebar_subtitle_toggle');
         this.darkModeToggle.OnChange (() => {
             onChange (this.darkModeToggle.GetStatus () ? Theme.Dark : Theme.Light);
         });
@@ -225,7 +227,7 @@ OV.SettingsThemeSection = class
     }
 };
 
-OV.SidebarSettingsPanel = class extends OV.SidebarPanel
+export class SidebarSettingsPanel extends SidebarPanel
 {
     constructor (parentDiv, settings)
     {
@@ -233,14 +235,14 @@ OV.SidebarSettingsPanel = class extends OV.SidebarPanel
         this.settings = settings;
 
         this.sectionsDiv = AddDiv (this.contentDiv, 'ov_sidebar_settings_sections ov_thin_scrollbar');
-        this.backgroundColorSection = new OV.SettingsColorSection (this.sectionsDiv);
-        this.defaultColorSection = new OV.SettingsColorSection (this.sectionsDiv);
+        this.backgroundColorSection = new SettingsColorSection (this.sectionsDiv);
+        this.defaultColorSection = new SettingsColorSection (this.sectionsDiv);
         this.gridDisplaySection = null;
         if (FeatureSet.ShowGrid) {
-            this.gridDisplaySection = new OV.SettingsGridDisplaySection (this.sectionsDiv);
+            this.gridDisplaySection = new SettingsGridDisplaySection (this.sectionsDiv);
         }
-        this.edgeDisplaySection = new OV.SettingsEdgeDisplaySection (this.sectionsDiv);
-        this.themeSection = new OV.SettingsThemeSection (this.sectionsDiv);
+        this.edgeDisplaySection = new SettingsEdgeDisplaySection (this.sectionsDiv);
+        this.themeSection = new SettingsThemeSection (this.sectionsDiv);
 
         this.resetToDefaultsButton = AddDiv (this.contentDiv, 'ov_button ov_sidebar_button outline', 'Reset to Default');
         this.resetToDefaultsButton.addEventListener ('click', () => {
@@ -314,11 +316,11 @@ OV.SidebarSettingsPanel = class extends OV.SidebarPanel
         this.themeSection.Init (this.settings.themeId, (themeId) => {
             this.settings.themeId = themeId;
             if (themeId === Theme.Light) {
-                this.SetBackgroundColor (new OV.Color (255, 255, 255), true);
-                this.SetDefaultColor (new OV.Color (200, 200, 200), true);
+                this.SetBackgroundColor (new Color (255, 255, 255), true);
+                this.SetDefaultColor (new Color (200, 200, 200), true);
             } else if (themeId === Theme.Dark) {
-                this.SetBackgroundColor (new OV.Color (42, 43, 46), true);
-                this.SetDefaultColor (new OV.Color (200, 200, 200), true);
+                this.SetBackgroundColor (new Color (42, 43, 46), true);
+                this.SetDefaultColor (new Color (200, 200, 200), true);
             }
             callbacks.onThemeChange ();
         });
@@ -378,9 +380,9 @@ OV.SidebarSettingsPanel = class extends OV.SidebarPanel
 
     Resize ()
     {
-        let titleHeight = OV.GetDomElementOuterHeight (this.titleDiv);
-        let resetButtonHeight = OV.GetDomElementOuterHeight (this.resetToDefaultsButton);
+        let titleHeight = GetDomElementOuterHeight (this.titleDiv);
+        let resetButtonHeight = GetDomElementOuterHeight (this.resetToDefaultsButton);
         let height = this.parentDiv.offsetHeight;
-        OV.SetDomElementOuterHeight (this.sectionsDiv, height - titleHeight - resetButtonHeight);
+        SetDomElementOuterHeight (this.sectionsDiv, height - titleHeight - resetButtonHeight);
     }
 };

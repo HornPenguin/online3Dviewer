@@ -1,7 +1,10 @@
-import { AddDiv, ShowDomElement, ClearDomElement } from "../../../source/viewer/domutils";
+import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, SetDomElementHeight, GetDomElementOuterHeight } from "../../../source/viewer/domutils";
 import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from "./dialogs";
+import { MeshItem, NavigatorItemRecurse, NodeItem } from "./navigatoritems";
+import { NavigatorPanel, NavigatorPopupButton } from "./navigatorpanel";
+import { AddSvgIconElement, GetMaterialName, GetMeshName, GetNodeName, SetSvgIconImageElement } from "./utils";
 
-OV.NavigatorMaterialsPopupButton = class extends OV.NavigatorPopupButton
+export class NavigatorMaterialsPopupButton extends NavigatorPopupButton
 {
     constructor (parentDiv)
     {
@@ -30,7 +33,7 @@ OV.NavigatorMaterialsPopupButton = class extends OV.NavigatorPopupButton
         for (let i = 0; i < this.materialInfoArray.length; i++) {
             let usedMaterial = this.materialInfoArray[i];
             materialItems.push ({
-                name : OV.GetMaterialName (usedMaterial.name),
+                name : GetMaterialName (usedMaterial.name),
                 color : usedMaterial.color
             });
         }
@@ -51,7 +54,7 @@ OV.NavigatorMaterialsPopupButton = class extends OV.NavigatorPopupButton
     }
 };
 
-OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
+export class NavigatorMeshesPanel extends NavigatorPanel
 {
     constructor (parentDiv)
     {
@@ -66,11 +69,11 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
 
         this.titleDiv.classList.add ('nomargin');
         this.treeView.AddClass ('tight');
-        this.buttonsDiv = OV.CreateDiv ('ov_navigator_buttons');
-        OV.InsertDomElementBefore (this.buttonsDiv, this.treeDiv);
+        this.buttonsDiv = CreateDiv ('ov_navigator_buttons');
+        InsertDomElementBefore (this.buttonsDiv, this.treeDiv);
 
         this.popupDiv = AddDiv (this.panelDiv, 'ov_navigator_info_panel');
-        this.materialsButton = new OV.NavigatorMaterialsPopupButton (this.popupDiv);
+        this.materialsButton = new NavigatorMaterialsPopupButton (this.popupDiv);
     }
 
     GetName ()
@@ -86,10 +89,10 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
     Resize ()
     {
         let titleHeight = this.titleDiv.offsetHeight;
-        let buttonsHeight = OV.GetDomElementOuterHeight (this.buttonsDiv);
-        let popupHeight = OV.GetDomElementOuterHeight (this.popupDiv);
+        let buttonsHeight = GetDomElementOuterHeight (this.buttonsDiv);
+        let popupHeight = GetDomElementOuterHeight (this.popupDiv);
         let height = this.parentDiv.offsetHeight;
-        OV.SetDomElementHeight (this.treeDiv, height - titleHeight - buttonsHeight - popupHeight);
+        SetDomElementHeight (this.treeDiv, height - titleHeight - buttonsHeight - popupHeight);
     }
 
     Clear ()
@@ -145,7 +148,7 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
             if (className) {
                 button.div.classList.add (className);
             }
-            button.iconDiv = OV.AddSvgIconElement (button.div, button.icon);
+            button.iconDiv = AddSvgIconElement (button.div, button.icon);
             button.div.addEventListener ('click', () => {
                 onClick ();
             });
@@ -181,7 +184,7 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
 
             for (let meshInstanceId of hiddenMeshInstanceIds) {
                 let meshItem = panel.GetMeshItem (meshInstanceId);
-                meshItem.SetVisible (false, OV.NavigatorItemRecurse.Parents);
+                meshItem.SetVisible (false, NavigatorItemRecurse.Parents);
             }
 
             UpdateButtonsStatus (panel.buttons, panel.showTree, isHierarchical);
@@ -281,10 +284,10 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
         function AddMeshToNodeTree (panel, model, node, meshIndex, parentItem, showTree)
         {
             let mesh = model.GetMesh (meshIndex);
-            let meshName = OV.GetMeshName (mesh.GetName ());
+            let meshName = GetMeshName (mesh.GetName ());
             let meshInstanceId = new OV.MeshInstanceId (node.GetId (), meshIndex);
             let meshItemIcon = showTree ? 'tree_mesh' : null;
-            let meshItem = new OV.MeshItem (meshName, meshItemIcon, meshInstanceId, {
+            let meshItem = new MeshItem (meshName, meshItemIcon, meshInstanceId, {
                 onShowHide : (selectedMeshId) => {
                     panel.callbacks.onMeshShowHide (selectedMeshId);
                 },
@@ -301,9 +304,9 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
 
         function CreateNodeItem (panel, node)
         {
-            const nodeName = OV.GetNodeName (node.GetName ());
+            const nodeName = GetNodeName (node.GetName ());
             const nodeId = node.GetId ();
-            let nodeItem = new OV.NodeItem (nodeName, nodeId, {
+            let nodeItem = new NodeItem (nodeName, nodeId, {
                 onShowHide : (selectedNodeId) => {
                     panel.callbacks.onNodeShowHide (selectedNodeId);
                 },
@@ -318,12 +321,12 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
         function CreateDummyRootItem (panel, node)
         {
             const nodeId = node.GetId ();
-            let rootItem = new OV.NodeItem (null, nodeId, {
+            let rootItem = new NodeItem (null, nodeId, {
                 onVisibilityChanged : (isVisible) => {
                     if (isVisible) {
-                        OV.SetSvgIconImageElement (panel.buttons.showHideMeshes.iconDiv, 'visible');
+                        SetSvgIconImageElement (panel.buttons.showHideMeshes.iconDiv, 'visible');
                     } else {
-                        OV.SetSvgIconImageElement (panel.buttons.showHideMeshes.iconDiv, 'hidden');
+                        SetSvgIconImageElement (panel.buttons.showHideMeshes.iconDiv, 'hidden');
                     }
                 }
             });
@@ -423,11 +426,11 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
     ShowAllMeshes (show)
     {
         this.EnumerateNodeItems ((nodeItem) => {
-            nodeItem.SetVisible (show, OV.NavigatorItemRecurse.No);
+            nodeItem.SetVisible (show, NavigatorItemRecurse.No);
             return true;
         });
         this.EnumerateMeshItems ((meshItem) => {
-            meshItem.SetVisible (show, OV.NavigatorItemRecurse.No);
+            meshItem.SetVisible (show, NavigatorItemRecurse.No);
             return true;
         });
     }
@@ -435,13 +438,13 @@ OV.NavigatorMeshesPanel = class extends OV.NavigatorPanel
     ToggleNodeVisibility (nodeId)
     {
         let nodeItem = this.GetNodeItem (nodeId);
-        nodeItem.SetVisible (!nodeItem.IsVisible (), OV.NavigatorItemRecurse.All);
+        nodeItem.SetVisible (!nodeItem.IsVisible (), NavigatorItemRecurse.All);
     }
 
     ToggleMeshVisibility (meshInstanceId)
     {
         let meshItem = this.GetMeshItem (meshInstanceId);
-        meshItem.SetVisible (!meshItem.IsVisible (), OV.NavigatorItemRecurse.Parents);
+        meshItem.SetVisible (!meshItem.IsVisible (), NavigatorItemRecurse.Parents);
     }
 
     IsMeshIsolated (meshInstanceId)

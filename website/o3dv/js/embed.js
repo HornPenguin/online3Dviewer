@@ -1,19 +1,22 @@
+import { TransformFileHostUrls } from "../../../source/io/fileutils";
+import { AddDomElement } from "../../../source/viewer/domutils";
+import { Viewer } from "../../../source/viewer/viewer";
 import { HashHandler } from "./hashhandler";
 import { ThreeModelLoaderUI } from "./threemodelloaderui";
 
-OV.Embed = class
+export class Embed
 {
     constructor (parameters)
     {
         this.parameters = parameters;
-        this.viewer = new OV.Viewer ();
+        this.viewer = new Viewer ();
         this.hashHandler = new HashHandler ();
         this.modelLoaderUI = new ThreeModelLoaderUI ();
     }
 
     Load ()
     {
-        let canvas = OV.AddDomElement (this.parameters.viewerDiv, 'canvas');
+        let canvas = AddDomElement (this.parameters.viewerDiv, 'canvas');
         this.InitViewer (canvas);
         this.Resize ();
 
@@ -22,7 +25,7 @@ OV.Embed = class
             if (urls === null) {
                 return;
             }
-            OV.TransformFileHostUrls (urls);
+            TransformFileHostUrls (urls);
             let background = this.hashHandler.GetBackgroundFromHash ();
             if (background !== null) {
                 this.viewer.SetBackgroundColor (background);

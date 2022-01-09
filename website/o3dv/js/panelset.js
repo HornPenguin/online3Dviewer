@@ -1,6 +1,7 @@
-import { AddDiv, ShowDomElement } from "../../../source/viewer/domutils";
+import { AddDiv, ShowDomElement, IsDomElementVisible, SetDomElementWidth, SetDomElementHeight } from "../../../source/viewer/domutils";
+import { AddSvgIconElement, SetSvgIconImageElement } from "./utils";
 
-OV.Panel = class
+export class Panel
 {
     constructor (parentDiv)
     {
@@ -41,7 +42,7 @@ OV.Panel = class
     }
 };
 
-OV.PanelSet = class
+export class PanelSet
 {
     constructor (parentDiv)
     {
@@ -68,7 +69,7 @@ OV.PanelSet = class
     AddPanel (panel)
     {
         this.panels.push (panel);
-        let button = OV.AddSvgIconElement (this.menuDiv, panel.GetIcon (), 'ov_panel_set_menu_button');
+        let button = AddSvgIconElement (this.menuDiv, panel.GetIcon (), 'ov_panel_set_menu_button');
         button.setAttribute ('alt', panel.GetName ());
         button.setAttribute ('title', panel.GetName ());
         this.panelButtons.push (button);
@@ -100,7 +101,7 @@ OV.PanelSet = class
         this.panelsVisible = show;
         if (this.panelsVisible) {
             ShowDomElement (this.contentDiv, true);
-            OV.SetDomElementWidth (this.parentDiv, this.menuDiv.offsetWidth + this.panelsPrevWidth);
+            SetDomElementWidth (this.parentDiv, this.menuDiv.offsetWidth + this.panelsPrevWidth);
         } else {
             for (let panelButton of this.panelButtons) {
                 panelButton.classList.remove ('selected');
@@ -109,7 +110,7 @@ OV.PanelSet = class
                 panel.Show (false);
             }
             this.panelsPrevWidth = this.contentDiv.offsetWidth;
-            OV.SetDomElementWidth (this.parentDiv, this.menuDiv.offsetWidth);
+            SetDomElementWidth (this.parentDiv, this.menuDiv.offsetWidth);
             ShowDomElement (this.contentDiv, false);
         }
 
@@ -156,7 +157,7 @@ OV.PanelSet = class
     SetPanelIcon (panel, icon)
     {
         let panelButton = this.GetPanelButton (panel);
-        OV.SetSvgIconImageElement (panelButton, icon);
+        SetSvgIconImageElement (panelButton, icon);
     }
 
     GetPanelButton (panel)
@@ -168,8 +169,8 @@ OV.PanelSet = class
     Resize ()
     {
         let height = this.parentDiv.offsetHeight;
-        OV.SetDomElementHeight (this.menuDiv, height);
-        OV.SetDomElementHeight (this.contentDiv, height);
+        SetDomElementHeight (this.menuDiv, height);
+        SetDomElementHeight (this.contentDiv, height);
         if (this.panelsVisible) {
             for (let panel of this.panels) {
                 if (panel.IsVisible ()) {
@@ -181,7 +182,7 @@ OV.PanelSet = class
 
     IsParentVisible ()
     {
-        return OV.IsDomElementVisible (this.parentDiv);
+        return IsDomElementVisible (this.parentDiv);
     }
 
     Clear ()

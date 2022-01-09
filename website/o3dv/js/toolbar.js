@@ -1,6 +1,7 @@
-import { AddDiv } from "../../../source/viewer/domutils";
+import { AddDiv, CreateDiv } from "../../../source/viewer/domutils";
+import { AddSvgIconElement, InstallTooltip } from "./utils";
 
-OV.ToolbarButton = class
+export class ToolbarButton
 {
     constructor (image, imageTitle, onClick)
     {
@@ -8,14 +9,14 @@ OV.ToolbarButton = class
         this.imageTitle = imageTitle;
 
         this.selected = false;
-        this.buttonDiv = OV.CreateDiv ('ov_toolbar_button');
-        this.buttonImg = OV.AddSvgIconElement (this.buttonDiv, this.image);
+        this.buttonDiv = CreateDiv ('ov_toolbar_button');
+        this.buttonImg = AddSvgIconElement (this.buttonDiv, this.image);
         if (onClick !== null) {
             this.buttonDiv.addEventListener ('click', onClick);
         }
 
         this.buttonDiv.setAttribute ('alt', this.imageTitle);
-        OV.InstallTooltip (this.buttonDiv, this.imageTitle);
+        InstallTooltip (this.buttonDiv, this.imageTitle);
     }
 
     AddDomElements (parentDiv)
@@ -68,14 +69,14 @@ export class Toolbar
 
     AddImageButton (image, imageTitle, onClick)
     {
-        let button = new OV.ToolbarButton (image, imageTitle, onClick);
+        let button = new ToolbarButton (image, imageTitle, onClick);
         button.AddDomElements (this.mainDiv);
         return button;
     }
 
     AddImagePushButton (image, imageTitle, isSelected, onClick)
     {
-        let button = new OV.ToolbarButton (image, imageTitle, () => {
+        let button = new ToolbarButton (image, imageTitle, () => {
             button.SetSelected (!button.IsSelected ());
             onClick ();
         });

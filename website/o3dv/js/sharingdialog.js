@@ -1,13 +1,14 @@
-import { AddDiv } from "../../../source/viewer/domutils";
+import { AddDiv, AddDomElement, AddCheckbox } from "../../../source/viewer/domutils";
 import { ShowMessageDialog } from "./dialogs";
 import { ButtonDialog } from "./modal";
+import { CopyToClipboard } from "./utils";
 
-OV.ShowSharingDialog = function (fileList, settings, camera, eventHandler)
+export function ShowSharingDialog (fileList, settings, camera, eventHandler)
 {
     function AddCheckboxLine (parentDiv, text, id, onChange)
     {
         let line = AddDiv (parentDiv, 'ov_dialog_row');
-        let checkbox = OV.AddCheckbox (line, id, text, true, () => {
+        let checkbox = AddCheckbox (line, id, text, true, () => {
             onChange (checkbox.checked);
         });
     }
@@ -44,11 +45,11 @@ OV.ShowSharingDialog = function (fileList, settings, camera, eventHandler)
         let copyText = 'Copy';
         let copiedText = 'Copied';
         let container = AddDiv (parentDiv, 'ov_dialog_copyable_input');
-        let input = OV.AddDomElement (container, 'input', 'ov_dialog_text');
+        let input = AddDomElement (container, 'input', 'ov_dialog_text');
         input.readOnly = true;
         let button = AddDiv (container, 'ov_button outline ov_dialog_copyable_input_button', copyText);
         button.addEventListener ('click', () => {
-            OV.CopyToClipboard (getText ());
+            CopyToClipboard (getText ());
             button.innerHTML = copiedText;
             setTimeout (() => {
                 button.innerHTML = copyText;

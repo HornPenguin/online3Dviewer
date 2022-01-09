@@ -1,7 +1,8 @@
 import { FileFormat } from "../../../source/io/fileutils";
-import { AddDiv, ClearDomElement } from "../../../source/viewer/domutils";
+import { AddDiv, AddSelect, ClearDomElement } from "../../../source/viewer/domutils";
 import { ShowMessageDialog } from "./dialogs";
 import { ButtonDialog, ProgressDialog } from "./modal";
+import { DownloadArrayBufferAsFile, DownloadUrlAsFile } from "./utils";
 
 export const ExportType =
 {
@@ -31,18 +32,12 @@ export class ExporterUI
 
     }
 
-    AddCheckbox (parentDiv, id, name, isChecked)
-    {
-        let line = AddDiv (parentDiv, 'ov_dialog_row');
-        return OV.AddCheckbox (line, id, name, isChecked);
-    }
-
-    AddSelect (parametersDiv, name, values, defaultIndex)
+    AddSelectItem (parametersDiv, name, values, defaultIndex)
     {
         let parameterRow = AddDiv (parametersDiv, 'ov_dialog_row');
         AddDiv (parameterRow, 'ov_dialog_row_name', name);
         let parameterValueDiv = AddDiv (parameterRow, 'ov_dialog_row_value');
-        return OV.AddSelect (parameterValueDiv, values, defaultIndex);
+        return AddSelect (parameterValueDiv, values, defaultIndex);
     }
 };
 
@@ -64,8 +59,8 @@ export class ModelExporterUI extends ExporterUI
 
     GenerateParametersUI (parametersDiv)
     {
-        this.visibleOnlySelect = this.AddSelect (parametersDiv, 'Scope', ['Entire Model', 'Visible Only'], 1);
-        this.rotationSelect = this.AddSelect (parametersDiv, 'Rotation', ['No Rotation', '-90 Degrees', '90 Degrees'], 0);
+        this.visibleOnlySelect = this.AddSelectItem (parametersDiv, 'Scope', ['Entire Model', 'Visible Only'], 1);
+        this.rotationSelect = this.AddSelectItem (parametersDiv, 'Rotation', ['No Rotation', '-90 Degrees', '90 Degrees'], 0);
     }
 
     ExportModel (model, callbacks)
@@ -112,7 +107,7 @@ export class ModelExporterUI extends ExporterUI
                     } else if (files.length === 1) {
                         progressDialog.Hide ();
                         let file = files[0];
-                        OV.DownloadArrayBufferAsFile (file.GetBufferContent (), file.GetName ());
+                        DownloadArrayBufferAsFile (file.GetBufferContent (), file.GetName ());
                     } else if (files.length > 1) {
                         OV.LoadExternalLibrary ('loaders/fflate.min.js').then (() => {
                             let filesInZip = {};
@@ -122,7 +117,7 @@ export class ModelExporterUI extends ExporterUI
                             let zippedContent = fflate.zipSync (filesInZip);
                             let zippedBuffer = zippedContent.buffer;
                             progressDialog.Hide ();
-                            OV.DownloadArrayBufferAsFile (zippedBuffer, 'model.zip');
+                            DownloadArrayBufferAsFile (zippedBuffer, 'model.zip');
                         }).catch (() => {
                             progressDialog.Hide ();
                         });
@@ -155,7 +150,7 @@ export class ImageExporterUI extends ExporterUI
     GenerateParametersUI (parametersDiv)
     {
         let sizeNames = this.sizes.map (size => size.name);
-        this.sizeSelect = this.AddSelect (parametersDiv, 'Image size', sizeNames, 1);
+        this.sizeSelect = this.AddSelectItem (parametersDiv, 'Image size', sizeNames, 1);
     }
 
     ExportImage (viewer)
@@ -168,11 +163,11 @@ export class ImageExporterUI extends ExporterUI
         } else {
             url = viewer.GetImageAsDataUrl (selectedSize.value[0], selectedSize.value[1]);
         }
-        OV.DownloadUrlAsFile (url, 'model.' + this.extension);
+        DownloadUrlAsFile (url, 'model.' + this.extension);
     }
 };
 
-OV.ExportDialog = class
+export class ExportDialog
 {
     constructor (callbacks, eventHandler)
     {
@@ -222,7 +217,7 @@ OV.ExportDialog = class
         this.parametersDiv = AddDiv (contentDiv);
         let formatNames = this.exporters.map (exporter => exporter.GetName ());
         let defaultFormatIndex = 6;
-        OV.AddSelect (formatRow, formatNames, defaultFormatIndex, (selectedIndex) => {
+        AddSelect (formatRow, formatNames, defaultFormatIndex, (selectedIndex) => {
             this.OnFormatSelected (selectedIndex);
         });
         this.OnFormatSelected (defaultFormatIndex);

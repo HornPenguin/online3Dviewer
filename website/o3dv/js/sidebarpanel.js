@@ -1,6 +1,7 @@
 import { AddDiv, ClearDomElement } from "../../../source/viewer/domutils";
+import { Panel } from "./panelset";
 
-OV.SidebarPanel = class extends OV.Panel
+export class SidebarPanel extends Panel
 {
     constructor (parentDiv)
     {
