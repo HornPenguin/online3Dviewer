@@ -28,9 +28,10 @@
 		"update": "node tools/run_python.js tools/update.py",
 		"updatelibs": "npm install && node tools/run_python.js tools/updatelibs.py",
 		"svg": "node tools/run_python.js tools/svg.py",
-		"update_engine_exports": "node tools/run_python.js tools/updateengine.py",
-		"build_engine" : "npm run update_engine_exports && webpack --config tools/webpack.engine.cjs",
-		"build_website" : "webpack --config tools/webpack.website.cjs"
+		"update_engine_exports": "node tools/run_python.js tools/update_engine_exports.py",
+		"build_engine_dev" : "npm run update_engine_exports && webpack --config tools/webpack.config.cjs --config-name engine_dev",
+		"build_engine_prod" : "npm run update_engine_exports && webpack --config tools/webpack.config.cjs --config-name engine_prod",
+		"build_website_dev" : "webpack --config tools/webpack.config.cjs --config-name website_dev"
 	},
 	"dependencies": {
 		"@simonwep/pickr": "1.8.2",
@@ -64,7 +65,6 @@
 			"semi": "error",
 			"no-var": "error",
 			"guard-for-in": "error",
-			"no-use-before-define": "error",
 			"no-new": "error",
 			"no-new-object": "error",
 			"no-new-func": "error",
@@ -83,7 +83,8 @@
 			"no-undef": "error",
 			"no-extend-native": "error",
 			"eqeqeq": "error",
-			"no-unused-vars": "off"
+			"no-unused-vars": "off",
+			"no-use-before-define": "off"
 		}
 	}
 }

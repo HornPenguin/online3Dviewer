@@ -21,20 +21,24 @@ def Main (argv):
 		if not os.path.isdir (dirPath):
 			continue
 		for fileName in os.listdir (dirPath):
-			engineFiles.append ('source/' + dirName + '/' + fileName)
+			engineFiles.append ({
+				'dirName': dirName,
+				'fileName': fileName
+			})
 
 	exportedSymbols = []
 	mainFileContent = ''
-	for file in engineFiles:
-		content = Tools.GetFileContent (file)
+	for engineFile in engineFiles:
+		engineFilePath = os.path.join (sourceFolder, engineFile['dirName'], engineFile['fileName'])
+		content = Tools.GetFileContent (engineFilePath)
 		matches = re.findall ('export class ([a-zA-Z0-9]+)', content)
 		matches.extend (re.findall ('export function ([a-zA-Z0-9]+)', content))
 		matches.extend (re.findall ('export const ([a-zA-Z0-9]+)', content))
 		matches.extend (re.findall ('export let ([a-zA-Z0-9]+)', content))
 		if len (matches) == 0:
 			continue
-		filePath = file.replace ('source/', '../source/')
-		mainFileContent += 'import { ' + ', '.join (matches) + ' } from \'' + filePath + '\';\n'
+		relativePath = './' + engineFile['dirName'] + '/' + engineFile['fileName']
+		mainFileContent += 'import { ' + ', '.join (matches) + ' } from \'' + relativePath + '\';\n'
 		for match in matches:
 			exportedSymbols.append (match)
 
