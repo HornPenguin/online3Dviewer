@@ -1,4 +1,15 @@
-OV.ObjMeshConverter = class
+import { Coord2D } from "../geometry/coord2d";
+import { Coord3D } from "../geometry/coord3d";
+import { Direction } from "../geometry/geometry";
+import { ArrayBufferToUtf8String } from "../io/bufferutils";
+import { ColorFromFloatComponents } from "../model/color";
+import { PhongMaterial, TextureMap } from "../model/material";
+import { Mesh } from "../model/mesh";
+import { Triangle } from "../model/triangle";
+import { ImporterBase } from "./importerbase";
+import { NameFromLine, ParametersFromLine, ReadLines, UpdateMaterialTransparency } from "./importerutils";
+
+export class ObjMeshConverter
 {
     constructor (mesh)
     {
@@ -11,21 +22,21 @@ OV.ObjMeshConverter = class
     AddVertex (globalIndex, globalVertices)
     {
         return this.GetLocalIndex (globalIndex, globalVertices, this.globalToMeshVertices, (val) => {
-            return this.mesh.AddVertex (new OV.Coord3D (val.x, val.y, val.z));
+            return this.mesh.AddVertex (new Coord3D (val.x, val.y, val.z));
         });
     }
 
     AddNormal (globalIndex, globalNormals)
     {
         return this.GetLocalIndex (globalIndex, globalNormals, this.globalToMeshNormals, (val) => {
-            return this.mesh.AddNormal (new OV.Coord3D (val.x, val.y, val.z));
+            return this.mesh.AddNormal (new Coord3D (val.x, val.y, val.z));
         });
     }
 
     AddUV (globalIndex, globalUvs)
     {
         return this.GetLocalIndex (globalIndex, globalUvs, this.globalToMeshUvs, (val) => {
-            return this.mesh.AddTextureUV (new OV.Coord2D (val.x, val.y));
+            return this.mesh.AddTextureUV (new Coord2D (val.x, val.y));
         });
     }
 
@@ -50,7 +61,7 @@ OV.ObjMeshConverter = class
     }
 };
 
-OV.ImporterObj = class extends OV.ImporterBase
+export class ImporterObj extends ImporterBase
 {
     constructor ()
     {
@@ -64,7 +75,7 @@ OV.ImporterObj = class extends OV.ImporterBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Y;
+        return Direction.Y;
     }
 
     ClearContent ()
@@ -97,8 +108,8 @@ OV.ImporterObj = class extends OV.ImporterBase
 
     ImportContent (fileContent, onFinish)
     {
-        let textContent = OV.ArrayBufferToUtf8String (fileContent);
-        OV.ReadLines (textContent, (line) => {
+        let textContent = ArrayBufferToUtf8String (fileContent);
+        ReadLines (textContent, (line) => {
             if (!this.WasError ()) {
                 this.ProcessLine (line);
             }
@@ -112,7 +123,7 @@ OV.ImporterObj = class extends OV.ImporterBase
             return;
         }
 
-        let parameters = OV.ParametersFromLine (line, '#');
+        let parameters = ParametersFromLine (line, '#');
         if (parameters.length === 0) {
             return;
         }
@@ -134,10 +145,10 @@ OV.ImporterObj = class extends OV.ImporterBase
         if (this.meshNameToConverter.has (name)) {
             this.currentMeshConverter = this.meshNameToConverter.get (name);
         } else {
-            let mesh = new OV.Mesh ();
+            let mesh = new Mesh ();
             mesh.SetName (name);
             this.model.AddMeshToRootNode (mesh);
-            this.currentMeshConverter = new OV.ObjMeshConverter (mesh);
+            this.currentMeshConverter = new ObjMeshConverter (mesh);
             this.meshNameToConverter.set (name, this.currentMeshConverter);
         }
     }
@@ -148,14 +159,14 @@ OV.ImporterObj = class extends OV.ImporterBase
             if (parameters.length === 0) {
                 return true;
             }
-            let name = OV.NameFromLine (line, keyword.length, '#');
+            let name = NameFromLine (line, keyword.length, '#');
             this.AddNewMesh (name);
             return true;
         } else if (keyword === 'v') {
             if (parameters.length < 3) {
                 return true;
             }
-            this.globalVertices.push (new OV.Coord3D (
+            this.globalVertices.push (new Coord3D (
                 parseFloat (parameters[0]),
                 parseFloat (parameters[1]),
                 parseFloat (parameters[2])
@@ -165,7 +176,7 @@ OV.ImporterObj = class extends OV.ImporterBase
             if (parameters.length < 3) {
                 return true;
             }
-            this.globalNormals.push (new OV.Coord3D (
+            this.globalNormals.push (new Coord3D (
                 parseFloat (parameters[0]),
                 parseFloat (parameters[1]),
                 parseFloat (parameters[2])
@@ -175,7 +186,7 @@ OV.ImporterObj = class extends OV.ImporterBase
             if (parameters.length < 2) {
                 return true;
             }
-            this.globalUvs.push (new OV.Coord2D (
+            this.globalUvs.push (new Coord2D (
                 parseFloat (parameters[0]),
                 parseFloat (parameters[1])
             ));
@@ -195,8 +206,8 @@ OV.ImporterObj = class extends OV.ImporterBase
     {
         function CreateTexture (keyword, line, callbacks)
         {
-            let texture = new OV.TextureMap ();
-            let textureName = OV.NameFromLine (line, keyword.length, '#');
+            let texture = new TextureMap ();
+            let textureName = NameFromLine (line, keyword.length, '#');
             let textureBuffer = callbacks.getTextureBuffer (textureName);
             texture.name = textureName;
             if (textureBuffer !== null) {
@@ -211,8 +222,8 @@ OV.ImporterObj = class extends OV.ImporterBase
                 return true;
             }
 
-            let material = new OV.PhongMaterial ();
-            let materialName = OV.NameFromLine (line, keyword.length, '#');
+            let material = new PhongMaterial ();
+            let materialName = NameFromLine (line, keyword.length, '#');
             let materialIndex = this.model.AddMaterial (material);
             material.name = materialName;
             this.currentMaterial = material;
@@ -223,7 +234,7 @@ OV.ImporterObj = class extends OV.ImporterBase
                 return true;
             }
 
-            let materialName = OV.NameFromLine (line, keyword.length, '#');
+            let materialName = NameFromLine (line, keyword.length, '#');
             if (this.materialNameToIndex.has (materialName)) {
                 this.currentMaterialIndex = this.materialNameToIndex.get (materialName);
             }
@@ -232,11 +243,11 @@ OV.ImporterObj = class extends OV.ImporterBase
             if (parameters.length === 0) {
                 return true;
             }
-            let fileName = OV.NameFromLine (line, keyword.length, '#');
+            let fileName = NameFromLine (line, keyword.length, '#');
             let fileBuffer = this.callbacks.getFileBuffer (fileName);
             if (fileBuffer !== null) {
-                let textContent = OV.ArrayBufferToUtf8String (fileBuffer);
-                OV.ReadLines (textContent, (line) => {
+                let textContent = ArrayBufferToUtf8String (fileBuffer);
+                ReadLines (textContent, (line) => {
                     if (!this.WasError ()) {
                         this.ProcessLine (line);
                     }
@@ -248,7 +259,7 @@ OV.ImporterObj = class extends OV.ImporterBase
                 return true;
             }
             this.currentMaterial.diffuseMap = CreateTexture (keyword, line, this.callbacks);
-            OV.UpdateMaterialTransparency (this.currentMaterial);
+            UpdateMaterialTransparency (this.currentMaterial);
             return true;
         } else if (keyword === 'map_ks') {
             if (this.currentMaterial === null || parameters.length === 0) {
@@ -266,19 +277,19 @@ OV.ImporterObj = class extends OV.ImporterBase
             if (this.currentMaterial === null || parameters.length < 3) {
                 return true;
             }
-            this.currentMaterial.ambient = OV.ColorFromFloatComponents (parameters[0], parameters[1], parameters[2]);
+            this.currentMaterial.ambient = ColorFromFloatComponents (parameters[0], parameters[1], parameters[2]);
             return true;
         } else if (keyword === 'kd') {
             if (this.currentMaterial === null || parameters.length < 3) {
                 return true;
             }
-            this.currentMaterial.color = OV.ColorFromFloatComponents (parameters[0], parameters[1], parameters[2]);
+            this.currentMaterial.color = ColorFromFloatComponents (parameters[0], parameters[1], parameters[2]);
             return true;
         } else if (keyword === 'ks') {
             if (this.currentMaterial === null || parameters.length < 3) {
                 return true;
             }
-            this.currentMaterial.specular = OV.ColorFromFloatComponents (parameters[0], parameters[1], parameters[2]);
+            this.currentMaterial.specular = ColorFromFloatComponents (parameters[0], parameters[1], parameters[2]);
             return true;
         } else if (keyword === 'ns') {
             if (this.currentMaterial === null || parameters.length < 1) {
@@ -291,14 +302,14 @@ OV.ImporterObj = class extends OV.ImporterBase
                 return true;
             }
             this.currentMaterial.opacity = 1.0 - parseFloat (parameters[0]);
-            OV.UpdateMaterialTransparency (this.currentMaterial);
+            UpdateMaterialTransparency (this.currentMaterial);
             return true;
         } else if (keyword === 'd') {
             if (this.currentMaterial === null || parameters.length < 1) {
                 return true;
             }
             this.currentMaterial.opacity = parseFloat (parameters[0]);
-            OV.UpdateMaterialTransparency (this.currentMaterial);
+            UpdateMaterialTransparency (this.currentMaterial);
             return true;
         }
 
@@ -343,7 +354,7 @@ OV.ImporterObj = class extends OV.ImporterBase
                 this.SetError ('Invalid vertex index.');
                 break;
             }
-            let triangle = new OV.Triangle (v0, v1, v2);
+            let triangle = new Triangle (v0, v1, v2);
             if (normals.length === vertices.length) {
                 let n0 = this.currentMeshConverter.AddNormal (normals[0], this.globalNormals);
                 let n1 = this.currentMeshConverter.AddNormal (normals[i + 1], this.globalNormals);

@@ -1,4 +1,8 @@
-OV.ExporterOff = class extends OV.ExporterBase
+import { FileFormat } from "../io/fileutils";
+import { TextWriter } from "../io/textwriter";
+import { ExportedFile, ExporterBase } from "./exporterbase";
+
+export class ExporterOff extends ExporterBase
 {
 	constructor ()
 	{
@@ -7,15 +11,15 @@ OV.ExporterOff = class extends OV.ExporterBase
 
     CanExport (format, extension)
     {
-        return format === OV.FileFormat.Text && extension === 'off';
+        return format === FileFormat.Text && extension === 'off';
     }
 
 	ExportContent (exporterModel, format, files, onFinish)
 	{
-		let offFile = new OV.ExportedFile ('model.off');
+		let offFile = new ExportedFile ('model.off');
 		files.push (offFile);
 
-		let offWriter = new OV.TextWriter ();
+		let offWriter = new TextWriter ();
 		offWriter.WriteLine ('OFF');
 		offWriter.WriteArrayLine ([exporterModel.VertexCount (), exporterModel.TriangleCount (), 0]);
 

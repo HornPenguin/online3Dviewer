@@ -1,4 +1,16 @@
-OV.Importer3dm = class extends OV.ImporterBase
+import { Direction } from "../geometry/geometry";
+import { Matrix } from "../geometry/matrix";
+import { Transformation } from "../geometry/transformation";
+import { LoadExternalLibrary } from "../io/externallibs";
+import { PhongMaterial, PhysicalMaterial } from "../model/material";
+import { TransformMesh } from "../model/meshutils";
+import { IsModelEmpty } from "../model/modelutils";
+import { Property, PropertyGroup, PropertyType } from "../model/property";
+import { ConvertThreeGeometryToMesh } from "../threejs/threeutils";
+import { ImporterBase } from "./importerbase";
+import { UpdateMaterialTransparency } from "./importerutils";
+
+export class Importer3dm extends ImporterBase
 {
     constructor ()
     {
@@ -13,7 +25,7 @@ OV.Importer3dm = class extends OV.ImporterBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Z;
+        return Direction.Z;
     }
 
 	ClearContent ()
@@ -31,7 +43,7 @@ OV.Importer3dm = class extends OV.ImporterBase
     ImportContent (fileContent, onFinish)
     {
 		if (this.rhino === null) {
-			OV.LoadExternalLibrary ('loaders/rhino3dm.min.js').then (() => {
+			LoadExternalLibrary ('loaders/rhino3dm.min.js').then (() => {
 				rhino3dm ().then ((rhino) => {
 					this.rhino = rhino;
 					this.ImportRhinoContent (fileContent);
@@ -54,7 +66,7 @@ OV.Importer3dm = class extends OV.ImporterBase
 			return;
 		}
 		this.ImportRhinoDocument (rhinoDoc);
-        if (OV.IsModelEmpty (this.model)) {
+        if (IsModelEmpty (this.model)) {
 			this.SetError ('The model doesn\'t contain any 3D meshes. Try to save the model while you are in shaded view in Rhino.');
         }
 	}
@@ -87,10 +99,10 @@ OV.Importer3dm = class extends OV.ImporterBase
 	{
 		let docStrings = rhinoDoc.strings ();
 		if (docStrings.count () > 0) {
-			let propertyGroup = new OV.PropertyGroup ('Document user texts');
+			let propertyGroup = new PropertyGroup ('Document user texts');
 			for (let i = 0; i < docStrings.count (); i++) {
 				let docString = docStrings.get (i);
-				propertyGroup.AddProperty (new OV.Property (OV.PropertyType.Text, docString[0], docString[1]));
+				propertyGroup.AddProperty (new Property (PropertyType.Text, docString[0], docString[1]));
 			}
 			this.model.AddPropertyGroup (propertyGroup);
 		}
@@ -174,30 +186,30 @@ OV.Importer3dm = class extends OV.ImporterBase
 
 		let materialIndex = this.GetMaterialIndex (rhinoDoc, rhinoObject, rhinoInstanceReferences);
 		let threeJson = rhinoMesh.toThreejsJSON ();
-		let mesh = OV.ConvertThreeGeometryToMesh (threeJson.data, materialIndex);
+		let mesh = ConvertThreeGeometryToMesh (threeJson.data, materialIndex);
 		mesh.SetName (rhinoAttributes.name);
 
 		let userStrings = rhinoAttributes.getUserStrings ();
 		if (userStrings.length > 0) {
-			let propertyGroup = new OV.PropertyGroup ('User texts');
+			let propertyGroup = new PropertyGroup ('User texts');
 			for (let i = 0; i < userStrings.length; i++) {
 				let userString = userStrings[i];
-				propertyGroup.AddProperty (new OV.Property (OV.PropertyType.Text, userString[0], userString[1]));
+				propertyGroup.AddProperty (new Property (PropertyType.Text, userString[0], userString[1]));
 			}
 			mesh.AddPropertyGroup (propertyGroup);
 		}
 
 		if (rhinoInstanceReferences.length !== 0) {
-			let matrix = new OV.Matrix ().CreateIdentity ();
+			let matrix = new Matrix ().CreateIdentity ();
 			for (let i = rhinoInstanceReferences.length - 1; i >= 0; i--) {
 				let rhinoInstanceReference = rhinoInstanceReferences[i];
 				let rhinoInstanceReferenceGeometry = rhinoInstanceReference.geometry ();
 				let rhinoInstanceReferenceMatrix = rhinoInstanceReferenceGeometry.xform.toFloatArray (false);
-				let transformationMatrix = new OV.Matrix (rhinoInstanceReferenceMatrix);
+				let transformationMatrix = new Matrix (rhinoInstanceReferenceMatrix);
 				matrix = matrix.MultiplyMatrix (transformationMatrix);
 			}
-			let transformation = new OV.Transformation (matrix);
-			OV.TransformMesh (mesh, transformation);
+			let transformation = new Transformation (matrix);
+			TransformMesh (mesh, transformation);
 		}
 		this.model.AddMeshToRootNode (mesh);
 	}
@@ -248,23 +260,23 @@ OV.Importer3dm = class extends OV.ImporterBase
 
 			let material = null;
 			if (rhinoMaterial === null) {
-				material = new OV.PhongMaterial ();
+				material = new PhongMaterial ();
 				material.color.Set (255, 255, 255);
 			} else {
 				let physicallyBased = rhinoMaterial.physicallyBased ();
 				if (physicallyBased.supported) {
-					material = new OV.PhysicalMaterial ();
+					material = new PhysicalMaterial ();
 					material.metalness = physicallyBased.metallic ? 1.0 : 0.0;
 					material.roughness = physicallyBased.roughness;
 				} else {
-					material = new OV.PhongMaterial ();
+					material = new PhongMaterial ();
 					SetColor (material.ambient, rhinoMaterial.ambientColor);
 					SetColor (material.specular, rhinoMaterial.specularColor);
 				}
 				material.name = rhinoMaterial.name;
 				SetColor (material.color, rhinoMaterial.diffuseColor);
 				material.opacity = 1.0 - rhinoMaterial.transparency;
-				OV.UpdateMaterialTransparency (material);
+				UpdateMaterialTransparency (material);
 				// material.shininess = rhinoMaterial.shine / 255.0;
 				if (IsBlack (material.color) && !IsWhite (rhinoMaterial.reflectionColor)) {
 					SetColor (material.color, rhinoMaterial.reflectionColor);

@@ -1,4 +1,16 @@
-OV.ImporterThreeBase = class extends OV.ImporterBase
+import { WaitWhile } from "../core/taskrunner";
+import { Direction } from "../geometry/geometry";
+import { Matrix } from "../geometry/matrix";
+import { Transformation } from "../geometry/transformation";
+import { Base64DataURIToArrayBuffer, CreateObjectUrl, GetFileExtensionFromMimeType } from "../io/bufferutils";
+import { LoadExternalLibrary } from "../io/externallibs";
+import { GetFileExtension, GetFileName } from "../io/fileutils";
+import { PhongMaterial, TextureMap } from "../model/material";
+import { Node, NodeType } from "../model/node";
+import { ConvertThreeColorToColor, ConvertThreeGeometryToMesh } from "../threejs/threeutils";
+import { ImporterBase } from "./importerbase";
+
+export class ImporterThreeBase extends ImporterBase
 {
     constructor ()
     {
@@ -45,7 +57,7 @@ OV.ImporterThreeBase = class extends OV.ImporterBase
         {
             try {
                 for (let i = 0; i < libraries.length; i++) {
-                    await OV.LoadExternalLibrary (libraries[i]);
+                    await LoadExternalLibrary (libraries[i]);
                 }
             } catch (err) {
                 onError ();
@@ -73,17 +85,17 @@ OV.ImporterThreeBase = class extends OV.ImporterBase
             isAllLoadersDone = true;
         });
 
-        const mainFileUrl = OV.CreateObjectUrl (fileContent);
+        const mainFileUrl = CreateObjectUrl (fileContent);
         loadingManager.setURLModifier ((url) => {
             if (url === mainFileUrl) {
                 return url;
             }
-            const name = OV.GetFileName (url);
-            const extension = OV.GetFileExtension (url);
+            const name = GetFileName (url);
+            const extension = GetFileExtension (url);
             if (extension.length > 0) {
                 const buffer = this.callbacks.getFileBuffer (url);
                 if (buffer !== null) {
-                    let objectUrl = OV.CreateObjectUrl (buffer);
+                    let objectUrl = CreateObjectUrl (buffer);
                     this.objectUrlToFileName.set (objectUrl, name);
                     return objectUrl;
                 }
@@ -99,7 +111,7 @@ OV.ImporterThreeBase = class extends OV.ImporterBase
 
         threeLoader.load (mainFileUrl,
             (object) => {
-                OV.WaitWhile (() => {
+                WaitWhile (() => {
                     if (isAllLoadersDone) {
                         this.OnThreeObjectsLoaded (object, onFinish);
                         return false;
@@ -120,17 +132,17 @@ OV.ImporterThreeBase = class extends OV.ImporterBase
     {
         function GetObjectTransformation (threeObject)
         {
-            let matrix = new OV.Matrix ().CreateIdentity ();
+            let matrix = new Matrix ().CreateIdentity ();
             threeObject.updateMatrix ();
             if (threeObject.matrix !== undefined && threeObject.matrix !== null) {
                 matrix.Set (threeObject.matrix.elements);
             }
-            return new OV.Transformation (matrix);
+            return new Transformation (matrix);
         }
 
         function AddObject (importer, model, threeObject, parentNode)
         {
-            let node = new OV.Node ();
+            let node = new Node ();
             if (threeObject.name !== undefined) {
                 node.SetName (threeObject.name);
             }
@@ -142,7 +154,7 @@ OV.ImporterThreeBase = class extends OV.ImporterBase
             }
             if (threeObject.isMesh && importer.IsMeshVisible (threeObject)) {
                 if (threeObject.children.length === 0) {
-                    node.SetType (OV.NodeType.MeshNode);
+                    node.SetType (NodeType.MeshNode);
                 }
                 let mesh = importer.ConvertThreeMesh (threeObject);
                 let meshIndex = model.AddMesh (mesh);
@@ -164,7 +176,7 @@ OV.ImporterThreeBase = class extends OV.ImporterBase
     {
         let mesh = null;
         if (Array.isArray (threeMesh.material)) {
-            mesh = OV.ConvertThreeGeometryToMesh (threeMesh.geometry, null);
+            mesh = ConvertThreeGeometryToMesh (threeMesh.geometry, null);
             if (threeMesh.geometry.attributes.color === undefined || threeMesh.geometry.attributes.color === null) {
                 let materialIndices = [];
                 for (let i = 0; i < threeMesh.material.length; i++) {
@@ -188,7 +200,7 @@ OV.ImporterThreeBase = class extends OV.ImporterBase
             }
         } else {
             const materialIndex = this.FindOrCreateMaterial (threeMesh.material);
-            mesh = OV.ConvertThreeGeometryToMesh (threeMesh.geometry, materialIndex);
+            mesh = ConvertThreeGeometryToMesh (threeMesh.geometry, materialIndex);
         }
         if (threeMesh.name !== undefined && threeMesh.name !== null) {
             mesh.SetName (threeMesh.name);
@@ -235,15 +247,15 @@ OV.ImporterThreeBase = class extends OV.ImporterBase
 
             try {
                 const dataUrl = GetDataUrl (threeMap.image);
-                const base64Buffer = OV.Base64DataURIToArrayBuffer (dataUrl);
-                let texture = new OV.TextureMap ();
+                const base64Buffer = Base64DataURIToArrayBuffer (dataUrl);
+                let texture = new TextureMap ();
                 let textureName = null;
                 if (objectUrlToFileName.has (threeMap.image.src)) {
                     textureName = objectUrlToFileName.get (threeMap.image.src);
                 } else if (threeMap.name !== undefined && threeMap.name !== null) {
-                    textureName = threeMap.name + '.' + OV.GetFileExtensionFromMimeType (base64Buffer.mimeType);
+                    textureName = threeMap.name + '.' + GetFileExtensionFromMimeType (base64Buffer.mimeType);
                 } else {
-                    textureName = 'Embedded_' + threeMap.id.toString () + '.' + OV.GetFileExtensionFromMimeType (base64Buffer.mimeType);
+                    textureName = 'Embedded_' + threeMap.id.toString () + '.' + GetFileExtensionFromMimeType (base64Buffer.mimeType);
                 }
                 texture.name = textureName;
                 texture.url = dataUrl;
@@ -259,14 +271,14 @@ OV.ImporterThreeBase = class extends OV.ImporterBase
             }
         }
 
-        let material = new OV.PhongMaterial ();
+        let material = new PhongMaterial ();
         material.name = threeMaterial.name;
-        material.color = OV.ConvertThreeColorToColor (threeMaterial.color);
+        material.color = ConvertThreeColorToColor (threeMaterial.color);
         material.opacity = threeMaterial.opacity;
         material.transparent = threeMaterial.transparent;
         material.alphaTest = threeMaterial.alphaTest;
         if (threeMaterial.type === 'MeshPhongMaterial') {
-            material.specular = OV.ConvertThreeColorToColor (threeMaterial.specular);
+            material.specular = ConvertThreeColorToColor (threeMaterial.specular);
             material.shininess = threeMaterial.shininess / 100.0;
         }
         material.diffuseMap = CreateTexture (threeMaterial.map, this.objectUrlToFileName);
@@ -277,7 +289,7 @@ OV.ImporterThreeBase = class extends OV.ImporterBase
     }
 };
 
-OV.ImporterThreeFbx = class extends OV.ImporterThreeBase
+export class ImporterThreeFbx extends ImporterThreeBase
 {
     constructor ()
     {
@@ -291,7 +303,7 @@ OV.ImporterThreeFbx = class extends OV.ImporterThreeBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Y;
+        return Direction.Y;
     }
 
     GetExternalLibraries ()
@@ -315,7 +327,7 @@ OV.ImporterThreeFbx = class extends OV.ImporterThreeBase
     }
 };
 
-OV.ImporterThreeDae = class extends OV.ImporterThreeBase
+export class ImporterThreeDae extends ImporterThreeBase
 {
     constructor ()
     {
@@ -329,7 +341,7 @@ OV.ImporterThreeDae = class extends OV.ImporterThreeBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Y;
+        return Direction.Y;
     }
 
     GetExternalLibraries ()
@@ -352,7 +364,7 @@ OV.ImporterThreeDae = class extends OV.ImporterThreeBase
     }
 };
 
-OV.ImporterThreeWrl = class extends OV.ImporterThreeBase
+export class ImporterThreeWrl extends ImporterThreeBase
 {
     constructor ()
     {
@@ -366,7 +378,7 @@ OV.ImporterThreeWrl = class extends OV.ImporterThreeBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Y;
+        return Direction.Y;
     }
 
     GetExternalLibraries ()
@@ -404,7 +416,7 @@ OV.ImporterThreeWrl = class extends OV.ImporterThreeBase
     }
 };
 
-OV.ImporterThree3mf = class extends OV.ImporterThreeBase
+export class ImporterThree3mf extends ImporterThreeBase
 {
     constructor ()
     {
@@ -418,7 +430,7 @@ OV.ImporterThree3mf = class extends OV.ImporterThreeBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Z;
+        return Direction.Z;
     }
 
     GetExternalLibraries ()

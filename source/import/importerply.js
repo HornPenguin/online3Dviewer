@@ -1,4 +1,15 @@
-OV.PlyHeaderCheckResult =
+import { Coord3D } from "../geometry/coord3d";
+import { Direction } from "../geometry/geometry";
+import { BinaryReader } from "../io/binaryreader";
+import { ArrayBufferToUtf8String } from "../io/bufferutils";
+import { Color, IntegerToHexString } from "../model/color";
+import { PhongMaterial } from "../model/material";
+import { Mesh } from "../model/mesh";
+import { Triangle } from "../model/triangle";
+import { ImporterBase } from "./importerbase";
+import { ParametersFromLine, ReadLines, UpdateMaterialTransparency } from "./importerutils";
+
+export const PlyHeaderCheckResult =
 {
     Ok : 1,
     NoVertices : 2,
@@ -6,7 +17,7 @@ OV.PlyHeaderCheckResult =
     UnknownError : 4
 };
 
-OV.PlyHeader = class
+export class PlyHeader
 {
     constructor ()
     {
@@ -69,30 +80,30 @@ OV.PlyHeader = class
     {
         let vertex = this.GetElement ('vertex');
         if (vertex === null || vertex.length === 0 || vertex.format.length < 3) {
-            return OV.PlyHeaderCheckResult.NoVertices;
+            return PlyHeaderCheckResult.NoVertices;
         }
 
         let face = this.GetElement ('face');
         if (this.format === 'ascii') {
             if (face === null || face.count === 0 || face.format.length < 0) {
-                return OV.PlyHeaderCheckResult.NoFaces;
+                return PlyHeaderCheckResult.NoFaces;
             }
         } else if (this.format === 'binary_little_endian' || this.format === 'binary_big_endian') {
             let triStrips = this.GetElement ('tristrips');
             let hasFaces = (face !== null && face.count > 0 && face.format.length > 0);
             let hasTriStrips = (triStrips !== null && triStrips.count > 0 && triStrips.format.length > 0);
             if (!hasFaces && !hasTriStrips) {
-                return OV.PlyHeaderCheckResult.NoFaces;
+                return PlyHeaderCheckResult.NoFaces;
             }
         } else {
-            return OV.PlyHeaderCheckResult.UnknownError;
+            return PlyHeaderCheckResult.UnknownError;
         }
 
-        return OV.PlyHeaderCheckResult.Ok;
+        return PlyHeaderCheckResult.Ok;
     }
 };
 
-OV.PlyMaterialHandler = class
+export class PlyMaterialHandler
 {
     constructor (model)
     {
@@ -103,19 +114,19 @@ OV.PlyMaterialHandler = class
     GetMaterialIndexByColor (color)
     {
         let materialName = 'Color ' +
-            OV.IntegerToHexString (color[0]) +
-            OV.IntegerToHexString (color[1]) +
-            OV.IntegerToHexString (color[2]) +
-            OV.IntegerToHexString (color[3]);
+            IntegerToHexString (color[0]) +
+            IntegerToHexString (color[1]) +
+            IntegerToHexString (color[2]) +
+            IntegerToHexString (color[3]);
 
         if (this.colorToMaterial.has (materialName)) {
             return this.colorToMaterial.get (materialName);
         } else {
-            let material = new OV.PhongMaterial ();
+            let material = new PhongMaterial ();
             material.name = materialName;
-            material.color = new OV.Color (color[0], color[1], color[2]);
+            material.color = new Color (color[0], color[1], color[2]);
             material.opacity = color[3] / 255.0;
-            OV.UpdateMaterialTransparency (material);
+            UpdateMaterialTransparency (material);
             let materialIndex = this.model.AddMaterial (material);
             this.colorToMaterial.set (materialName, materialIndex);
             return materialIndex;
@@ -123,7 +134,7 @@ OV.PlyMaterialHandler = class
     }
 };
 
-OV.ImporterPly = class extends OV.ImporterBase
+export class ImporterPly extends ImporterBase
 {
     constructor ()
     {
@@ -137,7 +148,7 @@ OV.ImporterPly = class extends OV.ImporterBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Y;
+        return Direction.Y;
     }
 
     ClearContent ()
@@ -147,7 +158,7 @@ OV.ImporterPly = class extends OV.ImporterBase
 
     ResetContent ()
     {
-        this.mesh = new OV.Mesh ();
+        this.mesh = new Mesh ();
         this.model.AddMeshToRootNode (this.mesh);
     }
 
@@ -156,18 +167,18 @@ OV.ImporterPly = class extends OV.ImporterBase
         let headerString = this.GetHeaderContent (fileContent);
         let header = this.ReadHeader (headerString);
         let checkResult = header.Check ();
-        if (checkResult === OV.PlyHeaderCheckResult.Ok) {
+        if (checkResult === PlyHeaderCheckResult.Ok) {
             if (header.format === 'ascii') {
-                let contentString = OV.ArrayBufferToUtf8String (fileContent);
+                let contentString = ArrayBufferToUtf8String (fileContent);
                 contentString = contentString.substr (headerString.length);
                 this.ReadAsciiContent (header, contentString);
             } else if (header.format === 'binary_little_endian' || header.format === 'binary_big_endian') {
                 this.ReadBinaryContent (header, fileContent, headerString.length);
             }
         } else {
-            if (checkResult === OV.PlyHeaderCheckResult.NoVertices) {
+            if (checkResult === PlyHeaderCheckResult.NoVertices) {
                 this.SetError ('The model contains no vertices.');
-            } else if (checkResult === OV.PlyHeaderCheckResult.NoFaces) {
+            } else if (checkResult === PlyHeaderCheckResult.NoFaces) {
                 this.SetError ('The model contains no faces.');
             } else {
                 this.SetError ('Invalid header information.');
@@ -201,9 +212,9 @@ OV.ImporterPly = class extends OV.ImporterBase
 
     ReadHeader (headerContent)
     {
-        let header = new OV.PlyHeader ();
-        OV.ReadLines (headerContent, (line) => {
-            let parameters = OV.ParametersFromLine (line, null);
+        let header = new PlyHeader ();
+        ReadLines (headerContent, (line) => {
+            let parameters = ParametersFromLine (line, null);
             if (parameters.length === 0 || parameters[0] === 'comment') {
                 return;
             }
@@ -232,19 +243,19 @@ OV.ImporterPly = class extends OV.ImporterBase
         let face = header.GetElement ('face');
         let foundVertex = 0;
         let foundFace = 0;
-        OV.ReadLines (fileContent, (line) => {
+        ReadLines (fileContent, (line) => {
             if (this.WasError ()) {
                 return;
             }
 
-            let parameters = OV.ParametersFromLine (line, null);
+            let parameters = ParametersFromLine (line, null);
             if (parameters.length === 0 || parameters[0] === 'comment') {
                 return;
             }
 
             if (foundVertex < vertex.count) {
                 if (parameters.length >= 3) {
-                    this.mesh.AddVertex (new OV.Coord3D (
+                    this.mesh.AddVertex (new Coord3D (
                         parseFloat (parameters[0]),
                         parseFloat (parameters[1]),
                         parseFloat (parameters[2])
@@ -264,7 +275,7 @@ OV.ImporterPly = class extends OV.ImporterBase
                         let v0 = parseInt (parameters[1]);
                         let v1 = parseInt (parameters[i + 2]);
                         let v2 = parseInt (parameters[i + 3]);
-                        let triangle = new OV.Triangle (v0, v1, v2);
+                        let triangle = new Triangle (v0, v1, v2);
                         this.mesh.AddTriangle (triangle);
                     }
                     foundFace += 1;
@@ -349,15 +360,15 @@ OV.ImporterPly = class extends OV.ImporterBase
 
         let reader = null;
         if (header.format === 'binary_little_endian') {
-            reader = new OV.BinaryReader (fileContent, true);
+            reader = new BinaryReader (fileContent, true);
         } else if (header.format === 'binary_big_endian') {
-            reader = new OV.BinaryReader (fileContent, false);
+            reader = new BinaryReader (fileContent, false);
         } else {
             return;
         }
         reader.Skip (headerLength);
 
-        let materialHandler = new OV.PlyMaterialHandler (this.model);
+        let materialHandler = new PlyMaterialHandler (this.model);
         let elements = header.GetElements ();
         for (let elementIndex = 0; elementIndex < elements.length; elementIndex++) {
             let element = elements[elementIndex];
@@ -368,9 +379,9 @@ OV.ImporterPly = class extends OV.ImporterBase
                     let z = ReadByFormat (reader, element.format[2]);
                     let color = SkipAndGetColor (reader, element.format, 3);
                     if (color !== null) {
-                        this.mesh.AddVertexColor (new OV.Color (color[0], color[1], color[2]));
+                        this.mesh.AddVertexColor (new Color (color[0], color[1], color[2]));
                     }
-                    this.mesh.AddVertex (new OV.Coord3D (x, y, z));
+                    this.mesh.AddVertex (new Coord3D (x, y, z));
                 }
             } else if (element.name === 'face') {
                 for (let faceIndex = 0; faceIndex < element.count; faceIndex++) {
@@ -380,7 +391,7 @@ OV.ImporterPly = class extends OV.ImporterBase
                         let v0 = vertices[0];
                         let v1 = vertices[i + 1];
                         let v2 = vertices[i + 2];
-                        let triangle = new OV.Triangle (v0, v1, v2);
+                        let triangle = new Triangle (v0, v1, v2);
                         if (faceColor !== null) {
                             triangle.mat = materialHandler.GetMaterialIndexByColor (faceColor);
                         } else if (this.mesh.VertexColorCount () > 0) {
@@ -409,7 +420,7 @@ OV.ImporterPly = class extends OV.ImporterBase
                             v2 = tmp;
                         }
                         ccw = !ccw;
-                        let triangle = new OV.Triangle (v0, v1, v2);
+                        let triangle = new Triangle (v0, v1, v2);
                         this.mesh.AddTriangle (triangle);
                     }
                 }

@@ -1,4 +1,9 @@
-OV.ExporterObj = class extends OV.ExporterBase
+import { FileFormat, GetFileName } from "../io/fileutils";
+import { TextWriter } from "../io/textwriter";
+import { MaterialType } from "../model/material";
+import { ExportedFile, ExporterBase } from "./exporterbase";
+
+export class ExporterObj extends ExporterBase
 {
     constructor ()
     {
@@ -7,7 +12,7 @@ OV.ExporterObj = class extends OV.ExporterBase
 
     CanExport (format, extension)
     {
-        return format === OV.FileFormat.Text && extension === 'obj';
+        return format === FileFormat.Text && extension === 'obj';
     }
 
     ExportContent (exporterModel, format, files, onFinish)
@@ -17,46 +22,46 @@ OV.ExporterObj = class extends OV.ExporterBase
             if (texture === null || !texture.IsValid ()) {
                 return;
             }
-            let fileName = OV.GetFileName (texture.name);
+            let fileName = GetFileName (texture.name);
             mtlWriter.WriteArrayLine ([keyword, fileName]);
 
             let fileIndex = files.findIndex ((file) => {
                 return file.GetName () === fileName;
             });
             if (fileIndex === -1) {
-                let textureFile = new OV.ExportedFile (fileName);
+                let textureFile = new ExportedFile (fileName);
                 textureFile.SetBufferContent (texture.buffer);
                 files.push (textureFile);
             }
         }
 
-        let mtlFile = new OV.ExportedFile ('model.mtl');
-        let objFile = new OV.ExportedFile ('model.obj');
+        let mtlFile = new ExportedFile ('model.mtl');
+        let objFile = new ExportedFile ('model.obj');
 
         files.push (mtlFile);
         files.push (objFile);
 
-        let mtlWriter = new OV.TextWriter ();
+        let mtlWriter = new TextWriter ();
         mtlWriter.WriteLine (this.GetHeaderText ());
         for (let materialIndex = 0; materialIndex < exporterModel.MaterialCount (); materialIndex++) {
             let material = exporterModel.GetMaterial (materialIndex);
             mtlWriter.WriteArrayLine (['newmtl', this.GetExportedMaterialName (material.name)]);
             mtlWriter.WriteArrayLine (['Kd', material.color.r / 255.0, material.color.g / 255.0, material.color.b / 255.0]);
             mtlWriter.WriteArrayLine (['d', material.opacity]);
-            if (material.type === OV.MaterialType.Phong) {
+            if (material.type === MaterialType.Phong) {
                 mtlWriter.WriteArrayLine (['Ka', material.ambient.r / 255.0, material.ambient.g / 255.0, material.ambient.b / 255.0]);
                 mtlWriter.WriteArrayLine (['Ks', material.specular.r / 255.0, material.specular.g / 255.0, material.specular.b / 255.0]);
                 mtlWriter.WriteArrayLine (['Ns', material.shininess * 1000.0]);
             }
             WriteTexture (mtlWriter, 'map_Kd', material.diffuseMap, files);
-            if (material.type === OV.MaterialType.Phong) {
+            if (material.type === MaterialType.Phong) {
                 WriteTexture (mtlWriter, 'map_Ks', material.specularMap, files);
             }
             WriteTexture (mtlWriter, 'bump', material.bumpMap, files);
         }
         mtlFile.SetTextContent (mtlWriter.GetText ());
 
-        let objWriter = new OV.TextWriter ();
+        let objWriter = new TextWriter ();
         objWriter.WriteLine (this.GetHeaderText ());
         objWriter.WriteArrayLine (['mtllib', mtlFile.GetName ()]);
         let vertexOffset = 0;

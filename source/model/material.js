@@ -1,12 +1,16 @@
-OV.TextureMap = class
+import { Coord2D, CoordIsEqual2D } from "../geometry/coord2d";
+import { IsEqual } from "../geometry/geometry";
+import { Color, ColorIsEqual } from "./color";
+
+export class TextureMap
 {
     constructor ()
     {
         this.name = null;
         this.url = null;
         this.buffer = null;
-        this.offset = new OV.Coord2D (0.0, 0.0);
-        this.scale = new OV.Coord2D (1.0, 1.0);
+        this.offset = new Coord2D (0.0, 0.0);
+        this.scale = new Coord2D (1.0, 1.0);
         this.rotation = 0.0; // radians
     }
 
@@ -17,13 +21,13 @@ OV.TextureMap = class
 
     HasTransformation ()
     {
-        if (!OV.CoordIsEqual2D (this.offset, new OV.Coord2D (0.0, 0.0))) {
+        if (!CoordIsEqual2D (this.offset, new Coord2D (0.0, 0.0))) {
             return true;
         }
-        if (!OV.CoordIsEqual2D (this.scale, new OV.Coord2D (1.0, 1.0))) {
+        if (!CoordIsEqual2D (this.scale, new Coord2D (1.0, 1.0))) {
             return true;
         }
-        if (!OV.IsEqual (this.rotation, 0.0)) {
+        if (!IsEqual (this.rotation, 0.0)) {
             return true;
         }
         return false;
@@ -40,20 +44,20 @@ OV.TextureMap = class
         if (this.url !== rhs.url) {
             return false;
         }
-        if (!OV.CoordIsEqual2D (this.offset, rhs.offset)) {
+        if (!CoordIsEqual2D (this.offset, rhs.offset)) {
             return false;
         }
-        if (!OV.CoordIsEqual2D (this.scale, rhs.scale)) {
+        if (!CoordIsEqual2D (this.scale, rhs.scale)) {
             return false;
         }
-        if (!OV.IsEqual (this.rotation, rhs.rotation)) {
+        if (!IsEqual (this.rotation, rhs.rotation)) {
             return false;
         }
         return true;
     }
 };
 
-OV.TextureMapIsEqual = function (aTex, bTex)
+export function TextureMapIsEqual (aTex, bTex)
 {
     if (aTex === null && bTex === null) {
         return true;
@@ -63,13 +67,13 @@ OV.TextureMapIsEqual = function (aTex, bTex)
     return aTex.IsEqual (bTex);
 };
 
-OV.MaterialType =
+export const MaterialType =
 {
     Phong : 1,
     Physical : 2
 };
 
-OV.MaterialBase = class
+export class MaterialBase
 {
     constructor (type)
     {
@@ -77,7 +81,7 @@ OV.MaterialBase = class
         this.isDefault = false;
 
         this.name = '';
-        this.color = new OV.Color (0, 0, 0);
+        this.color = new Color (0, 0, 0);
 
         this.vertexColors = false;
     }
@@ -93,7 +97,7 @@ OV.MaterialBase = class
         if (this.name !== rhs.name) {
             return false;
         }
-        if (!OV.ColorIsEqual (this.color, rhs.color)) {
+        if (!ColorIsEqual (this.color, rhs.color)) {
             return false;
         }
         if (this.vertexColors !== rhs.vertexColors) {
@@ -103,13 +107,13 @@ OV.MaterialBase = class
     }
 };
 
-OV.FaceMaterial = class extends OV.MaterialBase
+export class FaceMaterial extends MaterialBase
 {
     constructor (type)
     {
         super (type);
 
-        this.emissive = new OV.Color (0, 0, 0);
+        this.emissive = new Color (0, 0, 0);
 
         this.opacity = 1.0; // 0.0 .. 1.0
         this.transparent = false;
@@ -128,28 +132,28 @@ OV.FaceMaterial = class extends OV.MaterialBase
         if (!super.IsEqual (rhs)) {
             return false;
         }
-        if (!OV.ColorIsEqual (this.emissive, rhs.emissive)) {
+        if (!ColorIsEqual (this.emissive, rhs.emissive)) {
             return false;
         }
-        if (!OV.IsEqual (this.opacity, rhs.opacity)) {
+        if (!IsEqual (this.opacity, rhs.opacity)) {
             return false;
         }
         if (this.transparent !== rhs.transparent) {
             return false;
         }
-        if (!OV.TextureMapIsEqual (this.diffuseMap, rhs.diffuseMap)) {
+        if (!TextureMapIsEqual (this.diffuseMap, rhs.diffuseMap)) {
             return false;
         }
-        if (!OV.TextureMapIsEqual (this.bumpMap, rhs.bumpMap)) {
+        if (!TextureMapIsEqual (this.bumpMap, rhs.bumpMap)) {
             return false;
         }
-        if (!OV.TextureMapIsEqual (this.normalMap, rhs.normalMap)) {
+        if (!TextureMapIsEqual (this.normalMap, rhs.normalMap)) {
             return false;
         }
-        if (!OV.TextureMapIsEqual (this.emissiveMap, rhs.emissiveMap)) {
+        if (!TextureMapIsEqual (this.emissiveMap, rhs.emissiveMap)) {
             return false;
         }
-        if (!OV.IsEqual (this.alphaTest, rhs.alphaTest)) {
+        if (!IsEqual (this.alphaTest, rhs.alphaTest)) {
             return false;
         }
         if (this.multiplyDiffuseMap !== rhs.multiplyDiffuseMap) {
@@ -175,14 +179,14 @@ OV.FaceMaterial = class extends OV.MaterialBase
     }
 };
 
-OV.PhongMaterial = class extends OV.FaceMaterial
+export class PhongMaterial extends FaceMaterial
 {
     constructor ()
     {
-        super (OV.MaterialType.Phong);
+        super (MaterialType.Phong);
 
-        this.ambient = new OV.Color (0, 0, 0);
-        this.specular = new OV.Color (0, 0, 0);
+        this.ambient = new Color (0, 0, 0);
+        this.specular = new Color (0, 0, 0);
         this.shininess = 0.0; // 0.0 .. 1.0
         this.specularMap = null;
     }
@@ -192,16 +196,16 @@ OV.PhongMaterial = class extends OV.FaceMaterial
         if (!super.IsEqual (rhs)) {
             return false;
         }
-        if (!OV.ColorIsEqual (this.ambient, rhs.ambient)) {
+        if (!ColorIsEqual (this.ambient, rhs.ambient)) {
             return false;
         }
-        if (!OV.ColorIsEqual (this.specular, rhs.specular)) {
+        if (!ColorIsEqual (this.specular, rhs.specular)) {
             return false;
         }
-        if (!OV.IsEqual (this.shininess, rhs.shininess)) {
+        if (!IsEqual (this.shininess, rhs.shininess)) {
             return false;
         }
-        if (!OV.TextureMapIsEqual (this.specularMap, rhs.specularMap)) {
+        if (!TextureMapIsEqual (this.specularMap, rhs.specularMap)) {
             return false;
         }
         return true;
@@ -216,11 +220,11 @@ OV.PhongMaterial = class extends OV.FaceMaterial
     }
 };
 
-OV.PhysicalMaterial = class extends OV.FaceMaterial
+export class PhysicalMaterial extends FaceMaterial
 {
     constructor ()
     {
-        super (OV.MaterialType.Physical);
+        super (MaterialType.Physical);
 
         this.metalness = 0.0; // 0.0 .. 1.0
         this.roughness = 1.0; // 0.0 .. 1.0
@@ -232,13 +236,13 @@ OV.PhysicalMaterial = class extends OV.FaceMaterial
         if (!super.IsEqual (rhs)) {
             return false;
         }
-        if (!OV.IsEqual (this.metalness, rhs.metalness)) {
+        if (!IsEqual (this.metalness, rhs.metalness)) {
             return false;
         }
-        if (!OV.IsEqual (this.roughness, rhs.roughness)) {
+        if (!IsEqual (this.roughness, rhs.roughness)) {
             return false;
         }
-        if (!OV.TextureMapIsEqual (this.metalnessMap, rhs.metalnessMap)) {
+        if (!TextureMapIsEqual (this.metalnessMap, rhs.metalnessMap)) {
             return false;
         }
         return true;
@@ -253,7 +257,7 @@ OV.PhysicalMaterial = class extends OV.FaceMaterial
     }
 };
 
-OV.TextureIsEqual = function (a, b)
+export function TextureIsEqual (a, b)
 {
     if (a.name !== b.name) {
         return false;
@@ -264,13 +268,13 @@ OV.TextureIsEqual = function (a, b)
     if (a.url !== b.url) {
         return false;
     }
-    if (!OV.CoordIsEqual2D (a.offset, b.offset)) {
+    if (!CoordIsEqual2D (a.offset, b.offset)) {
         return false;
     }
-    if (!OV.CoordIsEqual2D (a.scale, b.scale)) {
+    if (!CoordIsEqual2D (a.scale, b.scale)) {
         return false;
     }
-    if (!OV.IsEqual (a.rotation, b.rotation)) {
+    if (!IsEqual (a.rotation, b.rotation)) {
         return false;
     }
     return true;

@@ -15,7 +15,8 @@
 		"mocha": "^9.1.3",
 		"oslllo-svg-fixer": "^1.4.0",
 		"rewire": "^6.0.0",
-		"svgo": "^2.3.1"
+		"svgo": "^2.3.1",
+		"webpack-cli": "^4.9.1"
 	},
 	"scripts": {
 		"start": "http-server",
@@ -25,7 +26,8 @@
 		"build": "npm run lint && npm run doc && node tools/run_python.js tools/build.py",
 		"update": "node tools/run_python.js tools/update.py",
 		"updatelibs": "npm install && node tools/run_python.js tools/updatelibs.py",
-		"svg": "node tools/run_python.js tools/svg.py"
+		"svg": "node tools/run_python.js tools/svg.py",
+		"build_engine" : "webpack --config tools/webpack.engine.js"
 	},
 	"dependencies": {
 		"@simonwep/pickr": "1.8.2",

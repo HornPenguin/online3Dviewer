@@ -1,17 +1,24 @@
-OV.EmbeddedViewer = class
+import { IsDefined } from "../core/core";
+import { ImportErrorCode, ImportSettings } from "../import/importer";
+import { FileSource, TransformFileHostUrls } from "../io/fileutils";
+import { ParameterConverter } from "../parameters/parameterlist";
+import { ThreeModelLoader } from "../threejs/threemodelloader";
+import { Viewer } from "./viewer";
+
+export class EmbeddedViewer
 {
     constructor (parentElement, parameters)
     {
         this.parentElement = parentElement;
         this.parameters = {};
-        if (OV.IsDefined (parameters)) {
+        if (IsDefined (parameters)) {
             this.parameters = parameters;
         }
 
         this.canvas = document.createElement ('canvas');
         this.parentElement.appendChild (this.canvas);
 
-        this.viewer = new OV.Viewer ();
+        this.viewer = new Viewer ();
         this.viewer.Init (this.canvas);
 
         let width = this.parentElement.clientWidth;
@@ -46,16 +53,16 @@ OV.EmbeddedViewer = class
         if (modelUrls === null || modelUrls.length === 0) {
             return null;
         }
-        OV.TransformFileHostUrls (modelUrls);
+        TransformFileHostUrls (modelUrls);
 
-        let settings = new OV.ImportSettings ();
+        let settings = new ImportSettings ();
         if (this.parameters.defaultColor) {
             settings.defaultColor = this.parameters.defaultColor;
         }
 
         let progressDiv = null;
-        let loader = new OV.ThreeModelLoader ();
-        loader.LoadModel (modelUrls, OV.FileSource.Url, settings, {
+        let loader = new ThreeModelLoader ();
+        loader.LoadModel (modelUrls, FileSource.Url, settings, {
             onLoadStart : () => {
                 this.canvas.style.display = 'none';
                 progressDiv = document.createElement ('div');
@@ -88,11 +95,11 @@ OV.EmbeddedViewer = class
             },
             onLoadError : (importError) => {
                 let message = 'Unknown error';
-                if (importError.code === OV.ImportErrorCode.NoImportableFile) {
+                if (importError.code === ImportErrorCode.NoImportableFile) {
                     message = 'No importable file found';
-                } else if (importError.code === OV.ImportErrorCode.FailedToLoadFile) {
+                } else if (importError.code === ImportErrorCode.FailedToLoadFile) {
                     message = 'Failed to load file for import.';
-                } else if (importError.code === OV.ImportErrorCode.ImportFailed) {
+                } else if (importError.code === ImportErrorCode.ImportFailed) {
                     message = 'Failed to import model.';
                 }
                 if (importError.message !== null) {
@@ -116,39 +123,39 @@ OV.EmbeddedViewer = class
     }
 };
 
-OV.Init3DViewerElement = function (parentElement, modelUrls, parameters)
+export function Init3DViewerElement (parentElement, modelUrls, parameters)
 {
-    let viewer = new OV.EmbeddedViewer (parentElement, parameters);
+    let viewer = new EmbeddedViewer (parentElement, parameters);
     viewer.LoadModelFromUrls (modelUrls);
     return viewer;
 };
 
-OV.Init3DViewerElements = function (onReady)
+export function Init3DViewerElements (onReady)
 {
     function LoadElement (element)
     {
         let camera = null;
         let cameraParams = element.getAttribute ('camera');
         if (cameraParams) {
-            camera = OV.ParameterConverter.StringToCamera (cameraParams);
+            camera = ParameterConverter.StringToCamera (cameraParams);
         }
 
         let backgroundColor = null;
         let backgroundColorParams = element.getAttribute ('backgroundcolor');
         if (backgroundColorParams) {
-            backgroundColor = OV.ParameterConverter.StringToColor (backgroundColorParams);
+            backgroundColor = ParameterConverter.StringToColor (backgroundColorParams);
         }
 
         let defaultColor = null;
         let defaultColorParams = element.getAttribute ('defaultcolor');
         if (defaultColorParams) {
-            defaultColor = OV.ParameterConverter.StringToColor (defaultColorParams);
+            defaultColor = ParameterConverter.StringToColor (defaultColorParams);
         }
 
         let edgeSettings = null;
         let edgeSettingsParams = element.getAttribute ('edgesettings');
         if (edgeSettingsParams) {
-            edgeSettings = OV.ParameterConverter.StringToEdgeSettings (edgeSettingsParams);
+            edgeSettings = ParameterConverter.StringToEdgeSettings (edgeSettingsParams);
         }
 
         let environmentMap = null;
@@ -163,10 +170,10 @@ OV.Init3DViewerElements = function (onReady)
         let modelUrls = null;
         let modelParams = element.getAttribute ('model');
         if (modelParams) {
-            modelUrls = OV.ParameterConverter.StringToModelUrls (modelParams);
+            modelUrls = ParameterConverter.StringToModelUrls (modelParams);
         }
 
-        return OV.Init3DViewerElement (element, modelUrls, {
+        return Init3DViewerElement (element, modelUrls, {
             camera : camera,
             backgroundColor : backgroundColor,
             defaultColor : defaultColor,

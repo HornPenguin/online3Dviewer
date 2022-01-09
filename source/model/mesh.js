@@ -1,4 +1,6 @@
-OV.Mesh = class extends OV.ModelObject3D
+import { ModelObject3D } from "./object";
+
+export class Mesh extends ModelObject3D
 {
     constructor ()
     {
@@ -136,7 +138,7 @@ OV.Mesh = class extends OV.ModelObject3D
 
     Clone ()
     {
-        let cloned = new OV.Mesh ();
+        let cloned = new Mesh ();
 
         cloned.SetName (this.GetName ());
 

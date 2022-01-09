@@ -1,17 +1,17 @@
-OV.FileSource =
+export const FileSource =
 {
     Url : 1,
     File : 2,
 	Decompressed : 3
 };
 
-OV.FileFormat =
+export const FileFormat =
 {
     Text : 1,
     Binary : 2
 };
 
-OV.GetFileName = function (filePath)
+export function GetFileName (filePath)
 {
 	let firstSeparator = filePath.lastIndexOf ('/');
 	if (firstSeparator === -1) {
@@ -28,9 +28,9 @@ OV.GetFileName = function (filePath)
 	return decodeURI (fileName);
 };
 
-OV.GetFileExtension = function (filePath)
+export function GetFileExtension (filePath)
 {
-	let fileName = OV.GetFileName (filePath);
+	let fileName = GetFileName (filePath);
 	let firstPoint = fileName.lastIndexOf ('.');
 	if (firstPoint === -1) {
 		return '';
@@ -39,14 +39,14 @@ OV.GetFileExtension = function (filePath)
 	return extension.toLowerCase ();
 };
 
-OV.RequestUrl = function (url, format)
+export function RequestUrl (url, format)
 {
 	return new Promise ((resolve, reject) => {
 		let request = new XMLHttpRequest ();
 		request.open ('GET', url, true);
-		if (format === OV.FileFormat.Text) {
+		if (format === FileFormat.Text) {
 			request.responseType = 'text';
-		} else if (format === OV.FileFormat.Binary) {
+		} else if (format === FileFormat.Binary) {
 			request.responseType = 'arraybuffer';
 		} else {
 			reject ();
@@ -69,7 +69,7 @@ OV.RequestUrl = function (url, format)
 	});
 };
 
-OV.ReadFile = function (file, format)
+export function ReadFile (file, format)
 {
 	return new Promise ((resolve, reject) => {
 		let reader = new FileReader ();
@@ -84,9 +84,9 @@ OV.ReadFile = function (file, format)
 			reject ();
 		};
 
-		if (format === OV.FileFormat.Text) {
+		if (format === FileFormat.Text) {
 			reader.readAsText (file);
-		} else if (format === OV.FileFormat.Binary) {
+		} else if (format === FileFormat.Binary) {
 			reader.readAsArrayBuffer (file);
 		} else {
 			reject ();
@@ -94,7 +94,7 @@ OV.ReadFile = function (file, format)
 	});
 };
 
-OV.TransformFileHostUrls = function (urls)
+export function TransformFileHostUrls (urls)
 {
     for (let i = 0; i < urls.length; i++) {
         let url = urls[i];

@@ -1,4 +1,7 @@
-OV.MeshInstanceId = class
+import { TransformMesh } from "./meshutils";
+import { ModelObject3D } from "./object";
+
+export class MeshInstanceId
 {
     constructor (nodeId, meshIndex)
     {
@@ -17,7 +20,7 @@ OV.MeshInstanceId = class
     }
 };
 
-OV.MeshInstance = class extends OV.ModelObject3D
+export class MeshInstance extends ModelObject3D
 {
     constructor (id, node, mesh)
     {
@@ -119,7 +122,7 @@ OV.MeshInstance = class extends OV.ModelObject3D
     {
         let transformation = this.node.GetWorldTransformation ();
         let transformed = this.mesh.Clone ();
-        OV.TransformMesh (transformed, transformation);
+        TransformMesh (transformed, transformation);
         return transformed;
     }
 };

@@ -1,54 +1,54 @@
-OV.Eps = 0.00000001;
-OV.BigEps = 0.0001;
-OV.RadDeg = 57.29577951308232;
-OV.DegRad = 0.017453292519943;
+export const Eps = 0.00000001;
+export const BigEps = 0.0001;
+export const RadDeg = 57.29577951308232;
+export const DegRad = 0.017453292519943;
 
-OV.IsZero = function (a)
+export function IsZero (a)
 {
-	return Math.abs (a) < OV.Eps;
+	return Math.abs (a) < Eps;
 };
 
-OV.IsLower = function (a, b)
+export function IsLower (a, b)
 {
-	return b - a > OV.Eps;
+	return b - a > Eps;
 };
 
-OV.IsGreater = function (a, b)
+export function IsGreater (a, b)
 {
-	return a - b > OV.Eps;
+	return a - b > Eps;
 };
 
-OV.IsLowerOrEqual = function (a, b)
+export function IsLowerOrEqual (a, b)
 {
-	return b - a > -OV.Eps;
+	return b - a > -Eps;
 };
 
-OV.IsGreaterOrEqual = function (a, b)
+export function IsGreaterOrEqual (a, b)
 {
-	return a - b > -OV.Eps;
+	return a - b > -Eps;
 };
 
-OV.IsEqual = function (a, b)
+export function IsEqual (a, b)
 {
-	return Math.abs (b - a) < OV.Eps;
+	return Math.abs (b - a) < Eps;
 };
 
-OV.IsEqualEps = function (a, b, eps)
+export function IsEqualEps (a, b, eps)
 {
 	return Math.abs (b - a) < eps;
 };
 
-OV.IsPositive = function (a)
+export function IsPositive (a)
 {
-	return a > OV.Eps;
+	return a > Eps;
 };
 
-OV.IsNegative = function (a)
+export function IsNegative (a)
 {
-	return a < -OV.Eps;
+	return a < -Eps;
 };
 
-OV.Direction =
+export const Direction =
 {
 	X : 1,
 	Y : 2,

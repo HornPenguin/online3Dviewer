@@ -1,9 +1,13 @@
-OV.Model = class extends OV.ModelObject3D
+import { MeshInstance, MeshInstanceId } from "./meshinstance";
+import { Node } from "./node";
+import { ModelObject3D } from "./object";
+
+export class Model extends ModelObject3D
 {
     constructor ()
     {
         super ();
-        this.root = new OV.Node ();
+        this.root = new Node ();
         this.materials = [];
         this.meshes = [];
     }
@@ -137,8 +141,8 @@ OV.Model = class extends OV.ModelObject3D
             return null;
         }
         let foundMesh = this.GetMesh (instanceId.meshIndex);
-        let id = new OV.MeshInstanceId (foundNode.GetId (), instanceId.meshIndex);
-        return new OV.MeshInstance (id, foundNode, foundMesh);
+        let id = new MeshInstanceId (foundNode.GetId (), instanceId.meshIndex);
+        return new MeshInstance (id, foundNode, foundMesh);
     }
 
     EnumerateMeshes (onMesh)
@@ -152,9 +156,9 @@ OV.Model = class extends OV.ModelObject3D
     {
         this.root.Enumerate ((node) => {
             for (let meshIndex of node.GetMeshIndices ()) {
-                let id = new OV.MeshInstanceId (node.GetId (), meshIndex);
+                let id = new MeshInstanceId (node.GetId (), meshIndex);
                 let mesh = this.GetMesh (meshIndex);
-                let meshInstance = new OV.MeshInstance (id, node, mesh);
+                let meshInstance = new MeshInstance (id, node, mesh);
                 onMeshInstance (meshInstance);
             }
         });

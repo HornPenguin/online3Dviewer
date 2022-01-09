@@ -1,24 +1,29 @@
-OV.IsModelEmpty = function (model)
+import { BoundingBoxCalculator3D } from "../geometry/box3d";
+import { Octree } from "../geometry/octree";
+import { GetMeshType, MeshType } from "./meshutils";
+import { Topology } from "./topology";
+
+export function IsModelEmpty (model)
 {
     let isEmpty = true;
     model.EnumerateMeshInstances ((meshInstance) => {
-        if (OV.GetMeshType (meshInstance) !== OV.MeshType.Empty) {
+        if (GetMeshType (meshInstance) !== MeshType.Empty) {
             isEmpty = false;
         }
     });
     return isEmpty;
 };
 
-OV.GetBoundingBox = function (object3D)
+export function GetBoundingBox (object3D)
 {
-    let calculator = new OV.BoundingBoxCalculator3D ();
+    let calculator = new BoundingBoxCalculator3D ();
     object3D.EnumerateVertices ((vertex) => {
         calculator.AddPoint (vertex);
     });
     return calculator.GetBox ();
 };
 
-OV.GetTopology = function (object3D)
+export function GetTopology (object3D)
 {
     function GetVertexIndex (vertex, octree, topology)
     {
@@ -30,9 +35,9 @@ OV.GetTopology = function (object3D)
         return index;
     }
 
-    let boundingBox = OV.GetBoundingBox (object3D);
-    let octree = new OV.Octree (boundingBox);
-    let topology = new OV.Topology ();
+    let boundingBox = GetBoundingBox (object3D);
+    let octree = new Octree (boundingBox);
+    let topology = new Topology ();
 
     object3D.EnumerateTriangleVertices ((v0, v1, v2) => {
         let v0Index = GetVertexIndex (v0, octree, topology);
@@ -43,7 +48,7 @@ OV.GetTopology = function (object3D)
     return topology;
 };
 
-OV.IsSolid = function (object3D)
+export function IsSolid (object3D)
 {
     function GetEdgeOrientationInTriangle (topology, triangleIndex, edgeIndex)
     {
@@ -63,7 +68,7 @@ OV.IsSolid = function (object3D)
         return null;
     }
 
-    const topology = OV.GetTopology (object3D);
+    const topology = GetTopology (object3D);
     for (let edgeIndex = 0; edgeIndex < topology.edges.length; edgeIndex++) {
         const edge = topology.edges[edgeIndex];
         let triCount = edge.triangles.length;
@@ -87,7 +92,7 @@ OV.IsSolid = function (object3D)
     return true;
 };
 
-OV.HasDefaultMaterial = function (model)
+export function HasDefaultMaterial (model)
 {
     for (let i = 0; i < model.MaterialCount (); i++) {
         let material = model.GetMaterial (i);
@@ -98,7 +103,7 @@ OV.HasDefaultMaterial = function (model)
     return false;
 };
 
-OV.ReplaceDefaultMaterialColor = function (model, color)
+export function ReplaceDefaultMaterialColor (model, color)
 {
     for (let i = 0; i < model.MaterialCount (); i++) {
         let material = model.GetMaterial (i);

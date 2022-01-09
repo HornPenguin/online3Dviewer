@@ -1,11 +1,14 @@
-OV.Transformation = class
+import { Coord3D } from "./coord3d";
+import { Matrix, MatrixIsEqual } from "./matrix";
+
+export class Transformation
 {
     constructor (matrix)
     {
         if (matrix !== undefined && matrix !== null) {
             this.matrix = matrix;
         } else {
-            this.matrix = new OV.Matrix ();
+            this.matrix = new Matrix ();
             this.matrix.CreateIdentity ();
         }
     }
@@ -41,18 +44,18 @@ OV.Transformation = class
     TransformCoord3D (coord)
     {
         let resultVector = this.matrix.MultiplyVector ([coord.x, coord.y, coord.z, 1.0]);
-        let result = new OV.Coord3D (resultVector[0], resultVector[1], resultVector[2]);
+        let result = new Coord3D (resultVector[0], resultVector[1], resultVector[2]);
         return result;
     }
 
     Clone ()
     {
         const clonedMatrix = this.matrix.Clone ();
-        return new OV.Transformation (clonedMatrix);
+        return new Transformation (clonedMatrix);
     }
 };
 
-OV.TransformationIsEqual = function (a, b)
+export function TransformationIsEqual (a, b)
 {
-    return OV.MatrixIsEqual (a.GetMatrix (), b.GetMatrix ());
+    return MatrixIsEqual (a.GetMatrix (), b.GetMatrix ());
 };

@@ -1,4 +1,8 @@
-OV.OctreeNode = class
+import { Box3D } from "./box3d";
+import { Coord3D, CoordIsEqual3D } from "./coord3d";
+import { IsGreaterOrEqual, IsLowerOrEqual } from "./geometry";
+
+export class OctreeNode
 {
     constructor (boundingBox, level)
     {
@@ -57,7 +61,7 @@ OV.OctreeNode = class
     {
         for (let i = 0; i < this.pointItems.length; i++) {
             let pointItem = this.pointItems[i];
-            if (OV.CoordIsEqual3D (point, pointItem.point)) {
+            if (CoordIsEqual3D (point, pointItem.point)) {
                 return pointItem.data;
             }
         }
@@ -89,11 +93,11 @@ OV.OctreeNode = class
     {
         function AddChildNode (node, minX, minY, minZ, sizeX, sizeY, sizeZ)
         {
-            let box = new OV.Box3D (
-                new OV.Coord3D (minX, minY, minZ),
-                new OV.Coord3D (minX + sizeX, minY + sizeY, minZ + sizeZ)
+            let box = new Box3D (
+                new Coord3D (minX, minY, minZ),
+                new Coord3D (minX + sizeX, minY + sizeY, minZ + sizeZ)
             );
-            node.childNodes.push (new OV.OctreeNode (box, node.level + 1, node.options));
+            node.childNodes.push (new OctreeNode (box, node.level + 1, node.options));
         }
 
         let min = this.boundingBox.min;
@@ -115,17 +119,17 @@ OV.OctreeNode = class
     IsPointInBounds (point)
     {
         let isEqual =
-            OV.IsGreaterOrEqual (point.x, this.boundingBox.min.x) &&
-            OV.IsGreaterOrEqual (point.y, this.boundingBox.min.y) &&
-            OV.IsGreaterOrEqual (point.z, this.boundingBox.min.z) &&
-            OV.IsLowerOrEqual (point.x, this.boundingBox.max.x) &&
-            OV.IsLowerOrEqual (point.y, this.boundingBox.max.y) &&
-            OV.IsLowerOrEqual (point.z, this.boundingBox.max.z);
+            IsGreaterOrEqual (point.x, this.boundingBox.min.x) &&
+            IsGreaterOrEqual (point.y, this.boundingBox.min.y) &&
+            IsGreaterOrEqual (point.z, this.boundingBox.min.z) &&
+            IsLowerOrEqual (point.x, this.boundingBox.max.x) &&
+            IsLowerOrEqual (point.y, this.boundingBox.max.y) &&
+            IsLowerOrEqual (point.z, this.boundingBox.max.z);
         return isEqual;
     }
 };
 
-OV.Octree = class
+export class Octree
 {
     constructor (boundingBox, options)
     {
@@ -141,7 +145,7 @@ OV.Octree = class
                 this.options.maxTreeDepth = options.maxTreeDepth;
             }
         }
-        this.rootNode = new OV.OctreeNode (boundingBox, 0, this.options);
+        this.rootNode = new OctreeNode (boundingBox, 0, this.options);
     }
 
     AddPoint (point, data)

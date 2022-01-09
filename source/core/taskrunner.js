@@ -1,4 +1,4 @@
-OV.TaskRunner = class
+export class TaskRunner
 {
     constructor ()
     {
@@ -55,26 +55,26 @@ OV.TaskRunner = class
     }
 };
 
-OV.RunTaskAsync = function (task)
+export function RunTaskAsync (task)
 {
     setTimeout (() => {
         task ();
     }, 0);
 };
 
-OV.RunTasks = function (count, callbacks)
+export function RunTasks (count, callbacks)
 {
-    let taskRunner = new OV.TaskRunner ();
+    let taskRunner = new TaskRunner ();
     taskRunner.Run (count, callbacks);
 };
 
-OV.RunTasksBatch = function (count, batchCount, callbacks)
+export function RunTasksBatch (count, batchCount, callbacks)
 {
-    let taskRunner = new OV.TaskRunner ();
+    let taskRunner = new TaskRunner ();
     taskRunner.RunBatch (count, batchCount, callbacks);
 };
 
-OV.WaitWhile = function (expression)
+export function WaitWhile (expression)
 {
     function Waiter (expression)
     {

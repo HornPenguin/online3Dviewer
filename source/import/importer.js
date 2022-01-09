@@ -1,12 +1,29 @@
-OV.ImportSettings = class
+import { RunTaskAsync } from "../core/taskrunner";
+import { CreateObjectUrl, RevokeObjectUrl } from "../io/bufferutils";
+import { LoadExternalLibrary } from "../io/externallibs";
+import { FileSource, GetFileName } from "../io/fileutils";
+import { Color } from "../model/color";
+import { File, FileList } from "./filelist";
+import { Importer3dm } from "./importer3dm";
+import { Importer3ds } from "./importer3ds";
+import { ImporterGltf } from "./importergltf";
+import { ImporterIfc } from "./importerifc";
+import { ImporterO3dv } from "./importero3dv";
+import { ImporterObj } from "./importerobj";
+import { ImporterOff } from "./importeroff";
+import { ImporterPly } from "./importerply";
+import { ImporterStl } from "./importerstl";
+import { ImporterThree3mf, ImporterThreeDae, ImporterThreeFbx, ImporterThreeWrl } from "./importerthree";
+
+export class ImportSettings
 {
     constructor ()
     {
-        this.defaultColor = new OV.Color (200, 200, 200);
+        this.defaultColor = new Color (200, 200, 200);
     }
 };
 
-OV.ImportErrorCode =
+export const ImportErrorCode =
 {
     NoImportableFile : 1,
     FailedToLoadFile : 2,
@@ -14,7 +31,7 @@ OV.ImportErrorCode =
     UnknownError : 4
 };
 
-OV.ImportError = class
+export class ImportError
 {
     constructor (code, message)
     {
@@ -23,7 +40,7 @@ OV.ImportError = class
     }
 };
 
-OV.ImportResult = class
+export class ImportResult
 {
     constructor ()
     {
@@ -35,7 +52,7 @@ OV.ImportResult = class
     }
 };
 
-OV.ImporterFileAccessor = class
+export class ImporterFileAccessor
 {
     constructor (getBufferCallback)
     {
@@ -46,7 +63,7 @@ OV.ImporterFileAccessor = class
 
     GetFileBuffer (filePath)
     {
-        let fileName = OV.GetFileName (filePath);
+        let fileName = GetFileName (filePath);
         if (this.fileBuffers.has (fileName)) {
             return this.fileBuffers.get (fileName);
         }
@@ -57,7 +74,7 @@ OV.ImporterFileAccessor = class
 
     GetTextureBuffer (filePath)
     {
-        let fileName = OV.GetFileName (filePath);
+        let fileName = GetFileName (filePath);
         if (this.textureBuffers.has (fileName)) {
             return this.textureBuffers.get (fileName);
         }
@@ -65,7 +82,7 @@ OV.ImporterFileAccessor = class
         let textureBuffer = this.getBufferCallback (fileName);
         if (textureBuffer !== null) {
             buffer = {
-                url : OV.CreateObjectUrl (textureBuffer),
+                url : CreateObjectUrl (textureBuffer),
                 buffer : textureBuffer
             };
         }
@@ -74,26 +91,26 @@ OV.ImporterFileAccessor = class
     }
 };
 
-OV.Importer = class
+export class Importer
 {
     constructor ()
     {
         this.importers = [
-            new OV.ImporterObj (),
-            new OV.ImporterStl (),
-            new OV.ImporterOff (),
-            new OV.ImporterPly (),
-            new OV.Importer3ds (),
-            new OV.ImporterGltf (),
-            new OV.ImporterO3dv (),
-            new OV.Importer3dm (),
-            new OV.ImporterIfc (),
-            new OV.ImporterThreeFbx (),
-            new OV.ImporterThreeDae (),
-            new OV.ImporterThreeWrl (),
-            new OV.ImporterThree3mf ()
+            new ImporterObj (),
+            new ImporterStl (),
+            new ImporterOff (),
+            new ImporterPly (),
+            new Importer3ds (),
+            new ImporterGltf (),
+            new ImporterO3dv (),
+            new Importer3dm (),
+            new ImporterIfc (),
+            new ImporterThreeFbx (),
+            new ImporterThreeDae (),
+            new ImporterThreeWrl (),
+            new ImporterThree3mf ()
         ];
-        this.fileList = new OV.FileList ();
+        this.fileList = new FileList ();
         this.model = null;
         this.usedFiles = [];
         this.missingFiles = [];
@@ -108,7 +125,7 @@ OV.Importer = class
     {
         this.LoadFiles (fileList, fileSource, () => {
             callbacks.onFilesLoaded ();
-            OV.RunTaskAsync (() => {
+            RunTaskAsync (() => {
                 this.ImportLoadedFiles (settings, callbacks);
             });
         });
@@ -116,10 +133,10 @@ OV.Importer = class
 
     LoadFiles (fileList, fileSource, onReady)
     {
-        let newFileList = new OV.FileList (this.importers);
-        if (fileSource === OV.FileSource.Url) {
+        let newFileList = new FileList (this.importers);
+        if (fileSource === FileSource.Url) {
             newFileList.FillFromFileUrls (fileList);
-        } else if (fileSource === OV.FileSource.File) {
+        } else if (fileSource === FileSource.File) {
             newFileList.FillFromFileObjects (fileList);
         }
         let reset = false;
@@ -155,7 +172,7 @@ OV.Importer = class
     {
         let importableFiles = this.GetImportableFiles (this.fileList);
         if (importableFiles.length === 0) {
-            callbacks.onImportError (new OV.ImportError (OV.ImportErrorCode.NoImportableFile, null));
+            callbacks.onImportError (new ImportError (ImportErrorCode.NoImportableFile, null));
             return;
         }
 
@@ -166,10 +183,10 @@ OV.Importer = class
             let fileNames = importableFiles.map (importableFile => importableFile.file.name);
             callbacks.onSelectMainFile (fileNames, (mainFileIndex) => {
                 if (mainFileIndex === null) {
-                    callbacks.onImportError (new OV.ImportError (OV.ImportErrorCode.NoImportableFile, null));
+                    callbacks.onImportError (new ImportError (ImportErrorCode.NoImportableFile, null));
                     return;
                 }
-                OV.RunTaskAsync (() => {
+                RunTaskAsync (() => {
                     let mainFile = importableFiles[mainFileIndex];
                     this.ImportLoadedMainFile (mainFile, settings, callbacks);
                 });
@@ -180,7 +197,7 @@ OV.Importer = class
     ImportLoadedMainFile (mainFile, settings, callbacks)
     {
         if (mainFile === null || mainFile.file === null || mainFile.file.content === null) {
-            callbacks.onImportError (new OV.ImportError (OV.ImportErrorCode.FailedToLoadFile, null));
+            callbacks.onImportError (new ImportError (ImportErrorCode.FailedToLoadFile, null));
             return;
         }
 
@@ -191,7 +208,7 @@ OV.Importer = class
         this.usedFiles.push (mainFile.file.name);
 
         let importer = mainFile.importer;
-        let fileAccessor = new OV.ImporterFileAccessor ((fileName) => {
+        let fileAccessor = new ImporterFileAccessor ((fileName) => {
             let fileBuffer = null;
             let file = this.fileList.FindFileByPath (fileName);
             if (file === null || file.content === null) {
@@ -216,7 +233,7 @@ OV.Importer = class
             },
             onSuccess : () => {
                 this.model = importer.GetModel ();
-                let result = new OV.ImportResult ();
+                let result = new ImportResult ();
                 result.mainFile = mainFile.file.name;
                 result.model = this.model;
                 result.usedFiles = this.usedFiles;
@@ -226,7 +243,7 @@ OV.Importer = class
             },
             onError : () => {
                 let message = importer.GetErrorMessage ();
-                callbacks.onImportError (new OV.ImportError (OV.ImportErrorCode.ImportFailed, message));
+                callbacks.onImportError (new ImportError (ImportErrorCode.ImportFailed, message));
             },
             onComplete : () => {
                 importer.Clear ();
@@ -247,14 +264,14 @@ OV.Importer = class
             onReady ();
             return;
         }
-        OV.LoadExternalLibrary ('loaders/fflate.min.js').then (() => {
+        LoadExternalLibrary ('loaders/fflate.min.js').then (() => {
             for (let i = 0; i < archives.length; i++) {
                 const archiveFile = archives[i];
                 const archiveBuffer = new Uint8Array (archiveFile.content);
                 const decompressed = fflate.unzipSync (archiveBuffer);
                 for (const fileName in decompressed) {
                     if (Object.prototype.hasOwnProperty.call (decompressed, fileName)) {
-                        let file = new OV.File (fileName, OV.FileSource.Decompressed);
+                        let file = new File (fileName, FileSource.Decompressed);
                         file.SetContent (decompressed[fileName].buffer);
                         fileList.AddFile (file);
                     }
@@ -314,7 +331,7 @@ OV.Importer = class
             let material = this.model.GetMaterial (i);
             material.EnumerateTextureMaps ((texture) => {
                 if (texture.url !== null) {
-                    OV.RevokeObjectUrl (texture.url);
+                    RevokeObjectUrl (texture.url);
                 }
             });
         }

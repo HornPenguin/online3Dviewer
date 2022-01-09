@@ -1,4 +1,12 @@
-OV.ImporterOff = class extends OV.ImporterBase
+import { Coord3D } from "../geometry/coord3d";
+import { Direction } from "../geometry/geometry";
+import { ArrayBufferToUtf8String } from "../io/bufferutils";
+import { Mesh } from "../model/mesh";
+import { Triangle } from "../model/triangle";
+import { ImporterBase } from "./importerbase";
+import { ParametersFromLine, ReadLines } from "./importerutils";
+
+export class ImporterOff extends ImporterBase
 {
     constructor ()
     {
@@ -12,7 +20,7 @@ OV.ImporterOff = class extends OV.ImporterBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Y;
+        return Direction.Y;
     }
 
     ClearContent ()
@@ -23,7 +31,7 @@ OV.ImporterOff = class extends OV.ImporterBase
 
     ResetContent ()
     {
-        this.mesh = new OV.Mesh ();
+        this.mesh = new Mesh ();
         this.model.AddMeshToRootNode (this.mesh);
         this.status = {
             vertexCount : 0,
@@ -35,8 +43,8 @@ OV.ImporterOff = class extends OV.ImporterBase
 
     ImportContent (fileContent, onFinish)
     {
-        let textContent = OV.ArrayBufferToUtf8String (fileContent);
-        OV.ReadLines (textContent, (line) => {
+        let textContent = ArrayBufferToUtf8String (fileContent);
+        ReadLines (textContent, (line) => {
             if (!this.WasError ()) {
                 this.ProcessLine (line);
             }
@@ -50,7 +58,7 @@ OV.ImporterOff = class extends OV.ImporterBase
             return;
         }
 
-        let parameters = OV.ParametersFromLine (line, '#');
+        let parameters = ParametersFromLine (line, '#');
         if (parameters.length === 0) {
             return;
         }
@@ -69,7 +77,7 @@ OV.ImporterOff = class extends OV.ImporterBase
 
         if (this.status.foundVertex < this.status.vertexCount) {
             if (parameters.length >= 3) {
-                this.mesh.AddVertex (new OV.Coord3D (
+                this.mesh.AddVertex (new Coord3D (
                     parseFloat (parameters[0]),
                     parseFloat (parameters[1]),
                     parseFloat (parameters[2])
@@ -89,7 +97,7 @@ OV.ImporterOff = class extends OV.ImporterBase
                     let v0 = parseInt (parameters[1]);
                     let v1 = parseInt (parameters[i + 2]);
                     let v2 = parseInt (parameters[i + 3]);
-                    let triangle = new OV.Triangle (v0, v1, v2);
+                    let triangle = new Triangle (v0, v1, v2);
                     this.mesh.AddTriangle (triangle);
                 }
                 this.status.foundFace += 1;

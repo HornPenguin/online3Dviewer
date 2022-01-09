@@ -1,13 +1,19 @@
-OV.ModelFinalizer = class
+import { CopyObjectAttributes } from "../core/core";
+import { AddCoord3D, Coord3D, CoordIsEqual3D } from "../geometry/coord3d";
+import { Color } from "./color";
+import { PhongMaterial } from "./material";
+import { CalculateTriangleNormal, GetMeshType, MeshType } from "./meshutils";
+
+export class ModelFinalizer
 {
     constructor (params)
     {
         this.params = {
             getDefaultMaterialColor : () => {
-                return new OV.Color (0, 0, 0);
+                return new Color (0, 0, 0);
             }
         };
-        OV.CopyObjectAttributes (params, this.params);
+        CopyObjectAttributes (params, this.params);
         this.defaultMaterialIndex = null;
     }
 
@@ -51,8 +57,8 @@ OV.ModelFinalizer = class
     {
         for (let meshIndex = 0; meshIndex < model.MeshCount (); meshIndex++) {
             let mesh = model.GetMesh (meshIndex);
-            let type = OV.GetMeshType (mesh);
-            if (type === OV.MeshType.Empty) {
+            let type = GetMeshType (mesh);
+            if (type === MeshType.Empty) {
                 model.RemoveMesh (meshIndex);
                 meshIndex = meshIndex - 1;
                 continue;
@@ -71,7 +77,7 @@ OV.ModelFinalizer = class
                 {
                     for (let i = 0; i < array.length; i++) {
                         let current = array[i];
-                        if (OV.CoordIsEqual3D (current, normal)) {
+                        if (CoordIsEqual3D (current, normal)) {
                             return true;
                         }
                     }
@@ -91,9 +97,9 @@ OV.ModelFinalizer = class
                     }
                 }
 
-                let averageNormal = new OV.Coord3D (0.0, 0.0, 0.0);
+                let averageNormal = new Coord3D (0.0, 0.0, 0.0);
                 for (let i = 0; i < averageNormals.length; i++) {
-                    averageNormal = OV.AddCoord3D (averageNormal, averageNormals[i]);
+                    averageNormal = AddCoord3D (averageNormal, averageNormals[i]);
                 }
                 averageNormal.MultiplyScalar (1.0 / averageNormals.length);
                 averageNormal.Normalize ();
@@ -112,7 +118,7 @@ OV.ModelFinalizer = class
                 let v0 = mesh.GetVertex (triangle.v0);
                 let v1 = mesh.GetVertex (triangle.v1);
                 let v2 = mesh.GetVertex (triangle.v2);
-                let normal = OV.CalculateTriangleNormal (v0, v1, v2);
+                let normal = CalculateTriangleNormal (v0, v1, v2);
                 triangleNormals.push (normal);
                 vertexToTriangles.get (triangle.v0).push (triangleIndex);
                 vertexToTriangles.get (triangle.v1).push (triangleIndex);
@@ -155,7 +161,7 @@ OV.ModelFinalizer = class
                 let v0 = mesh.GetVertex (triangle.v0);
                 let v1 = mesh.GetVertex (triangle.v1);
                 let v2 = mesh.GetVertex (triangle.v2);
-                let normal = OV.CalculateTriangleNormal (v0, v1, v2);
+                let normal = CalculateTriangleNormal (v0, v1, v2);
                 let normalIndex = mesh.AddNormal (normal);
                 triangle.SetNormals (normalIndex, normalIndex, normalIndex);
             } else {
@@ -196,7 +202,7 @@ OV.ModelFinalizer = class
     {
         if (this.defaultMaterialIndex === null) {
             let defaultMaterialColor = this.params.getDefaultMaterialColor ();
-            let defaultMaterial = new OV.PhongMaterial ();
+            let defaultMaterial = new PhongMaterial ();
             defaultMaterial.color = defaultMaterialColor;
             defaultMaterial.isDefault = true;
             this.defaultMaterialIndex = model.AddMaterial (defaultMaterial);
@@ -210,13 +216,13 @@ OV.ModelFinalizer = class
     }
 };
 
-OV.FinalizeModel = function (model, params)
+export function FinalizeModel (model, params)
 {
-    let finalizer = new OV.ModelFinalizer (params);
+    let finalizer = new ModelFinalizer (params);
     finalizer.Finalize (model);
 };
 
-OV.CheckModel = function (model)
+export function CheckModel (model)
 {
     function IsCorrectValue (val)
     {

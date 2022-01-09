@@ -1,4 +1,9 @@
-OV.ImporterBase = class
+import { Direction } from "../geometry/geometry";
+import { Model } from "../model/model";
+import { FinalizeModel } from "../model/modelfinalization";
+import { IsModelEmpty } from "../model/modelutils";
+
+export class ImporterBase
 {
     constructor ()
     {
@@ -17,7 +22,7 @@ OV.ImporterBase = class
         this.name = name;
         this.extension = extension;
         this.callbacks = callbacks;
-        this.model = new OV.Model ();
+        this.model = new Model ();
         this.error = false;
         this.message = null;
         this.ResetContent ();
@@ -45,14 +50,14 @@ OV.ImporterBase = class
             return;
         }
 
-        if (OV.IsModelEmpty (this.model)) {
+        if (IsModelEmpty (this.model)) {
             this.error = true;
             callbacks.onError ();
             callbacks.onComplete ();
             return;
         }
 
-        OV.FinalizeModel (this.model, {
+        FinalizeModel (this.model, {
             getDefaultMaterialColor : this.callbacks.getDefaultMaterialColor
         });
 
@@ -67,7 +72,7 @@ OV.ImporterBase = class
 
     GetUpDirection ()
     {
-        return OV.Direction.Z;
+        return Direction.Z;
     }
 
     ClearContent ()

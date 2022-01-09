@@ -1,4 +1,9 @@
-OV.Matrix = class
+import { Quaternion } from "./quaternion";
+import { Coord3D, VectorLength3D } from "./coord3d";
+import { IsEqual, IsNegative } from "./geometry";
+import { QuaternionFromAxisAngle } from "./quaternion";
+
+export class Matrix
 {
     constructor (matrix)
     {
@@ -32,7 +37,7 @@ OV.Matrix = class
             this.matrix[8], this.matrix[9], this.matrix[10], this.matrix[11],
             this.matrix[12], this.matrix[13], this.matrix[14], this.matrix[15]
         ];
-        return new OV.Matrix (result);
+        return new Matrix (result);
     }
 
     CreateIdentity ()
@@ -48,9 +53,9 @@ OV.Matrix = class
 
     IsIdentity ()
     {
-        let identity = new OV.Matrix ().CreateIdentity ().Get ();
+        let identity = new Matrix ().CreateIdentity ().Get ();
         for (let i = 0; i < 16; i++) {
-            if (!OV.IsEqual (this.matrix[i], identity[i])) {
+            if (!IsEqual (this.matrix[i], identity[i])) {
                 return false;
             }
         }
@@ -93,7 +98,7 @@ OV.Matrix = class
 
     CreateRotationAxisAngle (axis, angle)
     {
-        let quaternion = OV.QuaternionFromAxisAngle (axis, angle);
+        let quaternion = QuaternionFromAxisAngle (axis, angle);
         return this.CreateRotation (quaternion.x, quaternion.y, quaternion.z, quaternion.w);
     }
 
@@ -145,20 +150,20 @@ OV.Matrix = class
 
     DecomposeTRS ()
     {
-        let translation = new OV.Coord3D (
+        let translation = new Coord3D (
             this.matrix[12],
             this.matrix[13],
             this.matrix[14]
         );
 
-        let sx = OV.VectorLength3D (this.matrix[0], this.matrix[1], this.matrix[2]);
-        let sy = OV.VectorLength3D (this.matrix[4], this.matrix[5], this.matrix[6]);
-        let sz = OV.VectorLength3D (this.matrix[8], this.matrix[9], this.matrix[10]);
+        let sx = VectorLength3D (this.matrix[0], this.matrix[1], this.matrix[2]);
+        let sy = VectorLength3D (this.matrix[4], this.matrix[5], this.matrix[6]);
+        let sz = VectorLength3D (this.matrix[8], this.matrix[9], this.matrix[10]);
         let determinant = this.Determinant ();
-        if (OV.IsNegative (determinant)) {
+        if (IsNegative (determinant)) {
             sx *= -1.0;
         }
-        let scale = new OV.Coord3D (sx, sy, sz);
+        let scale = new Coord3D (sx, sy, sz);
 
         let m00 = this.matrix[0] / sx;
         let m01 = this.matrix[4] / sy;
@@ -175,7 +180,7 @@ OV.Matrix = class
         let tr = m00 + m11 + m22;
         if (tr > 0.0) {
             let s = Math.sqrt (tr + 1.0) * 2.0;
-            rotation = new OV.Quaternion (
+            rotation = new Quaternion (
                 (m21 - m12) / s,
                 (m02 - m20) / s,
                 (m10 - m01) / s,
@@ -183,7 +188,7 @@ OV.Matrix = class
             );
         } else if ((m00 > m11) && (m00 > m22)) {
             let s = Math.sqrt (1.0 + m00 - m11 - m22) * 2.0;
-            rotation = new OV.Quaternion (
+            rotation = new Quaternion (
                 0.25 * s,
                 (m01 + m10) / s,
                 (m02 + m20) / s,
@@ -191,7 +196,7 @@ OV.Matrix = class
             );
         } else if (m11 > m22) {
             let s = Math.sqrt (1.0 + m11 - m00 - m22) * 2.0;
-            rotation = new OV.Quaternion (
+            rotation = new Quaternion (
                 (m01 + m10) / s,
                 0.25 * s,
                 (m12 + m21) / s,
@@ -199,7 +204,7 @@ OV.Matrix = class
             );
         } else {
             let s = Math.sqrt (1.0 + m22 - m00 - m11) * 2.0;
-            rotation = new OV.Quaternion (
+            rotation = new Quaternion (
                 (m02 + m20) / s,
                 (m12 + m21) / s,
                 0.25 * s,
@@ -283,7 +288,7 @@ OV.Matrix = class
         let b11 = a22 * a33 - a23 * a32;
 
         let determinant = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
-        if (OV.IsEqual (determinant, 0.0)) {
+        if (IsEqual (determinant, 0.0)) {
             return null;
         }
 
@@ -306,7 +311,7 @@ OV.Matrix = class
             (a20 * b03 - a21 * b01 + a22 * b00) / determinant
         ];
 
-        return new OV.Matrix (result);
+        return new Matrix (result);
     }
 
     MultiplyVector (vector)
@@ -397,16 +402,16 @@ OV.Matrix = class
             a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33
         ];
 
-        return new OV.Matrix (result);
+        return new Matrix (result);
     }
 };
 
-OV.MatrixIsEqual = function (a, b)
+export function MatrixIsEqual (a, b)
 {
     const aMatrix = a.Get ();
     const bMatrix = b.Get ();
 	for (let i = 0; i < 16; i++) {
-        if (!OV.IsEqual (aMatrix[i], bMatrix[i])) {
+        if (!IsEqual (aMatrix[i], bMatrix[i])) {
             return false;
         }
     }

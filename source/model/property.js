@@ -1,4 +1,4 @@
-OV.PropertyType =
+export const PropertyType =
 {
     Text : 1,
     Integer : 2,
@@ -8,7 +8,7 @@ OV.PropertyType =
     Color : 6
 };
 
-OV.Property = class
+export class Property
 {
     constructor (type, name, value)
     {
@@ -18,7 +18,7 @@ OV.Property = class
     }
 };
 
-OV.PropertyGroup = class
+export class PropertyGroup
 {
     constructor (name)
     {

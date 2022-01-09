@@ -1,27 +1,31 @@
-OV.MeshType =
+import { Coord3D, CrossVector3D, SubCoord3D } from "../geometry/coord3d";
+import { Matrix } from "../geometry/matrix";
+import { Transformation } from "../geometry/transformation";
+
+export const MeshType =
 {
     Empty : 0,
     TriangleMesh : 1
 };
 
-OV.GetMeshType = function (mesh)
+export function GetMeshType (mesh)
 {
     if (mesh.TriangleCount () > 0) {
-        return OV.MeshType.TriangleMesh;
+        return MeshType.TriangleMesh;
     }
-    return OV.MeshType.Empty;
+    return MeshType.Empty;
 };
 
-OV.CalculateTriangleNormal = function (v0, v1, v2)
+export function CalculateTriangleNormal (v0, v1, v2)
 {
-    let v = OV.SubCoord3D (v1, v0);
-    let w = OV.SubCoord3D (v2, v0);
-    let normal = OV.CrossVector3D (v, w);
+    let v = SubCoord3D (v1, v0);
+    let w = SubCoord3D (v2, v0);
+    let normal = CrossVector3D (v, w);
     normal.Normalize ();
     return normal;
 };
 
-OV.TransformMesh = function (mesh, transformation)
+export function TransformMesh (mesh, transformation)
 {
     if (transformation.IsIdentity ()) {
         return;
@@ -37,8 +41,8 @@ OV.TransformMesh = function (mesh, transformation)
 
     if (mesh.NormalCount () > 0) {
         let trs = transformation.GetMatrix ().DecomposeTRS ();
-        let normalMatrix = new OV.Matrix ().ComposeTRS (new OV.Coord3D (0.0, 0.0, 0.0), trs.rotation, new OV.Coord3D (1.0, 1.0, 1.0));
-        let normalTransformation = new OV.Transformation (normalMatrix);
+        let normalMatrix = new Matrix ().ComposeTRS (new Coord3D (0.0, 0.0, 0.0), trs.rotation, new Coord3D (1.0, 1.0, 1.0));
+        let normalTransformation = new Transformation (normalMatrix);
         for (let i = 0; i < mesh.NormalCount (); i++) {
             let normal = mesh.GetNormal (i);
             let transformed = normalTransformation.TransformCoord3D (normal);
@@ -49,7 +53,7 @@ OV.TransformMesh = function (mesh, transformation)
     }
 };
 
-OV.FlipMeshTrianglesOrientation = function (mesh)
+export function FlipMeshTrianglesOrientation (mesh)
 {
     for (let i = 0; i < mesh.TriangleCount (); i++) {
         let triangle = mesh.GetTriangle (i);

@@ -1,4 +1,6 @@
-OV.Box3D = class
+import { Coord3D } from "./coord3d";
+
+export class Box3D
 {
     constructor (min, max)
     {
@@ -18,7 +20,7 @@ OV.Box3D = class
 
     GetCenter ()
     {
-        return new OV.Coord3D (
+        return new Coord3D (
             (this.min.x + this.max.x) / 2.0,
             (this.min.y + this.max.y) / 2.0,
             (this.min.z + this.max.z) / 2.0
@@ -26,13 +28,13 @@ OV.Box3D = class
     }
 };
 
-OV.BoundingBoxCalculator3D = class
+export class BoundingBoxCalculator3D
 {
     constructor ()
     {
-        this.box = new OV.Box3D (
-            new OV.Coord3D (Infinity, Infinity, Infinity),
-            new OV.Coord3D (-Infinity, -Infinity, -Infinity)
+        this.box = new Box3D (
+            new Coord3D (Infinity, Infinity, Infinity),
+            new Coord3D (-Infinity, -Infinity, -Infinity)
         );
         this.isValid = false;
     }

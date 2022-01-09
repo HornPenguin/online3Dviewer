@@ -1,22 +1,26 @@
-OV.ExporterSettings = class
+import { CopyObjectAttributes } from "../core/core";
+import { Transformation } from "../geometry/transformation";
+import { CalculateTriangleNormal, TransformMesh } from "../model/meshutils";
+
+export class ExporterSettings
 {
     constructor (settings)
     {
-        this.transformation = new OV.Transformation ();
+        this.transformation = new Transformation ();
         this.isMeshVisible = (meshInstanceId) => {
             return true;
         };
 
-        OV.CopyObjectAttributes (settings, this);
+        CopyObjectAttributes (settings, this);
     }
 };
 
-OV.ExporterModel = class
+export class ExporterModel
 {
     constructor (model, settings)
     {
         this.model = model;
-        this.settings = settings || new OV.ExporterSettings ();
+        this.settings = settings || new ExporterSettings ();
     }
 
     MaterialCount ()
@@ -76,7 +80,7 @@ OV.ExporterModel = class
             let mesh = meshInstance.GetMesh ();
             let transformed = mesh.Clone ();
             if (!transformation.IsIdentity ()) {
-                OV.TransformMesh (transformed, transformation);
+                TransformMesh (transformed, transformation);
             }
 
             onMesh (transformed);
@@ -109,7 +113,7 @@ OV.ExporterModel = class
     {
         this.EnumerateTransformedMeshes ((mesh) => {
             mesh.EnumerateTriangleVertices ((v0, v1, v2) => {
-                let normal = OV.CalculateTriangleNormal (v0, v1, v2);
+                let normal = CalculateTriangleNormal (v0, v1, v2);
                 onTriangle (v0, v1, v2, normal);
             });
         });

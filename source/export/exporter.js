@@ -1,14 +1,22 @@
-OV.Exporter = class
+import { Exporter3dm } from "./exporter3dm";
+import { ExporterGltf } from "./exportergltf";
+import { ExporterModel } from "./exportermodel";
+import { ExporterObj } from "./exporterobj";
+import { ExporterOff } from "./exporteroff";
+import { ExporterPly } from "./exporterply";
+import { ExporterStl } from "./exporterstl";
+
+export class Exporter
 {
     constructor ()
     {
         this.exporters = [
-            new OV.ExporterObj (),
-            new OV.ExporterStl (),
-            new OV.ExporterPly (),
-            new OV.ExporterOff (),
-            new OV.ExporterGltf (),
-            new OV.Exporter3dm ()
+            new ExporterObj (),
+            new ExporterStl (),
+            new ExporterPly (),
+            new ExporterOff (),
+            new ExporterGltf (),
+            new Exporter3dm ()
         ];
     }
 
@@ -32,7 +40,7 @@ OV.Exporter = class
             return;
         }
 
-        let exporterModel = new OV.ExporterModel (model, settings);
+        let exporterModel = new ExporterModel (model, settings);
         exporter.Export (exporterModel, format, (files) => {
             if (files.length === 0) {
                 callbacks.onError ();

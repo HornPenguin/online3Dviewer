@@ -1,4 +1,6 @@
-OV.NameFromLine = function (line, startIndex, commentChar)
+import { IsLower } from "../geometry/geometry";
+
+export function NameFromLine (line, startIndex, commentChar)
 {
 	let name = line.substr (startIndex);
 	let commentStart = name.indexOf (commentChar);
@@ -8,7 +10,7 @@ OV.NameFromLine = function (line, startIndex, commentChar)
 	return name.trim ();
 };
 
-OV.ParametersFromLine = function (line, commentChar)
+export function ParametersFromLine (line, commentChar)
 {
 	if (commentChar !== null) {
 		let commentStart = line.indexOf (commentChar);
@@ -19,7 +21,7 @@ OV.ParametersFromLine = function (line, commentChar)
 	return line.split (/\s+/u);
 };
 
-OV.ReadLines = function (str, onLine)
+export function ReadLines (str, onLine)
 {
 	function LineFound (line, onLine)
 	{
@@ -28,7 +30,7 @@ OV.ReadLines = function (str, onLine)
 			onLine (trimmed);
 		}
 	}
-	
+
 	let cursor = 0;
 	let next = str.indexOf ('\n', cursor);
 	while (next !== -1) {
@@ -39,24 +41,24 @@ OV.ReadLines = function (str, onLine)
 	LineFound (str.substr (cursor), onLine);
 };
 
-OV.IsPowerOfTwo = function (x)
+export function IsPowerOfTwo (x)
 {
 	return (x & (x - 1)) === 0;
 };
 
-OV.NextPowerOfTwo = function (x)
+export function NextPowerOfTwo (x)
 {
-	if (OV.IsPowerOfTwo (x)) {
+	if (IsPowerOfTwo (x)) {
 		return x;
 	}
 	let npot = Math.pow (2, Math.ceil (Math.log (x) / Math.log (2)));
 	return parseInt (npot, 10);
 };
 
-OV.UpdateMaterialTransparency = function (material)
+export function UpdateMaterialTransparency (material)
 {
 	material.transparent = false;
-	if (OV.IsLower (material.opacity, 1.0)) {
+	if (IsLower (material.opacity, 1.0)) {
 		material.transparent = true;
 	}
 };

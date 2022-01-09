@@ -1,10 +1,10 @@
-OV.ArrayBufferToUtf8String = function (buffer)
+export function ArrayBufferToUtf8String (buffer)
 {
 	let decoder = new TextDecoder ('utf-8');
 	return decoder.decode (buffer);
 };
 
-OV.ArrayBufferToAsciiString = function (buffer)
+export function ArrayBufferToAsciiString (buffer)
 {
 	let text = '';
 	let bufferView = new Uint8Array (buffer);
@@ -14,7 +14,7 @@ OV.ArrayBufferToAsciiString = function (buffer)
 	return text;
 };
 
-OV.AsciiStringToArrayBuffer = function (str)
+export function AsciiStringToArrayBuffer (str)
 {
 	let buffer = new ArrayBuffer (str.length);
 	let bufferView = new Uint8Array (buffer);
@@ -24,14 +24,14 @@ OV.AsciiStringToArrayBuffer = function (str)
 	return buffer;
 };
 
-OV.Utf8StringToArrayBuffer = function (str)
+export function Utf8StringToArrayBuffer (str)
 {
 	let encoder = new TextEncoder ();
 	let uint8Array = encoder.encode (str);
 	return uint8Array.buffer;
 };
 
-OV.Base64DataURIToArrayBuffer = function (uri)
+export function Base64DataURIToArrayBuffer (uri)
 {
 	let dataPrefix = 'data:';
 	if (!uri.startsWith (dataPrefix)) {
@@ -62,7 +62,7 @@ OV.Base64DataURIToArrayBuffer = function (uri)
 	};
 };
 
-OV.GetFileExtensionFromMimeType = function (mimeType)
+export function GetFileExtensionFromMimeType (mimeType)
 {
 	if (mimeType === undefined || mimeType === null) {
 		return '';
@@ -74,21 +74,21 @@ OV.GetFileExtensionFromMimeType = function (mimeType)
 	return mimeParts[mimeParts.length - 1];
 };
 
-OV.CreateObjectUrl = function (content)
+export function CreateObjectUrl (content)
 {
 	let blob = new Blob ([content]);
 	let url = URL.createObjectURL (blob);
 	return url;
 };
 
-OV.CreateObjectUrlWithMimeType = function (content, mimeType)
+export function CreateObjectUrlWithMimeType (content, mimeType)
 {
 	let blob = new Blob ([content], { type : mimeType });
 	let url = URL.createObjectURL (blob);
 	return url;
 };
 
-OV.RevokeObjectUrl = function (url)
+export function RevokeObjectUrl (url)
 {
 	URL.revokeObjectURL (url);
 };

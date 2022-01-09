@@ -1,4 +1,10 @@
-OV.GeneratorParams = class
+import { Coord2D } from "../geometry/coord2d";
+import { Coord3D } from "../geometry/coord3d";
+import { IsZero } from "../geometry/geometry";
+import { Mesh } from "./mesh";
+import { Triangle } from "./triangle";
+
+export class GeneratorParams
 {
     constructor ()
     {
@@ -19,12 +25,12 @@ OV.GeneratorParams = class
     }
 };
 
-OV.Generator = class
+export class Generator
 {
     constructor (params)
     {
-        this.params = params || new OV.GeneratorParams ();
-        this.mesh = new OV.Mesh ();
+        this.params = params || new GeneratorParams ();
+        this.mesh = new Mesh ();
         if (this.params.name !== null) {
             this.mesh.SetName (this.params.name);
         }
@@ -38,7 +44,7 @@ OV.Generator = class
 
     AddVertex (x, y, z)
     {
-        let coord = new OV.Coord3D (x, y, z);
+        let coord = new Coord3D (x, y, z);
         return this.mesh.AddVertex (coord);
     }
 
@@ -64,7 +70,7 @@ OV.Generator = class
 
     AddTriangle (v0, v1, v2)
     {
-        let triangle = new OV.Triangle (v0, v1, v2);
+        let triangle = new Triangle (v0, v1, v2);
         if (this.params.material !== null) {
             triangle.mat = this.params.material;
         }
@@ -102,7 +108,7 @@ OV.Generator = class
     }
 };
 
-OV.GeneratorHelper = class
+export class GeneratorHelper
 {
     constructor (generator)
     {
@@ -158,25 +164,25 @@ OV.GeneratorHelper = class
     }
 };
 
-OV.GenerateCuboid = function (genParams, xSize, ySize, zSize)
+export function GenerateCuboid (genParams, xSize, ySize, zSize)
 {
-    let generator = new OV.Generator (genParams);
+    let generator = new Generator (genParams);
     let vertices = [
-        new OV.Coord2D (0.0, 0.0),
-        new OV.Coord2D (xSize, 0.0),
-        new OV.Coord2D (xSize, ySize),
-        new OV.Coord2D (0.0, ySize),
+        new Coord2D (0.0, 0.0),
+        new Coord2D (xSize, 0.0),
+        new Coord2D (xSize, ySize),
+        new Coord2D (0.0, ySize),
     ];
-    let helper = new OV.GeneratorHelper (generator);
+    let helper = new GeneratorHelper (generator);
     helper.GenerateExtrude (vertices, zSize, null);
     return generator.GetMesh ();
 };
 
-OV.GenerateCylinder = function (genParams, radius, height, segments, smooth)
+export function GenerateCylinder (genParams, radius, height, segments, smooth)
 {
     function GetCylindricalCoord (radius, angle)
     {
-        return new OV.Coord2D (
+        return new Coord2D (
             radius * Math.cos (angle),
             radius * Math.sin (angle)
         );
@@ -186,23 +192,23 @@ OV.GenerateCylinder = function (genParams, radius, height, segments, smooth)
         return null;
     }
 
-    let generator = new OV.Generator (genParams);
+    let generator = new Generator (genParams);
     let baseVertices = [];
 	const step = 2.0 * Math.PI / segments;
 	for (let i = 0; i < segments; i++) {
         let cylindrical = GetCylindricalCoord (radius, i * step);
 		baseVertices.push (cylindrical);
 	}
-    let helper = new OV.GeneratorHelper (generator);
+    let helper = new GeneratorHelper (generator);
     helper.GenerateExtrude (baseVertices, height, smooth ? 1 : null);
     return generator.GetMesh ();
 };
 
-OV.GenerateSphere = function (genParams, radius, segments, smooth)
+export function GenerateSphere (genParams, radius, segments, smooth)
 {
     function GetSphericalCoord (radius, theta, phi)
     {
-        return new OV.Coord3D (
+        return new Coord3D (
             radius * Math.sin (theta) * Math.cos (phi),
             radius * Math.sin (theta) * Math.sin (phi),
             radius * Math.cos (theta)
@@ -213,8 +219,8 @@ OV.GenerateSphere = function (genParams, radius, segments, smooth)
         return null;
     }
 
-    let generator = new OV.Generator (genParams);
-    let helper = new OV.GeneratorHelper (generator);
+    let generator = new Generator (genParams);
+    let helper = new GeneratorHelper (generator);
 
     generator.SetCurve (smooth ? 1 : null);
 
@@ -246,20 +252,20 @@ OV.GenerateSphere = function (genParams, radius, segments, smooth)
     return generator.GetMesh ();
 };
 
-OV.GeneratePlatonicSolid = function (genParams, type, radius)
+export function GeneratePlatonicSolid (genParams, type, radius)
 {
     function AddVertex (generator, radius, x, y, z)
     {
-        let vertex = new OV.Coord3D (x, y, z);
+        let vertex = new Coord3D (x, y, z);
         vertex.MultiplyScalar (radius / vertex.Length ());
         generator.AddVertex (vertex.x, vertex.y, vertex.z);
     }
 
-    if (OV.IsZero (radius)) {
+    if (IsZero (radius)) {
         return null;
     }
 
-    let generator = new OV.Generator (genParams);
+    let generator = new Generator (genParams);
     if (type === 'tetrahedron') {
         let a = 1.0;
         AddVertex (generator, radius, +a, +a, +a);

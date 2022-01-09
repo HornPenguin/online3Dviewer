@@ -1,4 +1,6 @@
-OV.ExportedFile = class
+import { ArrayBufferToUtf8String, Utf8StringToArrayBuffer } from "../io/bufferutils";
+
+export class ExportedFile
 {
 	constructor (name)
 	{
@@ -18,7 +20,7 @@ OV.ExportedFile = class
 
 	GetTextContent ()
 	{
-		let text = OV.ArrayBufferToUtf8String (this.content);
+		let text = ArrayBufferToUtf8String (this.content);
 		return text;
 	}
 
@@ -29,7 +31,7 @@ OV.ExportedFile = class
 
 	SetTextContent (content)
 	{
-		let buffer = OV.Utf8StringToArrayBuffer (content);
+		let buffer = Utf8StringToArrayBuffer (content);
 		this.content = buffer;
 	}
 
@@ -39,7 +41,7 @@ OV.ExportedFile = class
 	}
 };
 
-OV.ExporterBase = class
+export class ExporterBase
 {
     constructor ()
     {

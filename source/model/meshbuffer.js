@@ -1,4 +1,8 @@
-OV.MeshPrimitiveBuffer = class
+import { Coord2D, CoordIsEqual2D } from "../geometry/coord2d";
+import { CoordIsEqual3D } from "../geometry/coord3d";
+import { Color, ColorIsEqual } from "./color";
+
+export class MeshPrimitiveBuffer
 {
     constructor ()
     {
@@ -34,7 +38,7 @@ OV.MeshPrimitiveBuffer = class
     }
 };
 
-OV.MeshBuffer = class
+export class MeshBuffer
 {
     constructor ()
     {
@@ -62,7 +66,7 @@ OV.MeshBuffer = class
     }
 };
 
-OV.ConvertMeshToMeshBuffer = function (mesh)
+export function ConvertMeshToMeshBuffer (mesh)
 {
     function AddVertexToPrimitiveBuffer (mesh, indices, primitiveBuffer, meshVertexToPrimitiveVertices)
     {
@@ -71,7 +75,7 @@ OV.ConvertMeshToMeshBuffer = function (mesh)
             if (colorIndex !== null) {
                 return mesh.GetVertexColor (colorIndex);
             } else if (forceColors) {
-                return new OV.Color (0, 0, 0);
+                return new Color (0, 0, 0);
             } else {
                 return null;
             }
@@ -82,7 +86,7 @@ OV.ConvertMeshToMeshBuffer = function (mesh)
             if (uvIndex !== null) {
                 return mesh.GetTextureUV (uvIndex);
             } else if (forceUVs) {
-                return new OV.Coord2D (0.0, 0.0);
+                return new Coord2D (0.0, 0.0);
             } else {
                 return null;
             }
@@ -128,13 +132,13 @@ OV.ConvertMeshToMeshBuffer = function (mesh)
                     return true;
                 }
                 let color = GetColorOrDefault (mesh, colorIndex, true);
-                return OV.ColorIsEqual (existingColor, color);
+                return ColorIsEqual (existingColor, color);
             }
 
             function IsEqualNormal (mesh, normalIndex, existingNormal)
             {
                 let normal = mesh.GetNormal (normalIndex);
-                return OV.CoordIsEqual3D (existingNormal, normal);
+                return CoordIsEqual3D (existingNormal, normal);
             }
 
             function IsEqualUV (mesh, uvIndex, existingUv)
@@ -143,7 +147,7 @@ OV.ConvertMeshToMeshBuffer = function (mesh)
                     return true;
                 }
                 let uv = GetUVOrDefault (mesh, uvIndex, true);
-                return OV.CoordIsEqual2D (existingUv, uv);
+                return CoordIsEqual2D (existingUv, uv);
             }
 
             for (let i = 0; i < primitiveVertices.length; i++) {
@@ -173,7 +177,7 @@ OV.ConvertMeshToMeshBuffer = function (mesh)
         }
     }
 
-    let meshBuffer = new OV.MeshBuffer ();
+    let meshBuffer = new MeshBuffer ();
 
     let triangleCount = mesh.TriangleCount ();
     if (triangleCount === 0) {
@@ -196,7 +200,7 @@ OV.ConvertMeshToMeshBuffer = function (mesh)
         let triangleIndex = triangleIndices[i];
         let triangle = mesh.GetTriangle (triangleIndex);
         if (primitiveBuffer === null || primitiveBuffer.material !== triangle.mat) {
-            primitiveBuffer = new OV.MeshPrimitiveBuffer ();
+            primitiveBuffer = new MeshPrimitiveBuffer ();
             primitiveBuffer.material = triangle.mat;
             meshVertexToPrimitiveVertices = new Map ();
             meshBuffer.primitives.push (primitiveBuffer);

@@ -1,4 +1,6 @@
-OV.Coord3D = class
+import { IsEqual } from "./geometry";
+
+export class Coord3D
 {
 	constructor (x, y, z)
 	{
@@ -64,61 +66,61 @@ OV.Coord3D = class
 
 	Clone ()
 	{
-		return new OV.Coord3D (this.x, this.y, this.z);
+		return new Coord3D (this.x, this.y, this.z);
 	}
 };
 
-OV.CoordIsEqual3D = function (a, b)
+export function CoordIsEqual3D (a, b)
 {
-	return OV.IsEqual (a.x, b.x) && OV.IsEqual (a.y, b.y) && OV.IsEqual (a.z, b.z);
+	return IsEqual (a.x, b.x) && IsEqual (a.y, b.y) && IsEqual (a.z, b.z);
 };
 
-OV.AddCoord3D = function (a, b)
+export function AddCoord3D (a, b)
 {
-	return new OV.Coord3D (a.x + b.x, a.y + b.y, a.z + b.z);
+	return new Coord3D (a.x + b.x, a.y + b.y, a.z + b.z);
 };
 
-OV.SubCoord3D = function (a, b)
+export function SubCoord3D (a, b)
 {
-	return new OV.Coord3D (a.x - b.x, a.y - b.y, a.z - b.z);
+	return new Coord3D (a.x - b.x, a.y - b.y, a.z - b.z);
 };
 
-OV.CoordDistance3D = function (a, b)
+export function CoordDistance3D (a, b)
 {
 	return Math.sqrt ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z));
 };
 
-OV.VectorAngle3D = function (a, b)
+export function VectorAngle3D (a, b)
 {
 	let aDirection = a.Clone ().Normalize ();
 	let bDirection = b.Clone ().Normalize ();
-	if (OV.CoordIsEqual3D (aDirection, bDirection)) {
+	if (CoordIsEqual3D (aDirection, bDirection)) {
 		return 0.0;
 	}
-	let product = OV.DotVector3D (aDirection, bDirection);
+	let product = DotVector3D (aDirection, bDirection);
 	return Math.acos (product);
 };
 
-OV.DotVector3D = function (a, b)
+export function DotVector3D (a, b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 };
 
-OV.CrossVector3D = function (a, b)
+export function CrossVector3D (a, b)
 {
-	let result = new OV.Coord3D (0.0, 0.0, 0.0);
+	let result = new Coord3D (0.0, 0.0, 0.0);
 	result.x = a.y * b.z - a.z * b.y;
 	result.y = a.z * b.x - a.x * b.z;
 	result.z = a.x * b.y - a.y * b.x;
 	return result;
 };
 
-OV.VectorLength3D = function (x, y, z)
+export function VectorLength3D (x, y, z)
 {
 	return Math.sqrt (x * x + y * y + z * z);
 };
 
-OV.ArrayToCoord3D = function (arr)
+export function ArrayToCoord3D (arr)
 {
-	return new OV.Coord3D (arr[0], arr[1], arr[2]);
+	return new Coord3D (arr[0], arr[1], arr[2]);
 };

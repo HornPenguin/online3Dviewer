@@ -1,4 +1,4 @@
-OV.BinaryWriter = class
+export class BinaryWriter
 {
     constructor (byteLength, isLittleEndian)
     {

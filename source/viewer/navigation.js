@@ -1,4 +1,10 @@
-OV.Camera = class
+import { Coord2D, CoordDistance2D, SubCoord2D } from "../geometry/coord2d";
+import { CoordDistance3D, CoordIsEqual3D, CrossVector3D, SubCoord3D, VectorAngle3D } from "../geometry/coord3d";
+import { DegRad, IsGreater, IsLower, IsZero } from "../geometry/geometry";
+import { ParabolicTweenFunction, TweenCoord3D } from "../geometry/tween";
+import { GetDomElementClientCoordinates } from "./domutils";
+
+export class Camera
 {
     constructor (eye, center, up)
     {
@@ -9,7 +15,7 @@ OV.Camera = class
 
     Clone ()
     {
-        return new OV.Camera (
+        return new Camera (
             this.eye.Clone (),
             this.center.Clone (),
             this.up.Clone ()
@@ -17,18 +23,18 @@ OV.Camera = class
     }
 };
 
-OV.CameraIsEqual3D = function (a, b)
+export function CameraIsEqual3D (a, b)
 {
-	return OV.CoordIsEqual3D (a.eye, b.eye) && OV.CoordIsEqual3D (a.center, b.center) && OV.CoordIsEqual3D (a.up, b.up);
+	return CoordIsEqual3D (a.eye, b.eye) && CoordIsEqual3D (a.center, b.center) && CoordIsEqual3D (a.up, b.up);
 };
 
-OV.MouseInteraction = class
+export class MouseInteraction
 {
     constructor ()
     {
-        this.prev = new OV.Coord2D (0.0, 0.0);
-        this.curr = new OV.Coord2D (0.0, 0.0);
-        this.diff = new OV.Coord2D (0.0, 0.0);
+        this.prev = new Coord2D (0.0, 0.0);
+        this.curr = new Coord2D (0.0, 0.0);
+        this.diff = new Coord2D (0.0, 0.0);
         this.buttons = [];
     }
 
@@ -42,7 +48,7 @@ OV.MouseInteraction = class
     Move (canvas, ev)
     {
         this.curr = this.GetPositionFromEvent (canvas, ev);
-		this.diff = OV.SubCoord2D (this.curr, this.prev);
+		this.diff = SubCoord2D (this.curr, this.prev);
 		this.prev = this.curr.Clone ();
 	}
 
@@ -87,17 +93,17 @@ OV.MouseInteraction = class
 
 	GetPositionFromEvent (canvas, ev)
 	{
-		return OV.GetDomElementClientCoordinates (canvas, ev.clientX, ev.clientY);
+		return GetDomElementClientCoordinates (canvas, ev.clientX, ev.clientY);
 	}
 };
 
-OV.TouchInteraction = class
+export class TouchInteraction
 {
 	constructor ()
 	{
-		this.prevPos = new OV.Coord2D (0.0, 0.0);
-		this.currPos = new OV.Coord2D (0.0, 0.0);
-		this.diffPos = new OV.Coord2D (0.0, 0.0);
+		this.prevPos = new Coord2D (0.0, 0.0);
+		this.currPos = new Coord2D (0.0, 0.0);
+		this.diffPos = new Coord2D (0.0, 0.0);
 		this.prevDist = 0.0;
 		this.currDist = 0.0;
 		this.diffDist = 0.0;
@@ -126,7 +132,7 @@ OV.TouchInteraction = class
 		}
 
 		this.currPos = this.GetPositionFromEvent (canvas, ev);
-		this.diffPos = OV.SubCoord2D (this.currPos, this.prevPos);
+		this.diffPos = SubCoord2D (this.currPos, this.prevPos);
 		this.prevPos = this.currPos.Clone ();
 
 		this.currDist = this.GetTouchDistanceFromEvent (canvas, ev);
@@ -175,7 +181,7 @@ OV.TouchInteraction = class
 		let coord = null;
 		if (ev.touches.length !== 0) {
 			let touchEv = ev.touches[0];
-			coord = OV.GetDomElementClientCoordinates (canvas, touchEv.pageX, touchEv.pageY);
+			coord = GetDomElementClientCoordinates (canvas, touchEv.pageX, touchEv.pageY);
 		}
 		return coord;
 	}
@@ -187,15 +193,15 @@ OV.TouchInteraction = class
 		}
 		let touchEv1 = ev.touches[0];
 		let touchEv2 = ev.touches[1];
-		let distance = OV.CoordDistance2D (
-			OV.GetDomElementClientCoordinates (canvas, touchEv1.pageX, touchEv1.pageY),
-			OV.GetDomElementClientCoordinates (canvas, touchEv2.pageX, touchEv2.pageY)
+		let distance = CoordDistance2D (
+			GetDomElementClientCoordinates (canvas, touchEv1.pageX, touchEv1.pageY),
+			GetDomElementClientCoordinates (canvas, touchEv2.pageX, touchEv2.pageY)
 		);
 		return distance;
 	}
 };
 
-OV.ClickDetector = class
+export class ClickDetector
 {
 	constructor ()
 	{
@@ -217,7 +223,7 @@ OV.ClickDetector = class
 
 		if (this.startPosition !== null) {
 			const maxClickDistance = 3.0;
-			const currentDistance = OV.CoordDistance2D (this.startPosition, currentPosition);
+			const currentDistance = CoordDistance2D (this.startPosition, currentPosition);
 			if (currentDistance > maxClickDistance) {
 				this.Cancel ();
 			}
@@ -243,7 +249,7 @@ OV.ClickDetector = class
 	}
 };
 
-OV.NavigationType =
+export const NavigationType =
 {
 	None : 0,
 	Orbit : 1,
@@ -251,7 +257,7 @@ OV.NavigationType =
 	Zoom : 3
 };
 
-OV.Navigation = class
+export class Navigation
 {
 	constructor (canvas, camera, callbacks)
 	{
@@ -260,9 +266,9 @@ OV.Navigation = class
 		this.callbacks = callbacks;
 		this.fixUpVector = true;
 
-		this.mouse = new OV.MouseInteraction ();
-		this.touch = new OV.TouchInteraction ();
-		this.clickDetector = new OV.ClickDetector ();
+		this.mouse = new MouseInteraction ();
+		this.touch = new TouchInteraction ();
+		this.clickDetector = new ClickDetector ();
 
 		this.onMouseClick = null;
 		this.onMouseMove = null;
@@ -339,14 +345,14 @@ OV.Navigation = class
 			return;
 		}
 
-		if (stepCount === 0 || OV.CameraIsEqual3D (this.camera, newCamera)) {
+		if (stepCount === 0 || CameraIsEqual3D (this.camera, newCamera)) {
 			this.camera = newCamera;
 		} else {
-			let tweenFunc = OV.ParabolicTweenFunction;
+			let tweenFunc = ParabolicTweenFunction;
 			let steps = {
-				eye : OV.TweenCoord3D (this.camera.eye, newCamera.eye, stepCount, tweenFunc),
-				center : OV.TweenCoord3D (this.camera.center, newCamera.center, stepCount, tweenFunc),
-				up : OV.TweenCoord3D (this.camera.up, newCamera.up, stepCount, tweenFunc)
+				eye : TweenCoord3D (this.camera.eye, newCamera.eye, stepCount, tweenFunc),
+				center : TweenCoord3D (this.camera.center, newCamera.center, stepCount, tweenFunc),
+				up : TweenCoord3D (this.camera.up, newCamera.up, stepCount, tweenFunc)
 			};
 			requestAnimationFrame (() => {
 				Step (this, steps, stepCount, 0);
@@ -358,22 +364,22 @@ OV.Navigation = class
 
 	GetFitToSphereCamera (center, radius, fov)
 	{
-		if (OV.IsZero (radius)) {
+		if (IsZero (radius)) {
 			return null;
 		}
 
 		let fitCamera = this.camera.Clone ();
 
-		let offsetToOrigo = OV.SubCoord3D (fitCamera.center, center);
-		fitCamera.eye = OV.SubCoord3D (fitCamera.eye, offsetToOrigo);
+		let offsetToOrigo = SubCoord3D (fitCamera.center, center);
+		fitCamera.eye = SubCoord3D (fitCamera.eye, offsetToOrigo);
 		fitCamera.center = center.Clone ();
 
-		let centerEyeDirection = OV.SubCoord3D (fitCamera.eye, fitCamera.center).Normalize ();
+		let centerEyeDirection = SubCoord3D (fitCamera.eye, fitCamera.center).Normalize ();
 		let fieldOfView = fov / 2.0;
 		if (this.canvas.width < this.canvas.height) {
 			fieldOfView = fieldOfView * this.canvas.width / this.canvas.height;
 		}
-		let distance = radius / Math.sin (fieldOfView * OV.DegRad);
+		let distance = radius / Math.sin (fieldOfView * DegRad);
 
 		fitCamera.eye = fitCamera.center.Clone ().Offset (centerEyeDirection, distance);
 
@@ -393,7 +399,7 @@ OV.Navigation = class
 		this.mouse.Move (this.canvas, ev);
 		this.clickDetector.Move (this.mouse.GetPosition ());
 		if (this.onMouseMove) {
-			let mouseCoords = OV.GetDomElementClientCoordinates (this.canvas, ev.clientX, ev.clientY);
+			let mouseCoords = GetDomElementClientCoordinates (this.canvas, ev.clientX, ev.clientY);
 			this.onMouseMove (mouseCoords);
 		}
 
@@ -404,27 +410,27 @@ OV.Navigation = class
 		let moveDiff = this.mouse.GetMoveDiff ();
 		let mouseButton = this.mouse.GetButton ();
 
-		let navigationType = OV.NavigationType.None;
+		let navigationType = NavigationType.None;
 		if (mouseButton === 1) {
 			if (ev.ctrlKey) {
-				navigationType = OV.NavigationType.Zoom;
+				navigationType = NavigationType.Zoom;
 			} else if (ev.shiftKey) {
-				navigationType = OV.NavigationType.Pan;
+				navigationType = NavigationType.Pan;
 			} else {
-				navigationType = OV.NavigationType.Orbit;
+				navigationType = NavigationType.Orbit;
 			}
 		} else if (mouseButton === 2 || mouseButton === 3) {
-			navigationType = OV.NavigationType.Pan;
+			navigationType = NavigationType.Pan;
 		}
 
-		if (navigationType === OV.NavigationType.Orbit) {
+		if (navigationType === NavigationType.Orbit) {
 			let orbitRatio = 0.5;
 			this.Orbit (moveDiff.x * orbitRatio, moveDiff.y * orbitRatio);
-		} else if (navigationType === OV.NavigationType.Pan) {
-			let eyeCenterDistance = OV.CoordDistance3D (this.camera.eye, this.camera.center);
+		} else if (navigationType === NavigationType.Pan) {
+			let eyeCenterDistance = CoordDistance3D (this.camera.eye, this.camera.center);
 			let panRatio = 0.001 * eyeCenterDistance;
 			this.Pan (moveDiff.x * panRatio, moveDiff.y * panRatio);
-		} else if (navigationType === OV.NavigationType.Zoom) {
+		} else if (navigationType === NavigationType.Zoom) {
 			let zoomRatio = 0.005;
 			this.Zoom (-moveDiff.y * zoomRatio);
 		}
@@ -471,20 +477,20 @@ OV.Navigation = class
 		let distanceDiff = this.touch.GetDistanceDiff ();
 		let fingerCount = this.touch.GetFingerCount ();
 
-		let navigationType = OV.NavigationType.None;
+		let navigationType = NavigationType.None;
 		if (fingerCount === 1) {
-			navigationType = OV.NavigationType.Orbit;
+			navigationType = NavigationType.Orbit;
 		} else if (fingerCount === 2) {
-			navigationType = OV.NavigationType.Pan;
+			navigationType = NavigationType.Pan;
 		}
 
-		if (navigationType === OV.NavigationType.Orbit) {
+		if (navigationType === NavigationType.Orbit) {
 			let orbitRatio = 0.5;
 			this.Orbit (moveDiff.x * orbitRatio, moveDiff.y * orbitRatio);
-		} else if (navigationType === OV.NavigationType.Pan) {
+		} else if (navigationType === NavigationType.Pan) {
 			let zoomRatio = 0.005;
 			this.Zoom (distanceDiff * zoomRatio);
-			let panRatio = 0.001 * OV.CoordDistance3D (this.camera.eye, this.camera.center);
+			let panRatio = 0.001 * CoordDistance3D (this.camera.eye, this.camera.center);
 			this.Pan (moveDiff.x * panRatio, moveDiff.y * panRatio);
 		}
 
@@ -534,21 +540,21 @@ OV.Navigation = class
 
 	Orbit (angleX, angleY)
 	{
-		let radAngleX = angleX * OV.DegRad;
-		let radAngleY = angleY * OV.DegRad;
+		let radAngleX = angleX * DegRad;
+		let radAngleY = angleY * DegRad;
 
-		let viewDirection = OV.SubCoord3D (this.camera.center, this.camera.eye).Normalize ();
-		let horizontalDirection = OV.CrossVector3D (viewDirection, this.camera.up).Normalize ();
+		let viewDirection = SubCoord3D (this.camera.center, this.camera.eye).Normalize ();
+		let horizontalDirection = CrossVector3D (viewDirection, this.camera.up).Normalize ();
 
 		if (this.fixUpVector) {
-			let originalAngle = OV.VectorAngle3D (viewDirection, this.camera.up);
+			let originalAngle = VectorAngle3D (viewDirection, this.camera.up);
 			let newAngle = originalAngle + radAngleY;
-			if (OV.IsGreater (newAngle, 0.0) && OV.IsLower (newAngle, Math.PI)) {
+			if (IsGreater (newAngle, 0.0) && IsLower (newAngle, Math.PI)) {
 				this.camera.eye.Rotate (horizontalDirection, -radAngleY, this.camera.center);
 			}
 			this.camera.eye.Rotate (this.camera.up, -radAngleX, this.camera.center);
 		} else {
-			let verticalDirection = OV.CrossVector3D (horizontalDirection, viewDirection).Normalize ();
+			let verticalDirection = CrossVector3D (horizontalDirection, viewDirection).Normalize ();
 			this.camera.eye.Rotate (horizontalDirection, -radAngleY, this.camera.center);
 			this.camera.eye.Rotate (verticalDirection, -radAngleX, this.camera.center);
 			this.camera.up = verticalDirection;
@@ -557,9 +563,9 @@ OV.Navigation = class
 
 	Pan (moveX, moveY)
 	{
-		let viewDirection = OV.SubCoord3D (this.camera.center, this.camera.eye).Normalize ();
-		let horizontalDirection = OV.CrossVector3D (viewDirection, this.camera.up).Normalize ();
-		let verticalDirection = OV.CrossVector3D (horizontalDirection, viewDirection).Normalize ();
+		let viewDirection = SubCoord3D (this.camera.center, this.camera.eye).Normalize ();
+		let horizontalDirection = CrossVector3D (viewDirection, this.camera.up).Normalize ();
+		let verticalDirection = CrossVector3D (horizontalDirection, viewDirection).Normalize ();
 
 		this.camera.eye.Offset (horizontalDirection, -moveX);
 		this.camera.center.Offset (horizontalDirection, -moveX);
@@ -570,7 +576,7 @@ OV.Navigation = class
 
 	Zoom (ratio)
 	{
-		let direction = OV.SubCoord3D (this.camera.center, this.camera.eye);
+		let direction = SubCoord3D (this.camera.center, this.camera.eye);
 		let distance = direction.Length ();
 		let move = distance * ratio;
 		this.camera.eye.Offset (direction, move);
@@ -595,7 +601,7 @@ OV.Navigation = class
 				x : clientX,
 				y : clientY
 			};
-			let localCoords = OV.GetDomElementClientCoordinates (this.canvas, clientX, clientY);
+			let localCoords = GetDomElementClientCoordinates (this.canvas, clientX, clientY);
 			this.onContext (globalCoords, localCoords);
 		}
 	}

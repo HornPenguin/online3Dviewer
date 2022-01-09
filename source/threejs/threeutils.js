@@ -1,8 +1,16 @@
 // Some mobile devices say that they support mediump, but in reality they don't. At the end
 // all materials rendered as black. This hack renders a single plane with red material and
 // it checks if it's really red. If it's not, then probably there is a driver issue.
+
+import { Coord2D } from "../geometry/coord2d";
+import { Coord3D } from "../geometry/coord3d";
+import { ColorFromFloatComponents } from "../model/color";
+import { MaterialType } from "../model/material";
+import { Mesh } from "../model/mesh";
+import { Triangle } from "../model/triangle";
+
 // https://github.com/kovacsv/Online3DViewer/issues/69
-OV.HasHighpDriverIssue = function ()
+export function HasHighpDriverIssue ()
 {
     let canvas = document.createElement ('canvas');
     document.body.appendChild (canvas);
@@ -55,37 +63,37 @@ OV.HasHighpDriverIssue = function ()
     return false;
 };
 
-OV.ShadingType =
+export const ShadingType =
 {
     Phong : 1,
     Physical : 2
 };
 
-OV.GetShadingType = function (model)
+export function GetShadingType (model)
 {
     let phongCount = 0;
     let physicalCount = 0;
     for (let i = 0; i < model.MaterialCount (); i++) {
         let material = model.GetMaterial (i);
-        if (material.type === OV.MaterialType.Phong) {
+        if (material.type === MaterialType.Phong) {
             phongCount += 1;
-        } else if (material.type === OV.MaterialType.Physical) {
+        } else if (material.type === MaterialType.Physical) {
             physicalCount += 1;
         }
     }
     if (phongCount >= physicalCount) {
-        return OV.ShadingType.Phong;
+        return ShadingType.Phong;
     } else {
-        return OV.ShadingType.Physical;
+        return ShadingType.Physical;
     }
 };
 
-OV.ConvertThreeColorToColor = function (threeColor)
+export function ConvertThreeColorToColor (threeColor)
 {
-    return OV.ColorFromFloatComponents (threeColor.r, threeColor.g, threeColor.b);
+    return ColorFromFloatComponents (threeColor.r, threeColor.g, threeColor.b);
 };
 
-OV.ConvertColorToThreeColor = function (color)
+export function ConvertColorToThreeColor (color)
 {
     return new THREE.Color (
         color.r / 255.0,
@@ -94,16 +102,16 @@ OV.ConvertColorToThreeColor = function (color)
     );
 };
 
-OV.ConvertThreeGeometryToMesh = function (threeGeometry, materialIndex)
+export function ConvertThreeGeometryToMesh (threeGeometry, materialIndex)
 {
-    let mesh = new OV.Mesh ();
+    let mesh = new Mesh ();
 
     let vertices = threeGeometry.attributes.position.array;
     for (let i = 0; i < vertices.length; i += 3) {
         let x = vertices[i];
         let y = vertices[i + 1];
         let z = vertices[i + 2];
-        mesh.AddVertex (new OV.Coord3D (x, y, z));
+        mesh.AddVertex (new Coord3D (x, y, z));
     }
 
     let hasVertexColors = (threeGeometry.attributes.color !== undefined);
@@ -112,7 +120,7 @@ OV.ConvertThreeGeometryToMesh = function (threeGeometry, materialIndex)
         let itemSize = threeGeometry.attributes.color.itemSize;
         for (let i = 0; i < colors.length; i += itemSize) {
             let threeColor = new THREE.Color (colors[i], colors[i + 1], colors[i + 2]);
-            mesh.AddVertexColor (OV.ConvertThreeColorToColor (threeColor));
+            mesh.AddVertexColor (ConvertThreeColorToColor (threeColor));
         }
     }
 
@@ -123,7 +131,7 @@ OV.ConvertThreeGeometryToMesh = function (threeGeometry, materialIndex)
             let x = normals[i];
             let y = normals[i + 1];
             let z = normals[i + 2];
-            mesh.AddNormal (new OV.Coord3D (x, y, z));
+            mesh.AddNormal (new Coord3D (x, y, z));
         }
     }
 
@@ -133,7 +141,7 @@ OV.ConvertThreeGeometryToMesh = function (threeGeometry, materialIndex)
         for (let i = 0; i < uvs.length; i += 2) {
             let x = uvs[i];
             let y = uvs[i + 1];
-            mesh.AddTextureUV (new OV.Coord2D (x, y));
+            mesh.AddTextureUV (new Coord2D (x, y));
         }
     }
 
@@ -151,7 +159,7 @@ OV.ConvertThreeGeometryToMesh = function (threeGeometry, materialIndex)
         let v0 = indices[i];
         let v1 = indices[i + 1];
         let v2 = indices[i + 2];
-        let triangle = new OV.Triangle (v0, v1, v2);
+        let triangle = new Triangle (v0, v1, v2);
         if (hasVertexColors) {
             triangle.SetVertexColors (v0, v1, v2);
         }

@@ -1,4 +1,12 @@
-OV.ExporterGltf = class extends OV.ExporterBase
+import { BinaryWriter } from "../io/binarywriter";
+import { Utf8StringToArrayBuffer } from "../io/bufferutils";
+import { FileFormat, GetFileExtension, GetFileName } from "../io/fileutils";
+import { Color, SRGBToLinear } from "../model/color";
+import { MaterialType } from "../model/material";
+import { ConvertMeshToMeshBuffer } from "../model/meshbuffer";
+import { ExportedFile, ExporterBase } from "./exporterbase";
+
+export class ExporterGltf extends ExporterBase
 {
 	constructor ()
 	{
@@ -17,14 +25,14 @@ OV.ExporterGltf = class extends OV.ExporterBase
 
     CanExport (format, extension)
     {
-        return (format === OV.FileFormat.Text && extension === 'gltf') || (format === OV.FileFormat.Binary && extension === 'glb');
+        return (format === FileFormat.Text && extension === 'gltf') || (format === FileFormat.Binary && extension === 'glb');
     }
 
 	ExportContent (exporterModel, format, files, onFinish)
 	{
-        if (format === OV.FileFormat.Text) {
+        if (format === FileFormat.Text) {
             this.ExportAsciiContent (exporterModel, files);
-        } else if (format === OV.FileFormat.Binary) {
+        } else if (format === FileFormat.Binary) {
             this.ExportBinaryContent (exporterModel, files);
         }
         onFinish ();
@@ -32,8 +40,8 @@ OV.ExporterGltf = class extends OV.ExporterBase
 
 	ExportAsciiContent (exporterModel, files)
 	{
-        let gltfFile = new OV.ExportedFile ('model.gltf');
-        let binFile = new OV.ExportedFile ('model.bin');
+        let gltfFile = new ExportedFile ('model.gltf');
+        let binFile = new ExportedFile ('model.bin');
         files.push (gltfFile);
         files.push (binFile);
 
@@ -47,11 +55,11 @@ OV.ExporterGltf = class extends OV.ExporterBase
 
         let fileNameToIndex = new Map ();
         this.ExportMaterials (exporterModel, mainJson, (texture) => {
-            let fileName = OV.GetFileName (texture.name);
+            let fileName = GetFileName (texture.name);
             if (fileNameToIndex.has (fileName)) {
                 return fileNameToIndex.get (fileName);
             } else {
-                let textureFile = new OV.ExportedFile (fileName);
+                let textureFile = new ExportedFile (fileName);
                 textureFile.SetBufferContent (texture.buffer);
                 files.push (textureFile);
 
@@ -92,7 +100,7 @@ OV.ExporterGltf = class extends OV.ExporterBase
             }
         }
 
-        let glbFile = new OV.ExportedFile ('model.glb');
+        let glbFile = new ExportedFile ('model.glb');
         files.push (glbFile);
 
         let meshDataArr = this.GetMeshData (exporterModel);
@@ -104,8 +112,8 @@ OV.ExporterGltf = class extends OV.ExporterBase
 
         let fileNameToIndex = new Map ();
         this.ExportMaterials (exporterModel, mainJson, (texture) => {
-            let fileName = OV.GetFileName (texture.name);
-            let extension = OV.GetFileExtension (texture.name);
+            let fileName = GetFileName (texture.name);
+            let extension = GetFileExtension (texture.name);
             if (fileNameToIndex.has (fileName)) {
                 return fileNameToIndex.get (fileName);
             } else {
@@ -143,12 +151,12 @@ OV.ExporterGltf = class extends OV.ExporterBase
         });
 
         let mainJsonString = JSON.stringify (mainJson);
-        let mainJsonBuffer = OV.Utf8StringToArrayBuffer (mainJsonString);
+        let mainJsonBuffer = Utf8StringToArrayBuffer (mainJsonString);
         let mainJsonBufferLength = mainJsonBuffer.byteLength;
         let mainJsonBufferAlignedLength = AlignToBoundary (mainJsonBufferLength);
 
         let glbSize = 12 + 8 + mainJsonBufferAlignedLength + 8 + mainBinaryBufferAlignedLength;
-        let glbWriter = new OV.BinaryWriter (glbSize, true);
+        let glbWriter = new BinaryWriter (glbSize, true);
 
         glbWriter.WriteUnsignedInteger32 (0x46546C67);
         glbWriter.WriteUnsignedInteger32 (2);
@@ -177,7 +185,7 @@ OV.ExporterGltf = class extends OV.ExporterBase
         let meshDataArr = [];
 
         exporterModel.EnumerateTransformedMeshes ((mesh) => {
-            let buffer = OV.ConvertMeshToMeshBuffer (mesh);
+            let buffer = ConvertMeshToMeshBuffer (mesh);
             meshDataArr.push ({
                 name : mesh.GetName (),
                 buffer : buffer,
@@ -197,7 +205,7 @@ OV.ExporterGltf = class extends OV.ExporterBase
             mainBufferSize += meshData.buffer.GetByteLength (this.components.index.size, this.components.number.size);
         }
 
-        let writer = new OV.BinaryWriter (mainBufferSize, true);
+        let writer = new BinaryWriter (mainBufferSize, true);
         for (let meshIndex = 0; meshIndex < meshDataArr.length; meshIndex++) {
             let meshData = meshDataArr[meshIndex];
             for (let primitiveIndex = 0; primitiveIndex < meshData.buffer.PrimitiveCount (); primitiveIndex++) {
@@ -210,7 +218,7 @@ OV.ExporterGltf = class extends OV.ExporterBase
                     writer.WriteFloat32 (primitive.vertices[i]);
                 }
                 for (let i = 0; i < primitive.colors.length; i++) {
-                    writer.WriteFloat32 (OV.SRGBToLinear (primitive.colors[i]));
+                    writer.WriteFloat32 (SRGBToLinear (primitive.colors[i]));
                 }
                 for (let i = 0; i < primitive.normals.length; i++) {
                     writer.WriteFloat32 (primitive.normals[i]);
@@ -373,9 +381,9 @@ OV.ExporterGltf = class extends OV.ExporterBase
             function ColorToRGBA (color, opacity)
             {
                 return [
-                    OV.SRGBToLinear (color.r / 255.0),
-                    OV.SRGBToLinear (color.g / 255.0),
-                    OV.SRGBToLinear (color.b / 255.0),
+                    SRGBToLinear (color.r / 255.0),
+                    SRGBToLinear (color.g / 255.0),
+                    SRGBToLinear (color.b / 255.0),
                     opacity
                 ];
             }
@@ -383,9 +391,9 @@ OV.ExporterGltf = class extends OV.ExporterBase
             function ColorToRGB (color)
             {
                 return [
-                    OV.SRGBToLinear (color.r / 255.0),
-                    OV.SRGBToLinear (color.g / 255.0),
-                    OV.SRGBToLinear (color.b / 255.0)
+                    SRGBToLinear (color.r / 255.0),
+                    SRGBToLinear (color.g / 255.0),
+                    SRGBToLinear (color.b / 255.0)
                 ];
             }
 
@@ -445,11 +453,11 @@ OV.ExporterGltf = class extends OV.ExporterBase
             let baseColorTexture = GetTextureParams (mainJson, material.diffuseMap, addTexture);
             if (baseColorTexture !== null) {
                 if (!material.multiplyDiffuseMap) {
-                    jsonMaterial.pbrMetallicRoughness.baseColorFactor = ColorToRGBA (new OV.Color (255, 255, 255), material.opacity);
+                    jsonMaterial.pbrMetallicRoughness.baseColorFactor = ColorToRGBA (new Color (255, 255, 255), material.opacity);
                 }
                 jsonMaterial.pbrMetallicRoughness.baseColorTexture = baseColorTexture;
             }
-            if (material.type === OV.MaterialType.Physical) {
+            if (material.type === MaterialType.Physical) {
                 let metallicTexture = GetTextureParams (mainJson, material.metalnessMap, addTexture);
                 if (metallicTexture !== null) {
                     jsonMaterial.pbrMetallicRoughness.metallicRoughnessTexture = metallicTexture;

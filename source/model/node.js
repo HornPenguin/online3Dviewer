@@ -1,10 +1,12 @@
-OV.NodeType =
+import { Transformation } from "../geometry/transformation";
+
+export const NodeType =
 {
     GroupNode : 0,
     MeshNode : 1
 };
 
-OV.NodeIdGenerator = class
+export class NodeIdGenerator
 {
     constructor ()
     {
@@ -19,19 +21,19 @@ OV.NodeIdGenerator = class
     }
 };
 
-OV.Node = class
+export class Node
 {
     constructor ()
     {
-        this.type = OV.NodeType.GroupNode;
+        this.type = NodeType.GroupNode;
         this.name = '';
         this.parent = null;
-        this.transformation = new OV.Transformation ();
+        this.transformation = new Transformation ();
 
         this.childNodes = [];
         this.meshIndices = [];
 
-        this.idGenerator = new OV.NodeIdGenerator ();
+        this.idGenerator = new NodeIdGenerator ();
         this.id = this.idGenerator.GenerateId ();
     }
 

@@ -1,11 +1,15 @@
-OV.ThreeModelLoader = class
+import { Importer } from "../import/importer";
+import { ConvertModelToThreeObject, ModelToThreeConversionOutput, ModelToThreeConversionParams } from "./threeconverter";
+import { ConvertColorToThreeColor, HasHighpDriverIssue } from "./threeutils";
+
+export class ThreeModelLoader
 {
     constructor ()
     {
-        this.importer = new OV.Importer ();
+        this.importer = new Importer ();
         this.inProgress = false;
         this.defaultMaterial = null;
-        this.hasHighpDriverIssue = OV.HasHighpDriverIssue ();
+        this.hasHighpDriverIssue = HasHighpDriverIssue ();
     }
 
     InProgress ()
@@ -34,10 +38,10 @@ OV.ThreeModelLoader = class
             },
             onImportSuccess : (importResult) => {
                 callbacks.onVisualizationStart ();
-                let params = new OV.ModelToThreeConversionParams ();
+                let params = new ModelToThreeConversionParams ();
                 params.forceMediumpForMaterials = this.hasHighpDriverIssue;
-                let output = new OV.ModelToThreeConversionOutput ();
-                OV.ConvertModelToThreeObject (importResult.model, params, output, {
+                let output = new ModelToThreeConversionOutput ();
+                ConvertModelToThreeObject (importResult.model, params, output, {
                     onTextureLoaded : () => {
                         callbacks.onTextureLoaded ();
                     },
@@ -68,7 +72,7 @@ OV.ThreeModelLoader = class
     ReplaceDefaultMaterialColor (defaultColor)
     {
         if (this.defaultMaterial !== null && !this.defaultMaterial.vertexColors) {
-            this.defaultMaterial.color = OV.ConvertColorToThreeColor (defaultColor);
+            this.defaultMaterial.color = ConvertColorToThreeColor (defaultColor);
         }
     }
 };

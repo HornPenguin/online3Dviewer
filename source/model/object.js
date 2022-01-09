@@ -1,4 +1,4 @@
-OV.Object3D = class
+export class Object3D
 {
     constructor ()
     {
@@ -46,7 +46,7 @@ OV.Object3D = class
     }
 };
 
-OV.ModelObject3D = class extends OV.Object3D
+export class ModelObject3D extends Object3D
 {
     constructor ()
     {

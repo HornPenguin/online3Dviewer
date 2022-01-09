@@ -1,4 +1,22 @@
-OV.GltfComponentType =
+import { Coord2D } from "../geometry/coord2d";
+import { ArrayToCoord3D, Coord3D } from "../geometry/coord3d";
+import { Coord4D } from "../geometry/coord4d";
+import { Direction } from "../geometry/geometry";
+import { Matrix } from "../geometry/matrix";
+import { ArrayToQuaternion } from "../geometry/quaternion";
+import { Transformation } from "../geometry/transformation";
+import { BinaryReader } from "../io/binaryreader";
+import { ArrayBufferToUtf8String, Base64DataURIToArrayBuffer, CreateObjectUrlWithMimeType, GetFileExtensionFromMimeType } from "../io/bufferutils";
+import { LoadExternalLibrary } from "../io/externallibs";
+import { Color, ColorComponentFromFloat, ColorFromFloatComponents, LinearToSRGB } from "../model/color";
+import { PhongMaterial, PhysicalMaterial, TextureMap } from "../model/material";
+import { Mesh } from "../model/mesh";
+import { Node, NodeType } from "../model/node";
+import { Property, PropertyGroup, PropertyType } from "../model/property";
+import { Triangle } from "../model/triangle";
+import { ImporterBase } from "./importerbase";
+
+export const GltfComponentType =
 {
     BYTE : 5120,
     UNSIGNED_BYTE : 5121,
@@ -8,7 +26,7 @@ OV.GltfComponentType =
     FLOAT  : 5126
 };
 
-OV.GltfDataType =
+export const GltfDataType =
 {
     SCALAR : 0,
     VEC2 : 1,
@@ -19,7 +37,7 @@ OV.GltfDataType =
     MAT4  : 6
 };
 
-OV.GltfRenderMode =
+export const GltfRenderMode =
 {
     POINTS : 0,
     LINES : 1,
@@ -30,45 +48,45 @@ OV.GltfRenderMode =
     TRIANGLE_FAN : 6
 };
 
-OV.GltfConstants =
+export const GltfConstants =
 {
     GLTF_STRING : 0x46546C67,
     JSON_CHUNK_TYPE : 0x4E4F534A,
     BINARY_CHUNK_TYPE : 0x004E4942
 };
 
-OV.GetGltfColor = function (color)
+export function GetGltfColor (color)
 {
-    return OV.ColorFromFloatComponents (
-        OV.LinearToSRGB (color[0]),
-        OV.LinearToSRGB (color[1]),
-        OV.LinearToSRGB (color[2])
+    return ColorFromFloatComponents (
+        LinearToSRGB (color[0]),
+        LinearToSRGB (color[1]),
+        LinearToSRGB (color[2])
     );
 };
 
-OV.GetGltfVertexColor = function (color, componentType)
+export function GetGltfVertexColor (color, componentType)
 {
     function GetColorComponent (component, componentType)
     {
         let normalized = component;
-        if (componentType !== OV.GltfComponentType.FLOAT) {
+        if (componentType !== GltfComponentType.FLOAT) {
             normalized /= 255.0;
         }
-        return OV.ColorComponentFromFloat (OV.LinearToSRGB (normalized));
+        return ColorComponentFromFloat (LinearToSRGB (normalized));
     }
 
-    return new OV.Color (
+    return new Color (
         GetColorComponent (color[0], componentType),
         GetColorComponent (color[1], componentType),
         GetColorComponent (color[2], componentType)
     );
 };
 
-OV.GltfBufferReader = class
+export class GltfBufferReader
 {
     constructor (buffer)
     {
-        this.reader = new OV.BinaryReader (buffer, true);
+        this.reader = new BinaryReader (buffer, true);
         this.componentType = null;
         this.dataType = null;
         this.byteStride = null;
@@ -84,19 +102,19 @@ OV.GltfBufferReader = class
     SetDataType (dataType)
     {
         if (dataType === 'SCALAR') {
-            this.dataType = OV.GltfDataType.SCALAR;
+            this.dataType = GltfDataType.SCALAR;
         } else if (dataType === 'VEC2') {
-            this.dataType = OV.GltfDataType.VEC2;
+            this.dataType = GltfDataType.VEC2;
         } else if (dataType === 'VEC3') {
-            this.dataType = OV.GltfDataType.VEC3;
+            this.dataType = GltfDataType.VEC3;
         } else if (dataType === 'VEC4') {
-            this.dataType = OV.GltfDataType.VEC4;
+            this.dataType = GltfDataType.VEC4;
         } else if (dataType === 'MAT2') {
-            this.dataType = OV.GltfDataType.MAT2;
+            this.dataType = GltfDataType.MAT2;
         } else if (dataType === 'MAT3') {
-            this.dataType = OV.GltfDataType.MAT3;
+            this.dataType = GltfDataType.MAT3;
         } else if (dataType === 'MAT4') {
-            this.dataType = OV.GltfDataType.MAT4;
+            this.dataType = GltfDataType.MAT4;
         }
     }
 
@@ -133,28 +151,28 @@ OV.GltfBufferReader = class
         if (this.dataType === null) {
             return null;
         }
-        if (this.dataType === OV.GltfDataType.SCALAR) {
+        if (this.dataType === GltfDataType.SCALAR) {
             let data = this.ReadComponent ();
             this.SkipBytesByStride (1);
             return data;
-        } else if (this.dataType === OV.GltfDataType.VEC2) {
+        } else if (this.dataType === GltfDataType.VEC2) {
             let x = this.ReadComponent ();
             let y = this.ReadComponent ();
             this.SkipBytesByStride (2);
-            return new OV.Coord2D (x, y);
-        } else if (this.dataType === OV.GltfDataType.VEC3) {
+            return new Coord2D (x, y);
+        } else if (this.dataType === GltfDataType.VEC3) {
             let x = this.ReadComponent ();
             let y = this.ReadComponent ();
             let z = this.ReadComponent ();
             this.SkipBytesByStride (3);
-            return new OV.Coord3D (x, y, z);
-        } else if (this.dataType === OV.GltfDataType.VEC4) {
+            return new Coord3D (x, y, z);
+        } else if (this.dataType === GltfDataType.VEC4) {
             let x = this.ReadComponent ();
             let y = this.ReadComponent ();
             let z = this.ReadComponent ();
             let w = this.ReadComponent ();
             this.SkipBytesByStride (4);
-            return new OV.Coord4D (x, y, z, w);
+            return new Coord4D (x, y, z, w);
         }
         return null;
     }
@@ -198,17 +216,17 @@ OV.GltfBufferReader = class
         if (this.componentType === null) {
             return null;
         }
-        if (this.componentType === OV.GltfComponentType.BYTE) {
+        if (this.componentType === GltfComponentType.BYTE) {
             return this.reader.ReadCharacter8 ();
-        } else if (this.componentType === OV.GltfComponentType.UNSIGNED_BYTE) {
+        } else if (this.componentType === GltfComponentType.UNSIGNED_BYTE) {
             return this.reader.ReadUnsignedCharacter8 ();
-        } else if (this.componentType === OV.GltfComponentType.SHORT) {
+        } else if (this.componentType === GltfComponentType.SHORT) {
             return this.reader.ReadInteger16 ();
-        } else if (this.componentType === OV.GltfComponentType.UNSIGNED_SHORT) {
+        } else if (this.componentType === GltfComponentType.UNSIGNED_SHORT) {
             return this.reader.ReadUnsignedInteger16 ();
-        } else if (this.componentType === OV.GltfComponentType.UNSIGNED_INT) {
+        } else if (this.componentType === GltfComponentType.UNSIGNED_INT) {
             return this.reader.ReadInteger32 ();
-        } else if (this.componentType === OV.GltfComponentType.FLOAT) {
+        } else if (this.componentType === GltfComponentType.FLOAT) {
             return this.reader.ReadFloat32 ();
         }
         return null;
@@ -225,24 +243,24 @@ OV.GltfBufferReader = class
 
     GetComponentSize ()
     {
-        if (this.componentType === OV.GltfComponentType.BYTE) {
+        if (this.componentType === GltfComponentType.BYTE) {
             return 1;
-        } else if (this.componentType === OV.GltfComponentType.UNSIGNED_BYTE) {
+        } else if (this.componentType === GltfComponentType.UNSIGNED_BYTE) {
             return 1;
-        } else if (this.componentType === OV.GltfComponentType.SHORT) {
+        } else if (this.componentType === GltfComponentType.SHORT) {
             return 2;
-        } else if (this.componentType === OV.GltfComponentType.UNSIGNED_SHORT) {
+        } else if (this.componentType === GltfComponentType.UNSIGNED_SHORT) {
             return 2;
-        } else if (this.componentType === OV.GltfComponentType.UNSIGNED_INT) {
+        } else if (this.componentType === GltfComponentType.UNSIGNED_INT) {
             return 4;
-        } else if (this.componentType === OV.GltfComponentType.FLOAT) {
+        } else if (this.componentType === GltfComponentType.FLOAT) {
             return 4;
         }
         return 0;
     }
 };
 
-OV.GltfExtensions = class
+export class GltfExtensions
 {
     constructor ()
     {
@@ -261,7 +279,7 @@ OV.GltfExtensions = class
             return;
         }
         if (this.draco === null && extensionsRequired.indexOf ('KHR_draco_mesh_compression') !== -1) {
-			OV.LoadExternalLibrary ('loaders/draco_decoder.js').then (() => {
+			LoadExternalLibrary ('loaders/draco_decoder.js').then (() => {
                 DracoDecoderModule ().then ((draco) => {
                     this.draco = draco;
                     callbacks.onSuccess ();
@@ -300,10 +318,10 @@ OV.GltfExtensions = class
             return null;
         }
 
-        let phongMaterial = new OV.PhongMaterial ();
+        let phongMaterial = new PhongMaterial ();
         let diffuseColor = khrSpecularGlossiness.diffuseFactor;
         if (diffuseColor !== undefined) {
-            phongMaterial.color = OV.GetGltfColor (diffuseColor);
+            phongMaterial.color = GetGltfColor (diffuseColor);
             phongMaterial.opacity = diffuseColor[3];
         }
         let diffuseTexture = khrSpecularGlossiness.diffuseTexture;
@@ -312,7 +330,7 @@ OV.GltfExtensions = class
         }
         let specularColor = khrSpecularGlossiness.specularFactor;
         if (specularColor !== undefined) {
-            phongMaterial.specular = OV.GetGltfColor (specularColor);
+            phongMaterial.specular = GetGltfColor (specularColor);
         }
         let specularTexture = khrSpecularGlossiness.specularGlossinessTexture;
         if (specularTexture !== undefined) {
@@ -361,14 +379,14 @@ OV.GltfExtensions = class
             let attributeArray = new Float32Array (draco.HEAPF32.buffer, attributePtr, numValues).slice ();
             if (numComponents === 2) {
                 for (let i = 0; i < attributeArray.length; i += 2) {
-                    processor (new OV.Coord2D (
+                    processor (new Coord2D (
                         attributeArray[i + 0],
                         attributeArray[i + 1]
                     ));
                 }
             } else if (numComponents === 3) {
                 for (let i = 0; i < attributeArray.length; i += 3) {
-                    processor (new OV.Coord3D (
+                    processor (new Coord3D (
                         attributeArray[i + 0],
                         attributeArray[i + 1],
                         attributeArray[i + 2]
@@ -376,7 +394,7 @@ OV.GltfExtensions = class
                 }
             } else if (numComponents === 4) {
                 for (let i = 0; i < attributeArray.length; i += 4) {
-                    processor (new OV.Coord4D (
+                    processor (new Coord4D (
                         attributeArray[i + 0],
                         attributeArray[i + 1],
                         attributeArray[i + 2],
@@ -463,12 +481,12 @@ OV.GltfExtensions = class
     }
 };
 
-OV.ImporterGltf = class extends OV.ImporterBase
+export class ImporterGltf extends ImporterBase
 {
     constructor ()
     {
         super ();
-        this.gltfExtensions = new OV.GltfExtensions ();
+        this.gltfExtensions = new GltfExtensions ();
     }
 
     CanImportExtension (extension)
@@ -478,7 +496,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Y;
+        return Direction.Y;
     }
 
     ClearContent ()
@@ -504,7 +522,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
 
     ProcessGltf (fileContent, onFinish)
     {
-        let textContent = OV.ArrayBufferToUtf8String (fileContent);
+        let textContent = ArrayBufferToUtf8String (fileContent);
         let gltf = JSON.parse (textContent);
         if (gltf.asset.version !== '2.0') {
             this.SetError ('Invalid glTF version.');
@@ -515,7 +533,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
         for (let i = 0; i < gltf.buffers.length; i++) {
             let buffer = null;
             let gltfBuffer = gltf.buffers[i];
-            let base64Buffer = OV.Base64DataURIToArrayBuffer (gltfBuffer.uri);
+            let base64Buffer = Base64DataURIToArrayBuffer (gltfBuffer.uri);
             if (base64Buffer !== null) {
                 buffer = base64Buffer.buffer;
             } else {
@@ -548,9 +566,9 @@ OV.ImporterGltf = class extends OV.ImporterBase
             };
         }
 
-        let reader = new OV.BinaryReader (fileContent, true);
+        let reader = new BinaryReader (fileContent, true);
         let magic = reader.ReadUnsignedInteger32 ();
-        if (magic !== OV.GltfConstants.GLTF_STRING) {
+        if (magic !== GltfConstants.GLTF_STRING) {
             this.SetError ('Invalid glTF file.');
             onFinish ();
             return;
@@ -571,9 +589,9 @@ OV.ImporterGltf = class extends OV.ImporterBase
         let gltfTextContent = null;
         while (!reader.End ()) {
             let chunk = ReadChunk (reader);
-            if (chunk.type === OV.GltfConstants.JSON_CHUNK_TYPE) {
-                gltfTextContent = OV.ArrayBufferToUtf8String (chunk.buffer);
-            } else if (chunk.type === OV.GltfConstants.BINARY_CHUNK_TYPE) {
+            if (chunk.type === GltfConstants.JSON_CHUNK_TYPE) {
+                gltfTextContent = ArrayBufferToUtf8String (chunk.buffer);
+            } else if (chunk.type === GltfConstants.BINARY_CHUNK_TYPE) {
                 this.bufferContents.push (chunk.buffer);
             }
         }
@@ -629,11 +647,11 @@ OV.ImporterGltf = class extends OV.ImporterBase
     {
         function ImportProperties (model, propertyGroupName, propertyObject)
         {
-            let propertyGroup = new OV.PropertyGroup (propertyGroupName);
+            let propertyGroup = new PropertyGroup (propertyGroupName);
             for (let propertyName in propertyObject) {
                 if (Object.prototype.hasOwnProperty.call (propertyObject, propertyName)) {
                     if (typeof propertyObject[propertyName] === 'string') {
-                        const property = new OV.Property (OV.PropertyType.Text, propertyName, propertyObject[propertyName]);
+                        const property = new Property (PropertyType.Text, propertyName, propertyObject[propertyName]);
                         propertyGroup.AddProperty (property);
                     }
                 }
@@ -661,16 +679,16 @@ OV.ImporterGltf = class extends OV.ImporterBase
 
     ImportMaterial (gltf, gltfMaterial)
     {
-        let material = new OV.PhysicalMaterial ();
+        let material = new PhysicalMaterial ();
         if (gltfMaterial.name !== undefined) {
             material.name = gltfMaterial.name;
         }
 
-        material.color = OV.GetGltfColor ([1.0, 1.0, 1.0]);
+        material.color = GetGltfColor ([1.0, 1.0, 1.0]);
         if (gltfMaterial.pbrMetallicRoughness !== undefined) {
             let baseColor = gltfMaterial.pbrMetallicRoughness.baseColorFactor;
             if (baseColor !== undefined) {
-                material.color = OV.GetGltfColor (baseColor);
+                material.color = GetGltfColor (baseColor);
                 material.opacity = baseColor[3];
             }
             let metallicFactor = gltfMaterial.pbrMetallicRoughness.metallicFactor;
@@ -683,7 +701,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
             }
             let emissiveColor = gltfMaterial.emissiveFactor;
             if (emissiveColor !== undefined) {
-                material.emissive = OV.GetGltfColor (emissiveColor);
+                material.emissive = GetGltfColor (emissiveColor);
             }
 
             material.diffuseMap = this.ImportTexture (gltf, gltfMaterial.pbrMetallicRoughness.baseColorTexture);
@@ -720,7 +738,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
             return null;
         }
 
-        let texture = new OV.TextureMap ();
+        let texture = new TextureMap ();
         let gltfTexture = gltf.textures[gltfTextureRef.index];
         let gltfImageIndex = gltfTexture.source;
         let gltfImage = gltf.images[gltfImageIndex];
@@ -736,10 +754,10 @@ OV.ImporterGltf = class extends OV.ImporterBase
             };
             let textureIndexString = gltfImageIndex.toString ();
             if (gltfImage.uri !== undefined) {
-                let base64Buffer = OV.Base64DataURIToArrayBuffer (gltfImage.uri);
+                let base64Buffer = Base64DataURIToArrayBuffer (gltfImage.uri);
                 if (base64Buffer !== null) {
-                    textureParams.name = 'Embedded_' + textureIndexString + '.' + OV.GetFileExtensionFromMimeType (base64Buffer.mimeType);
-                    textureParams.url = OV.CreateObjectUrlWithMimeType (base64Buffer.buffer, base64Buffer.mimeType);
+                    textureParams.name = 'Embedded_' + textureIndexString + '.' + GetFileExtensionFromMimeType (base64Buffer.mimeType);
+                    textureParams.url = CreateObjectUrlWithMimeType (base64Buffer.buffer, base64Buffer.mimeType);
                     textureParams.buffer = base64Buffer.buffer;
                 } else {
                     let textureBuffer = this.callbacks.getTextureBuffer (gltfImage.uri);
@@ -754,8 +772,8 @@ OV.ImporterGltf = class extends OV.ImporterBase
                 let reader = this.GetReaderFromBufferView (bufferView);
                 if (reader !== null) {
                     let buffer = reader.ReadArrayBuffer (bufferView.byteLength);
-                    textureParams.name = 'Binary_' + textureIndexString + '.' + OV.GetFileExtensionFromMimeType (gltfImage.mimeType);
-                    textureParams.url = OV.CreateObjectUrlWithMimeType (buffer, gltfImage.mimeType);
+                    textureParams.name = 'Binary_' + textureIndexString + '.' + GetFileExtensionFromMimeType (gltfImage.mimeType);
+                    textureParams.url = CreateObjectUrlWithMimeType (buffer, gltfImage.mimeType);
                     textureParams.buffer = buffer;
                 }
             }
@@ -772,7 +790,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
 
     ImportMesh (gltf, gltfMesh)
     {
-        let mesh = new OV.Mesh ();
+        let mesh = new Mesh ();
         this.model.AddMesh (mesh);
         if (gltfMesh.name !== undefined) {
             mesh.SetName (gltfMesh.name);
@@ -800,11 +818,11 @@ OV.ImporterGltf = class extends OV.ImporterBase
         let hasUVs = (primitive.attributes.TEXCOORD_0 !== undefined);
         let hasIndices = (primitive.indices !== undefined);
 
-        let mode = OV.GltfRenderMode.TRIANGLES;
+        let mode = GltfRenderMode.TRIANGLES;
         if (primitive.mode !== undefined) {
             mode = primitive.mode;
         }
-        if (mode !== OV.GltfRenderMode.TRIANGLES && mode !== OV.GltfRenderMode.TRIANGLE_STRIP && mode !== OV.GltfRenderMode.TRIANGLE_FAN) {
+        if (mode !== GltfRenderMode.TRIANGLES && mode !== GltfRenderMode.TRIANGLE_STRIP && mode !== GltfRenderMode.TRIANGLE_FAN) {
             return;
         }
 
@@ -833,7 +851,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
                 return;
             }
             reader.EnumerateData ((data) => {
-                let color = OV.GetGltfVertexColor ([data.x, data.y, data.z], reader.componentType);
+                let color = GetGltfVertexColor ([data.x, data.y, data.z], reader.componentType);
                 mesh.AddVertexColor (color);
             });
         }
@@ -877,14 +895,14 @@ OV.ImporterGltf = class extends OV.ImporterBase
             }
         }
 
-        if (mode === OV.GltfRenderMode.TRIANGLES) {
+        if (mode === GltfRenderMode.TRIANGLES) {
             for (let i = 0; i < vertexIndices.length; i += 3) {
                 let v0 = vertexIndices[i];
                 let v1 = vertexIndices[i + 1];
                 let v2 = vertexIndices[i + 2];
                 this.AddTriangle (primitive, mesh, v0, v1, v2, hasVertexColors, hasNormals, hasUVs, vertexOffset, vertexColorOffset, normalOffset, uvOffset);
             }
-        } else if (mode === OV.GltfRenderMode.TRIANGLE_STRIP) {
+        } else if (mode === GltfRenderMode.TRIANGLE_STRIP) {
             for (let i = 0; i < vertexIndices.length - 2; i++) {
                 let v0 = vertexIndices[i];
                 let v1 = vertexIndices[i + 1];
@@ -896,7 +914,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
                 }
                 this.AddTriangle (primitive, mesh, v0, v1, v2, hasVertexColors, hasNormals, hasUVs, vertexOffset, vertexColorOffset, normalOffset, uvOffset);
             }
-        } else if (mode === OV.GltfRenderMode.TRIANGLE_FAN) {
+        } else if (mode === GltfRenderMode.TRIANGLE_FAN) {
             for (let i = 1; i < vertexIndices.length - 1; i++) {
                 let v0 = vertexIndices[0];
                 let v1 = vertexIndices[i];
@@ -908,7 +926,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
 
     AddTriangle (primitive, mesh, v0, v1, v2, hasVertexColors, hasNormals, hasUVs, vertexOffset, vertexColorOffset, normalOffset, uvOffset)
     {
-        let triangle = new OV.Triangle (vertexOffset + v0, vertexOffset + v1, vertexOffset + v2);
+        let triangle = new Triangle (vertexOffset + v0, vertexOffset + v1, vertexOffset + v2);
         if (hasVertexColors) {
             triangle.SetVertexColors (
                 vertexColorOffset + v0,
@@ -953,7 +971,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
     {
         function GetNodeTransformation (gltfNode)
         {
-            let matrix = new OV.Matrix ().CreateIdentity ();
+            let matrix = new Matrix ().CreateIdentity ();
             if (gltfNode.matrix !== undefined) {
                 matrix.Set (gltfNode.matrix);
             } else {
@@ -970,19 +988,19 @@ OV.ImporterGltf = class extends OV.ImporterBase
                     scale = gltfNode.scale;
                 }
                 matrix.ComposeTRS (
-                    OV.ArrayToCoord3D (translation),
-                    OV.ArrayToQuaternion (rotation),
-                    OV.ArrayToCoord3D (scale)
+                    ArrayToCoord3D (translation),
+                    ArrayToQuaternion (rotation),
+                    ArrayToCoord3D (scale)
                 );
             }
-            return new OV.Transformation (matrix);
+            return new Transformation (matrix);
         }
 
         if (gltfNode.children === undefined && gltfNode.mesh === undefined) {
             return;
         }
 
-        let node = new OV.Node ();
+        let node = new Node ();
         if (gltfNode.name !== undefined) {
             node.SetName (gltfNode.name);
         }
@@ -998,7 +1016,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
 
         if (gltfNode.mesh !== undefined) {
             if (gltfNode.children === undefined || gltfNode.children.length === 0) {
-                node.SetType (OV.NodeType.MeshNode);
+                node.SetType (NodeType.MeshNode);
             }
             node.AddMeshIndex (gltfNode.mesh);
         }
@@ -1012,7 +1030,7 @@ OV.ImporterGltf = class extends OV.ImporterBase
             return null;
         }
 
-        let reader = new OV.GltfBufferReader (buffer);
+        let reader = new GltfBufferReader (buffer);
         reader.SkipBytes (bufferView.byteOffset || 0);
         let byteStride = bufferView.byteStride;
         if (byteStride !== undefined && byteStride !== 0) {

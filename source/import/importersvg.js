@@ -1,4 +1,7 @@
-OV.ImporterThreeSvg = class extends OV.ImporterThreeBase
+import { Direction } from "../geometry/geometry";
+import { ImporterThreeBase } from "./importerthree";
+
+export class ImporterThreeSvg extends ImporterThreeBase
 {
     constructor ()
     {
@@ -12,7 +15,7 @@ OV.ImporterThreeSvg = class extends OV.ImporterThreeBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Z;
+        return Direction.Z;
     }
 
     GetExternalLibraries ()

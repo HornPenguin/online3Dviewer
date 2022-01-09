@@ -1,50 +1,58 @@
-OV.GetDefaultCamera = function (direction)
+import { Coord3D, CoordDistance3D, SubCoord3D } from "../geometry/coord3d";
+import { Direction } from "../geometry/geometry";
+import { ColorToHexString } from "../model/color";
+import { ShadingType } from "../threejs/threeutils";
+import { GetDomElementInnerDimensions } from "./domutils";
+import { CameraIsEqual3D, Navigation } from "./navigation";
+import { ViewerExtraGeometry, ViewerGeometry } from "./viewergeometry";
+
+export function GetDefaultCamera (direction)
 {
-    if (direction === OV.Direction.X) {
-        return new OV.Camera (
-            new OV.Coord3D (2.0, -3.0, 1.5),
-            new OV.Coord3D (0.0, 0.0, 0.0),
-            new OV.Coord3D (1.0, 0.0, 0.0)
+    if (direction === Direction.X) {
+        return new CameraIsEqual3D (
+            new Coord3D (2.0, -3.0, 1.5),
+            new Coord3D (0.0, 0.0, 0.0),
+            new Coord3D (1.0, 0.0, 0.0)
         );
-    } else if (direction === OV.Direction.Y) {
-        return new OV.Camera (
-            new OV.Coord3D (-1.5, 2.0, 3.0),
-            new OV.Coord3D (0.0, 0.0, 0.0),
-            new OV.Coord3D (0.0, 1.0, 0.0)
+    } else if (direction === Direction.Y) {
+        return new Camera (
+            new Coord3D (-1.5, 2.0, 3.0),
+            new Coord3D (0.0, 0.0, 0.0),
+            new Coord3D (0.0, 1.0, 0.0)
         );
-    } else if (direction === OV.Direction.Z) {
-        return new OV.Camera (
-            new OV.Coord3D (-1.5, -3.0, 2.0),
-            new OV.Coord3D (0.0, 0.0, 0.0),
-            new OV.Coord3D (0.0, 0.0, 1.0)
+    } else if (direction === Direction.Z) {
+        return new Camera (
+            new Coord3D (-1.5, -3.0, 2.0),
+            new Coord3D (0.0, 0.0, 0.0),
+            new Coord3D (0.0, 0.0, 1.0)
         );
     }
     return null;
 };
 
-OV.TraverseThreeObject = function (object, processor)
+export function TraverseThreeObject (object, processor)
 {
     if (!processor (object)) {
         return false;
     }
     for (let child of object.children) {
-        if (!OV.TraverseThreeObject (child, processor)) {
+        if (!TraverseThreeObject (child, processor)) {
             return false;
         }
     }
     return true;
 };
 
-OV.GetShadingTypeOfObject = function (mainObject)
+export function GetShadingTypeOfObject (mainObject)
 {
     let shadingType = null;
-    OV.TraverseThreeObject (mainObject, (obj) => {
+    TraverseThreeObject (mainObject, (obj) => {
         if (obj.isMesh) {
             for (const material of obj.material) {
                 if (material.type === 'MeshPhongMaterial') {
-                    shadingType = OV.ShadingType.Phong;
+                    shadingType = ShadingType.Phong;
                 } else if (material.type === 'MeshStandardMaterial') {
-                    shadingType = OV.ShadingType.Physical;
+                    shadingType = ShadingType.Physical;
                 }
                 return false;
             }
@@ -54,11 +62,11 @@ OV.GetShadingTypeOfObject = function (mainObject)
     return shadingType;
 };
 
-OV.UpVector = class
+export class UpVector
 {
     constructor ()
     {
-        this.direction = OV.Direction.Z;
+        this.direction = Direction.Z;
         this.isFixed = true;
         this.isFlipped = false;
     }
@@ -68,21 +76,21 @@ OV.UpVector = class
         this.direction = newDirection;
         this.isFlipped = false;
 
-        let defaultCamera = OV.GetDefaultCamera (this.direction);
-        let defaultDir = OV.SubCoord3D (defaultCamera.eye, defaultCamera.center);
+        let defaultCamera = GetDefaultCamera (this.direction);
+        let defaultDir = SubCoord3D (defaultCamera.eye, defaultCamera.center);
 
-        let distance = OV.CoordDistance3D (oldCamera.center, oldCamera.eye);
+        let distance = CoordDistance3D (oldCamera.center, oldCamera.eye);
         let newEye = oldCamera.center.Clone ().Offset (defaultDir, distance);
 
         let newCamera = oldCamera.Clone ();
-        if (this.direction === OV.Direction.X) {
-            newCamera.up = new OV.Coord3D (1.0, 0.0, 0.0);
+        if (this.direction === Direction.X) {
+            newCamera.up = new Coord3D (1.0, 0.0, 0.0);
             newCamera.eye = newEye;
-        } if (this.direction === OV.Direction.Y) {
-            newCamera.up = new OV.Coord3D (0.0, 1.0, 0.0);
+        } if (this.direction === Direction.Y) {
+            newCamera.up = new Coord3D (0.0, 1.0, 0.0);
             newCamera.eye = newEye;
-        } else if (this.direction === OV.Direction.Z) {
-            newCamera.up = new OV.Coord3D (0.0, 0.0, 1.0);
+        } else if (this.direction === Direction.Z) {
+            newCamera.up = new Coord3D (0.0, 0.0, 1.0);
             newCamera.eye = newEye;
         }
         return newCamera;
@@ -106,13 +114,13 @@ OV.UpVector = class
     }
 };
 
-OV.ShadingModel = class
+export class ShadingModel
 {
     constructor (scene)
     {
         this.scene = scene;
 
-        this.type = OV.ShadingType.Phong;
+        this.type = ShadingType.Phong;
         this.ambientLight = new THREE.AmbientLight (0x888888);
         this.directionalLight = new THREE.DirectionalLight (0x888888);
         this.environment = null;
@@ -124,11 +132,11 @@ OV.ShadingModel = class
     SetType (type)
     {
         this.type = type;
-        if (this.type === OV.ShadingType.Phong) {
+        if (this.type === ShadingType.Phong) {
             this.ambientLight.color.set (0x888888);
             this.directionalLight.color.set (0x888888);
             this.scene.environment = null;
-        } else if (this.type === OV.ShadingType.Physical) {
+        } else if (this.type === ShadingType.Physical) {
             this.ambientLight.color.set (0x000000);
             this.directionalLight.color.set (0x555555);
             this.scene.environment = this.environment;
@@ -145,19 +153,19 @@ OV.ShadingModel = class
 
     UpdateByCamera (camera)
     {
-        const lightDir = OV.SubCoord3D (camera.eye, camera.center);
+        const lightDir = SubCoord3D (camera.eye, camera.center);
         this.directionalLight.position.set (lightDir.x, lightDir.y, lightDir.z);
     }
 
     CreateHighlightMaterial (highlightColor, withOffset)
     {
         let material = null;
-        if (this.type === OV.ShadingType.Phong) {
+        if (this.type === ShadingType.Phong) {
             material = new THREE.MeshPhongMaterial ({
                 color : highlightColor,
                 side : THREE.DoubleSide
             });
-        } else if (this.type === OV.ShadingType.Physical) {
+        } else if (this.type === ShadingType.Physical) {
             material = new THREE.MeshStandardMaterial ({
                 color : highlightColor,
                 side : THREE.DoubleSide
@@ -172,7 +180,7 @@ OV.ShadingModel = class
     }
 };
 
-OV.Viewer = class
+export class Viewer
 {
     constructor ()
     {
@@ -208,8 +216,8 @@ OV.Viewer = class
         this.renderer.setSize (this.canvas.width, this.canvas.height);
 
         this.scene = new THREE.Scene ();
-        this.geometry = new OV.ViewerGeometry (this.scene);
-        this.extraGeometry = new OV.ViewerExtraGeometry (this.scene);
+        this.geometry = new ViewerGeometry (this.scene);
+        this.extraGeometry = new ViewerExtraGeometry (this.scene);
 
         this.InitNavigation ();
         this.InitShading ();
@@ -234,7 +242,7 @@ OV.Viewer = class
 
     SetBackgroundColor (color)
     {
-        let hexColor = '#' + OV.ColorToHexString (color);
+        let hexColor = '#' + ColorToHexString (color);
         this.renderer.setClearColor (hexColor, 1.0);
         this.Render ();
     }
@@ -276,7 +284,7 @@ OV.Viewer = class
 
     Resize (width, height)
     {
-        let innerSize = OV.GetDomElementInnerDimensions (this.canvas, width, height);
+        let innerSize = GetDomElementInnerDimensions (this.canvas, width, height);
         this.ResizeRenderer (innerSize.width, innerSize.height);
     }
 
@@ -296,7 +304,7 @@ OV.Viewer = class
         if (boundingSphere === null) {
             return;
         }
-        let center = new OV.Coord3D (boundingSphere.center.x, boundingSphere.center.y, boundingSphere.center.z);
+        let center = new Coord3D (boundingSphere.center.x, boundingSphere.center.y, boundingSphere.center.z);
         let radius = boundingSphere.radius;
         let fov = this.camera.fov;
 
@@ -372,7 +380,7 @@ OV.Viewer = class
 
     SetMainObject (object)
     {
-        const shadingType = OV.GetShadingTypeOfObject (object);
+        const shadingType = GetShadingTypeOfObject (object);
         this.geometry.SetMainObject (object);
         this.shading.SetType (shadingType);
 
@@ -493,20 +501,20 @@ OV.Viewer = class
         this.scene.add (this.camera);
 
         let canvasElem = this.renderer.domElement;
-        let camera = OV.GetDefaultCamera (OV.Direction.Z);
+        let camera = GetDefaultCamera (Direction.Z);
 
-        this.navigation = new OV.Navigation (canvasElem, camera, {
+        this.navigation = new Navigation (canvasElem, camera, {
             onUpdate : () => {
                 this.Render ();
             }
         });
 
-        this.upVector = new OV.UpVector ();
+        this.upVector = new UpVector ();
     }
 
     InitShading  ()
     {
-        this.shading = new OV.ShadingModel (this.scene);
+        this.shading = new ShadingModel (this.scene);
     }
 
     GetImageSize ()

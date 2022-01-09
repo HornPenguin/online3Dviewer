@@ -1,4 +1,8 @@
-OV.SetThreeMeshPolygonOffset = function (mesh, offset)
+import { IsEqual } from "../geometry/geometry";
+import { Color } from "../model/color";
+import { ConvertColorToThreeColor } from "../threejs/threeutils";
+
+export function SetThreeMeshPolygonOffset (mesh, offset)
 {
     function SetMaterialsPolygonOffset (materials, offset)
     {
@@ -15,7 +19,7 @@ OV.SetThreeMeshPolygonOffset = function (mesh, offset)
     }
 };
 
-OV.ViewerGeometry = class
+export class ViewerGeometry
 {
     constructor (scene)
     {
@@ -30,7 +34,7 @@ OV.ViewerGeometry = class
         };
         this.edgeSettings = {
             showEdges : false,
-            edgeColor : new OV.Color (0, 0, 0),
+            edgeColor : new Color (0, 0, 0),
             edgeThreshold : 1
         };
     }
@@ -91,7 +95,7 @@ OV.ViewerGeometry = class
                 this.GenerateMainEdgeObject ();
             } else {
 
-                let edgeColor = OV.ConvertColorToThreeColor (this.edgeSettings.edgeColor);
+                let edgeColor = ConvertColorToThreeColor (this.edgeSettings.edgeColor);
                 this.EnumerateEdges ((edge) => {
                     edge.material.color = edgeColor;
                 });
@@ -148,14 +152,14 @@ OV.ViewerGeometry = class
             let lineDist = alignedMinValue.x + step * cellSize;
             let beg = new THREE.Vector3 (alignedMinValue.y, level, lineDist);
             let end = new THREE.Vector3 (alignedMaxValue.y, level, lineDist);
-            let material = OV.IsEqual (lineDist, 0.0) ? strongMaterial : lightMaterial;
+            let material = IsEqual (lineDist, 0.0) ? strongMaterial : lightMaterial;
             this.mainGridObject.add (CreateLine (beg, end, material));
         }
         for (let step = 0; step < cellCountY + 1; step++) {
             let lineDist = alignedMinValue.y + step * cellSize;
             let beg = new THREE.Vector3 (lineDist, level, alignedMinValue.x);
             let end = new THREE.Vector3 (lineDist, level, alignedMaxValue.x);
-            let material = OV.IsEqual (lineDist, 0.0) ? strongMaterial : lightMaterial;
+            let material = IsEqual (lineDist, 0.0) ? strongMaterial : lightMaterial;
             this.mainGridObject.add (CreateLine (beg, end, material));
         }
         this.scene.add (this.mainGridObject);
@@ -164,12 +168,12 @@ OV.ViewerGeometry = class
 
     GenerateMainEdgeObject ()
     {
-        let edgeColor = OV.ConvertColorToThreeColor (this.edgeSettings.edgeColor);
+        let edgeColor = ConvertColorToThreeColor (this.edgeSettings.edgeColor);
         this.mainEdgeObject = new THREE.Object3D ();
 
         this.UpdateWorldMatrix ();
         this.EnumerateMeshes ((mesh) => {
-            OV.SetThreeMeshPolygonOffset (mesh, true);
+            SetThreeMeshPolygonOffset (mesh, true);
             let edges = new THREE.EdgesGeometry (mesh.geometry, this.edgeSettings.edgeThreshold);
             let line = new THREE.LineSegments (edges, new THREE.LineBasicMaterial ({
                 color: edgeColor
@@ -252,7 +256,7 @@ OV.ViewerGeometry = class
         }
 
         this.EnumerateMeshes ((mesh) => {
-            OV.SetThreeMeshPolygonOffset (mesh, false);
+            SetThreeMeshPolygonOffset (mesh, false);
         });
         this.EnumerateEdges ((edge) => {
             edge.geometry.dispose ();
@@ -308,7 +312,7 @@ OV.ViewerGeometry = class
     }
 };
 
-OV.ViewerExtraGeometry = class
+export class ViewerExtraGeometry
 {
     constructor (scene)
     {

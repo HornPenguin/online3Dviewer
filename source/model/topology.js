@@ -1,4 +1,4 @@
-OV.TopologyVertex = class
+export class TopologyVertex
 {
     constructor ()
     {
@@ -7,7 +7,7 @@ OV.TopologyVertex = class
     }
 };
 
-OV.TopologyEdge = class
+export class TopologyEdge
 {
     constructor (vertex1, vertex2)
     {
@@ -17,7 +17,7 @@ OV.TopologyEdge = class
     }
 };
 
-OV.TopologyTriangleEdge = class
+export class TopologyTriangleEdge
 {
     constructor (edge, reversed)
     {
@@ -26,7 +26,7 @@ OV.TopologyTriangleEdge = class
     }
 };
 
-OV.TopologyTriangle = class
+export class TopologyTriangle
 {
     constructor ()
     {
@@ -36,7 +36,7 @@ OV.TopologyTriangle = class
     }
 };
 
-OV.Topology = class
+export class Topology
 {
     constructor ()
     {
@@ -49,7 +49,7 @@ OV.Topology = class
 
     AddVertex ()
     {
-        this.vertices.push (new OV.TopologyVertex ());
+        this.vertices.push (new TopologyVertex ());
         return this.vertices.length - 1;
     }
 
@@ -76,7 +76,7 @@ OV.Topology = class
         }
 
         let triangleIndex = this.triangles.length;
-        let triangle = new OV.TopologyTriangle ();
+        let triangle = new TopologyTriangle ();
         triangle.triEdge1 = this.AddTriangleEdge (vertex1, vertex2);
         triangle.triEdge2 = this.AddTriangleEdge (vertex2, vertex3);
         triangle.triEdge3 = this.AddTriangleEdge (vertex3, vertex1);
@@ -108,7 +108,7 @@ OV.Topology = class
         }
 
         let edgeIndex = this.AddEdge (startVertex, endVertex);
-        this.triangleEdges.push (new OV.TopologyTriangleEdge (edgeIndex, reversed));
+        this.triangleEdges.push (new TopologyTriangleEdge (edgeIndex, reversed));
         return this.triangleEdges.length - 1;
     }
 
@@ -132,7 +132,7 @@ OV.Topology = class
             edgeIndex : edgeIndex
         });
 
-        this.edges.push (new OV.TopologyEdge (startVertex, endVertex));
+        this.edges.push (new TopologyEdge (startVertex, endVertex));
         return edgeIndex;
     }
 };

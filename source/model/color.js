@@ -1,4 +1,4 @@
-OV.Color = class
+export class Color
 {
     constructor (r, g, b)
     {
@@ -16,25 +16,25 @@ OV.Color = class
 
     Clone ()
     {
-        return new OV.Color (this.r, this.g, this.b);
+        return new Color (this.r, this.g, this.b);
     }
 };
 
-OV.ColorComponentFromFloat = function (component)
+export function ColorComponentFromFloat (component)
 {
     return parseInt (Math.round (component * 255.0), 10);
 };
 
-OV.ColorFromFloatComponents = function (r, g, b)
+export function ColorFromFloatComponents (r, g, b)
 {
-    return new OV.Color (
-        OV.ColorComponentFromFloat (r),
-        OV.ColorComponentFromFloat (g),
-        OV.ColorComponentFromFloat (b)
+    return new Color (
+        ColorComponentFromFloat (r),
+        ColorComponentFromFloat (g),
+        ColorComponentFromFloat (b)
     );
 };
 
-OV.SRGBToLinear = function (component)
+export function SRGBToLinear (component)
 {
     if (component < 0.04045) {
         return component * 0.0773993808;
@@ -43,7 +43,7 @@ OV.SRGBToLinear = function (component)
     }
 };
 
-OV.LinearToSRGB = function (component)
+export function LinearToSRGB (component)
 {
     if (component < 0.0031308) {
         return component * 12.92;
@@ -52,7 +52,7 @@ OV.LinearToSRGB = function (component)
     }
 };
 
-OV.IntegerToHexString = function (intVal)
+export function IntegerToHexString (intVal)
 {
     let result = parseInt (intVal, 10).toString (16);
     while (result.length < 2) {
@@ -61,15 +61,15 @@ OV.IntegerToHexString = function (intVal)
     return result;
 };
 
-OV.ColorToHexString = function (color)
+export function ColorToHexString (color)
 {
-    let r = OV.IntegerToHexString (color.r);
-    let g = OV.IntegerToHexString (color.g);
-    let b = OV.IntegerToHexString (color.b);
+    let r = IntegerToHexString (color.r);
+    let g = IntegerToHexString (color.g);
+    let b = IntegerToHexString (color.b);
     return r + g + b;
 };
 
-OV.HexStringToColor = function (hexString)
+export function HexStringToColor (hexString)
 {
     if (hexString.length !== 6) {
         return null;
@@ -78,15 +78,15 @@ OV.HexStringToColor = function (hexString)
     let r = parseInt (hexString.substr (0, 2), 16);
     let g = parseInt (hexString.substr (2, 2), 16);
     let b = parseInt (hexString.substr (4, 2), 16);
-    return new OV.Color (r, g, b);
+    return new Color (r, g, b);
 };
 
-OV.ArrayToColor = function (arr)
+export function ArrayToColor (arr)
 {
-	return new OV.Color (arr[0], arr[1], arr[2]);
+	return new Color (arr[0], arr[1], arr[2]);
 };
 
-OV.ColorIsEqual = function (a, b)
+export function ColorIsEqual (a, b)
 {
 	return a.r === b.r && a.g === b.g && a.b === b.b;
 };

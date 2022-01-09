@@ -1,4 +1,4 @@
-OV.Triangle = class
+export class Triangle
 {
     constructor (v0, v1, v2)
     {
@@ -88,7 +88,7 @@ OV.Triangle = class
 
     Clone ()
     {
-        let cloned = new OV.Triangle (this.v0, this.v1, this.v2);
+        let cloned = new Triangle (this.v0, this.v1, this.v2);
         cloned.SetVertexColors (this.c0, this.c1, this.c2);
         cloned.SetNormals (this.n0, this.n1, this.n2);
         cloned.SetTextureUVs (this.u0, this.u1, this.u2);

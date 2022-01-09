@@ -1,4 +1,4 @@
-OV.Coord4D = class
+export class Coord4D
 {
 	constructor (x, y, z, w)
 	{
@@ -10,6 +10,6 @@ OV.Coord4D = class
 
 	Clone ()
 	{
-		return new OV.Coord4D (this.x, this.y, this.z, this.w);
+		return new Coord4D (this.x, this.y, this.z, this.w);
 	}
 };

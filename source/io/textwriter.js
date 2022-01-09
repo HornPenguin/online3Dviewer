@@ -1,4 +1,4 @@
-OV.TextWriter = class
+export class TextWriter
 {
 	constructor ()
 	{

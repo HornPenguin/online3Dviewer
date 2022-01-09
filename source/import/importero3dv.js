@@ -1,4 +1,18 @@
-OV.ImporterO3dv = class extends OV.ImporterBase
+import { ValueOrDefault } from "../core/core";
+import { ArrayToCoord3D, Coord3D } from "../geometry/coord3d";
+import { Direction } from "../geometry/geometry";
+import { Matrix } from "../geometry/matrix";
+import { ArrayToQuaternion, Quaternion } from "../geometry/quaternion";
+import { Transformation } from "../geometry/transformation";
+import { ArrayBufferToUtf8String } from "../io/bufferutils";
+import { ArrayToColor } from "../model/color";
+import { GenerateCuboid, GenerateCylinder, GeneratePlatonicSolid, GenerateSphere, GeneratorParams } from "../model/generator";
+import { PhysicalMaterial } from "../model/material";
+import { Node, NodeType } from "../model/node";
+import { Property, PropertyGroup, PropertyType } from "../model/property";
+import { ImporterBase } from "./importerbase";
+
+export class ImporterO3dv extends ImporterBase
 {
     constructor ()
     {
@@ -12,7 +26,7 @@ OV.ImporterO3dv = class extends OV.ImporterBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Z;
+        return Direction.Z;
     }
 
     ClearContent ()
@@ -27,7 +41,7 @@ OV.ImporterO3dv = class extends OV.ImporterBase
 
     ImportContent (fileContent, onFinish)
     {
-        let textContent = OV.ArrayBufferToUtf8String (fileContent);
+        let textContent = ArrayBufferToUtf8String (fileContent);
         let content = JSON.parse (textContent);
         if (content.root === undefined) {
             onFinish ();
@@ -56,22 +70,22 @@ OV.ImporterO3dv = class extends OV.ImporterBase
 
     ImportMaterial (materialContent)
     {
-        let material = new OV.PhysicalMaterial ();
+        let material = new PhysicalMaterial ();
         material.color.Set (255, 255, 255);
         if (materialContent.name !== undefined) {
             material.name = materialContent.name;
         }
         if (materialContent.color !== undefined) {
-            material.color = OV.ArrayToColor (materialContent.color);
+            material.color = ArrayToColor (materialContent.color);
         }
-        material.metalness = OV.ValueOrDefault (materialContent.metalness, 0.0);
-        material.roughness = OV.ValueOrDefault (materialContent.roughness, 1.0);
+        material.metalness = ValueOrDefault (materialContent.metalness, 0.0);
+        material.roughness = ValueOrDefault (materialContent.roughness, 1.0);
         this.model.AddMaterial (material);
     }
 
     ImportMesh (meshContent)
     {
-        let genParams = new OV.GeneratorParams ();
+        let genParams = new GeneratorParams ();
         if (meshContent.name !== undefined) {
             genParams.SetName (meshContent.name);
         }
@@ -89,27 +103,27 @@ OV.ImporterO3dv = class extends OV.ImporterBase
             if (parameters.size_x === undefined || parameters.size_y === undefined || parameters.size_z === undefined) {
                 return;
             }
-            mesh = OV.GenerateCuboid (genParams, parameters.size_x, parameters.size_y, parameters.size_z);
+            mesh = GenerateCuboid (genParams, parameters.size_x, parameters.size_y, parameters.size_z);
         } else if (meshContent.type === 'cylinder') {
             if (parameters.radius === undefined || parameters.height === undefined) {
                 return;
             }
-            let segments = OV.ValueOrDefault (parameters.segments, 25);
-            let smooth = OV.ValueOrDefault (parameters.smooth, true);
-            mesh = OV.GenerateCylinder (genParams, parameters.radius, parameters.height, segments, smooth);
+            let segments = ValueOrDefault (parameters.segments, 25);
+            let smooth = ValueOrDefault (parameters.smooth, true);
+            mesh = GenerateCylinder (genParams, parameters.radius, parameters.height, segments, smooth);
         } else if (meshContent.type === 'sphere') {
             if (parameters.radius === undefined) {
                 return;
             }
-            let segments = OV.ValueOrDefault (parameters.segments, 20);
-            let smooth = OV.ValueOrDefault (parameters.smooth, true);
-            mesh = OV.GenerateSphere (genParams, parameters.radius, segments, smooth);
+            let segments = ValueOrDefault (parameters.segments, 20);
+            let smooth = ValueOrDefault (parameters.smooth, true);
+            mesh = GenerateSphere (genParams, parameters.radius, segments, smooth);
         } else if (meshContent.type === 'platonic') {
             if (parameters.solid_type === undefined) {
                 return;
             }
-            let radius = OV.ValueOrDefault (parameters.radius, 1.0);
-            mesh = OV.GeneratePlatonicSolid (genParams, parameters.solid_type, radius);
+            let radius = ValueOrDefault (parameters.radius, 1.0);
+            mesh = GeneratePlatonicSolid (genParams, parameters.solid_type, radius);
         }
         if (mesh !== null) {
             this.ImportProperties (mesh, meshContent);
@@ -129,14 +143,14 @@ OV.ImporterO3dv = class extends OV.ImporterBase
         if (nodeContent.children !== undefined) {
             for (const childIndex of nodeContent.children) {
                 let childContent = content.nodes[childIndex];
-                let childNode = new OV.Node ();
+                let childNode = new Node ();
                 node.AddChildNode (childNode);
                 this.ImportNode (content, childContent, childNode);
             }
         }
         if (nodeContent.mesh !== undefined) {
             if (nodeContent.children === undefined || nodeContent.children.length === 0) {
-                node.SetType (OV.NodeType.MeshNode);
+                node.SetType (NodeType.MeshNode);
             }
             node.AddMeshIndex (nodeContent.mesh);
         }
@@ -145,10 +159,10 @@ OV.ImporterO3dv = class extends OV.ImporterBase
     ImportProperties (element, nodeContent)
     {
         if (nodeContent.properties !== undefined) {
-            const propertyGroup = new OV.PropertyGroup ('Properties');
+            const propertyGroup = new PropertyGroup ('Properties');
             element.AddPropertyGroup (propertyGroup);
             for (const nodeProperty of nodeContent.properties) {
-                const property = new OV.Property (OV.PropertyType.Text, nodeProperty.name, nodeProperty.value);
+                const property = new Property (PropertyType.Text, nodeProperty.name, nodeProperty.value);
                 propertyGroup.AddProperty (property);
             }
         }
@@ -156,19 +170,19 @@ OV.ImporterO3dv = class extends OV.ImporterBase
 
     GetTransformation (contentTransformation)
     {
-        let translation = new OV.Coord3D (0.0, 0.0, 0.0);
-        let rotation = new OV.Quaternion (0.0, 0.0, 0.0, 1.0);
-        let scale = new OV.Coord3D (1.0, 1.0, 1.0);
+        let translation = new Coord3D (0.0, 0.0, 0.0);
+        let rotation = new Quaternion (0.0, 0.0, 0.0, 1.0);
+        let scale = new Coord3D (1.0, 1.0, 1.0);
         if (contentTransformation.translation !== undefined) {
-            translation = OV.ArrayToCoord3D (contentTransformation.translation);
+            translation = ArrayToCoord3D (contentTransformation.translation);
         }
         if (contentTransformation.rotation !== undefined) {
-            rotation = OV.ArrayToQuaternion (contentTransformation.rotation);
+            rotation = ArrayToQuaternion (contentTransformation.rotation);
         }
         if (contentTransformation.scale !== undefined) {
-            scale = OV.ArrayToCoord3D (contentTransformation.scale);
+            scale = ArrayToCoord3D (contentTransformation.scale);
         }
-        const matrix = new OV.Matrix ().ComposeTRS (translation, rotation, scale);
-        return new OV.Transformation (matrix);
+        const matrix = new Matrix ().ComposeTRS (translation, rotation, scale);
+        return new Transformation (matrix);
     }
 };

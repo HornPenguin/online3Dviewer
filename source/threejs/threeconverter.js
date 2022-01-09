@@ -1,4 +1,11 @@
-OV.ModelToThreeConversionParams = class
+import { RunTasksBatch } from "../core/taskrunner";
+import { IsEqual } from "../geometry/geometry";
+import { MaterialType } from "../model/material";
+import { MeshInstanceId } from "../model/meshinstance";
+import { GetMeshType, MeshType } from "../model/meshutils";
+import { ConvertColorToThreeColor, GetShadingType, ShadingType } from "./threeutils";
+
+export class ModelToThreeConversionParams
 {
 	constructor ()
 	{
@@ -6,7 +13,7 @@ OV.ModelToThreeConversionParams = class
 	}
 };
 
-OV.ModelToThreeConversionOutput = class
+export class ModelToThreeConversionOutput
 {
 	constructor ()
 	{
@@ -14,7 +21,7 @@ OV.ModelToThreeConversionOutput = class
 	}
 };
 
-OV.ThreeConversionStateHandler = class
+export class ThreeConversionStateHandler
 {
 	constructor (callbacks)
 	{
@@ -50,7 +57,7 @@ OV.ThreeConversionStateHandler = class
 	}
 };
 
-OV.ThreeNodeTree = class
+export class ThreeNodeTree
 {
 	constructor (rootNode, threeRootNode)
 	{
@@ -84,7 +91,7 @@ OV.ThreeNodeTree = class
 	}
 };
 
-OV.ConvertModelToThreeObject = function (model, params, output, callbacks)
+export function ConvertModelToThreeObject (model, params, output, callbacks)
 {
 	function CreateThreeMaterial (stateHandler, model, materialIndex, shadingType, params, output)
 	{
@@ -121,7 +128,7 @@ OV.ConvertModelToThreeObject = function (model, params, output, callbacks)
 		}
 
 		let material = model.GetMaterial (materialIndex);
-		let baseColor = OV.ConvertColorToThreeColor (material.color);
+		let baseColor = ConvertColorToThreeColor (material.color);
 		if (material.vertexColors) {
 			baseColor.setRGB (1.0, 1.0, 1.0);
 		}
@@ -140,11 +147,11 @@ OV.ConvertModelToThreeObject = function (model, params, output, callbacks)
 		}
 
 		let threeMaterial = null;
-		if (shadingType === OV.ShadingType.Phong) {
+		if (shadingType === ShadingType.Phong) {
 			threeMaterial = new THREE.MeshPhongMaterial (materialParams);
-			if (material.type === OV.MaterialType.Phong) {
-				let specularColor = OV.ConvertColorToThreeColor (material.specular);
-				if (OV.IsEqual (material.shininess, 0.0)) {
+			if (material.type === MaterialType.Phong) {
+				let specularColor = ConvertColorToThreeColor (material.specular);
+				if (IsEqual (material.shininess, 0.0)) {
 					specularColor.setRGB (0.0, 0.0, 0.0);
 				}
 				threeMaterial.specular = specularColor;
@@ -153,9 +160,9 @@ OV.ConvertModelToThreeObject = function (model, params, output, callbacks)
 					threeMaterial.specularMap = threeTexture;
 				});
 			}
-		} else if (shadingType === OV.ShadingType.Physical) {
+		} else if (shadingType === ShadingType.Physical) {
 			threeMaterial = new THREE.MeshStandardMaterial (materialParams);
-			if (material.type === OV.MaterialType.Physical) {
+			if (material.type === MaterialType.Physical) {
 				threeMaterial.metalness = material.metalness;
 				threeMaterial.roughness = material.roughness;
 				LoadTexture (stateHandler, threeMaterial, material.metalnessMap, (threeTexture) => {
@@ -167,7 +174,7 @@ OV.ConvertModelToThreeObject = function (model, params, output, callbacks)
 			}
 		}
 
-		let emissiveColor = OV.ConvertColorToThreeColor (material.emissive);
+		let emissiveColor = ConvertColorToThreeColor (material.emissive);
 		threeMaterial.emissive = emissiveColor;
 
 		LoadTexture (stateHandler, threeMaterial, material.diffuseMap, (threeTexture) => {
@@ -236,9 +243,9 @@ OV.ConvertModelToThreeObject = function (model, params, output, callbacks)
 			vertices.push (v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
 
 			if (triangle.HasVertexColors ()) {
-				let vc0 = OV.ConvertColorToThreeColor (mesh.GetVertexColor (triangle.c0));
-				let vc1 = OV.ConvertColorToThreeColor (mesh.GetVertexColor (triangle.c1));
-				let vc2 = OV.ConvertColorToThreeColor (mesh.GetVertexColor (triangle.c2));
+				let vc0 = ConvertColorToThreeColor (mesh.GetVertexColor (triangle.c0));
+				let vc1 = ConvertColorToThreeColor (mesh.GetVertexColor (triangle.c1));
+				let vc2 = ConvertColorToThreeColor (mesh.GetVertexColor (triangle.c2));
 				vertexColors.push (
 					vc0.r, vc0.g, vc0.b,
 					vc1.r, vc1.g, vc1.b,
@@ -309,8 +316,8 @@ OV.ConvertModelToThreeObject = function (model, params, output, callbacks)
 	function ConvertMesh (threeObject, model, meshInstanceId, modelThreeMaterials)
 	{
 		let mesh = model.GetMesh (meshInstanceId.meshIndex);
-		let type = OV.GetMeshType (mesh);
-		if (type === OV.MeshType.TriangleMesh) {
+		let type = GetMeshType (mesh);
+		if (type === MeshType.TriangleMesh) {
 			let threeMesh = CreateThreeMesh (model, meshInstanceId, modelThreeMaterials);
 			threeObject.add (threeMesh);
 		}
@@ -319,16 +326,16 @@ OV.ConvertModelToThreeObject = function (model, params, output, callbacks)
 	function ConvertNodeHierarchy (threeRootNode, model, modelThreeMaterials, stateHandler)
 	{
 		let rootNode = model.GetRootNode ();
-		let nodeTree = new OV.ThreeNodeTree (rootNode, threeRootNode);
+		let nodeTree = new ThreeNodeTree (rootNode, threeRootNode);
 		let meshInstances = nodeTree.GetMeshInstances ();
 
-		OV.RunTasksBatch (meshInstances.length, 100, {
+		RunTasksBatch (meshInstances.length, 100, {
 			runTask : (firstMeshInstanceIndex, lastMeshInstanceIndex, onReady) => {
 				for (let meshInstanceIndex = firstMeshInstanceIndex; meshInstanceIndex <= lastMeshInstanceIndex; meshInstanceIndex++) {
 					let meshInstance = meshInstances[meshInstanceIndex];
 					let node = meshInstance.node;
 					let threeNode = meshInstance.threeNode;
-					let meshInstanceId = new OV.MeshInstanceId (node.GetId (), meshInstance.meshIndex);
+					let meshInstanceId = new MeshInstanceId (node.GetId (), meshInstance.meshIndex);
 					ConvertMesh (threeNode, model, meshInstanceId, modelThreeMaterials);
 				}
 				onReady ();
@@ -339,8 +346,8 @@ OV.ConvertModelToThreeObject = function (model, params, output, callbacks)
 		});
 	}
 
-	let stateHandler = new OV.ThreeConversionStateHandler (callbacks);
-	let shadingType = OV.GetShadingType (model);
+	let stateHandler = new ThreeConversionStateHandler (callbacks);
+	let shadingType = GetShadingType (model);
 
 	let modelThreeMaterials = [];
 	for (let materialIndex = 0; materialIndex < model.MaterialCount (); materialIndex++) {

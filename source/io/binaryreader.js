@@ -1,4 +1,4 @@
-OV.BinaryReader = class
+export class BinaryReader
 {
     constructor (arrayBuffer, isLittleEndian)
     {

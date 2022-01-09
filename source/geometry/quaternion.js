@@ -1,4 +1,4 @@
-OV.Quaternion = class
+export class Quaternion
 {
 	constructor (x, y, z, w)
 	{
@@ -9,17 +9,17 @@ OV.Quaternion = class
 	}
 };
 
-OV.ArrayToQuaternion = function (arr)
+export function ArrayToQuaternion (arr)
 {
-	return new OV.Quaternion (arr[0], arr[1], arr[2], arr[3]);
+	return new Quaternion (arr[0], arr[1], arr[2], arr[3]);
 };
 
-OV.QuaternionFromAxisAngle = function (axis, angle)
+export function QuaternionFromAxisAngle (axis, angle)
 {
 	const a = angle / 2.0;
 	const s = Math.sin (a);
 
-	return new OV.Quaternion (
+	return new Quaternion (
 		axis.x * s,
 		axis.y * s,
 		axis.z * s,

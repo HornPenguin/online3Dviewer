@@ -1,23 +1,26 @@
-OV.File = class
+import { RunTasks } from "../core/taskrunner";
+import { FileSource, GetFileExtension, GetFileName, ReadFile, RequestUrl } from "../io/fileutils";
+
+export class File
 {
     constructor (file, source)
     {
         this.source = source;
-        if (source === OV.FileSource.Url) {
+        if (source === FileSource.Url) {
             this.fileUrl = file;
             this.fileObject = null;
-            this.name = OV.GetFileName (file);
-            this.extension = OV.GetFileExtension (file);
-        } else if (source === OV.FileSource.File) {
+            this.name = GetFileName (file);
+            this.extension = GetFileExtension (file);
+        } else if (source === FileSource.File) {
             this.fileUrl = null;
             this.fileObject = file;
-            this.name = OV.GetFileName (file.name);
-            this.extension = OV.GetFileExtension (file.name);
-        } else if (source === OV.FileSource.Decompressed) {
+            this.name = GetFileName (file.name);
+            this.extension = GetFileExtension (file.name);
+        } else if (source === FileSource.Decompressed) {
             this.fileUrl = null;
             this.fileObject = null;
-            this.name = OV.GetFileName (file);
-            this.extension = OV.GetFileExtension (file);
+            this.name = GetFileName (file);
+            this.extension = GetFileExtension (file);
         }
         this.content = null;
     }
@@ -28,7 +31,7 @@ OV.File = class
     }
 };
 
-OV.FileList = class
+export class FileList
 {
     constructor ()
     {
@@ -37,12 +40,12 @@ OV.FileList = class
 
     FillFromFileUrls (fileList)
     {
-        this.Fill (fileList, OV.FileSource.Url);
+        this.Fill (fileList, FileSource.Url);
     }
 
     FillFromFileObjects (fileList)
     {
-        this.Fill (fileList, OV.FileSource.File);
+        this.Fill (fileList, FileSource.File);
     }
 
     ExtendFromFileList (files)
@@ -62,7 +65,7 @@ OV.FileList = class
 
     GetContent (onReady)
     {
-        OV.RunTasks (this.files.length, {
+        RunTasks (this.files.length, {
             runTask : (index, complete) => {
                 this.GetFileContent (this.files[index], complete);
             },
@@ -77,7 +80,7 @@ OV.FileList = class
 
     FindFileByPath (filePath)
     {
-        let fileName = OV.GetFileName (filePath).toLowerCase ();
+        let fileName = GetFileName (filePath).toLowerCase ();
         for (let fileIndex = 0; fileIndex < this.files.length; fileIndex++) {
             let file = this.files[fileIndex];
             if (file.name.toLowerCase () === fileName) {
@@ -94,7 +97,7 @@ OV.FileList = class
         }
         for (let i = 0; i < this.files.length; i++) {
             let file = this.files[i];
-            if (file.source !== OV.FileSource.Url && file.source !== OV.FileSource.Decompressed) {
+            if (file.source !== FileSource.Url && file.source !== FileSource.Decompressed) {
                 return false;
             }
         }
@@ -106,7 +109,7 @@ OV.FileList = class
         this.files = [];
         for (let fileIndex = 0; fileIndex < fileList.length; fileIndex++) {
             let fileObject = fileList[fileIndex];
-            let file = new OV.File (fileObject, fileSource);
+            let file = new File (fileObject, fileSource);
             this.AddFile (file);
         }
     }
@@ -123,10 +126,10 @@ OV.FileList = class
             return;
         }
         let loaderPromise = null;
-        if (file.source === OV.FileSource.Url) {
-            loaderPromise = OV.RequestUrl (file.fileUrl, OV.FileFormat.Binary);
-        } else if (file.source === OV.FileSource.File) {
-            loaderPromise = OV.ReadFile (file.fileObject, OV.FileFormat.Binary);
+        if (file.source === FileSource.Url) {
+            loaderPromise = RequestUrl (file.fileUrl, FileFormat.Binary);
+        } else if (file.source === FileSource.File) {
+            loaderPromise = ReadFile (file.fileObject, FileFormat.Binary);
         } else {
             complete ();
             return;

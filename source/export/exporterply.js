@@ -1,4 +1,9 @@
-OV.ExporterPly = class extends OV.ExporterBase
+import { BinaryWriter } from "../io/binarywriter";
+import { FileFormat } from "../io/fileutils";
+import { TextWriter } from "../io/textwriter";
+import { ExportedFile, ExporterBase } from "./exporterbase";
+
+export class ExporterPly extends ExporterBase
 {
 	constructor ()
 	{
@@ -7,12 +12,12 @@ OV.ExporterPly = class extends OV.ExporterBase
 
     CanExport (format, extension)
     {
-        return (format === OV.FileFormat.Text || format === OV.FileFormat.Binary) && extension === 'ply';
+        return (format === FileFormat.Text || format === FileFormat.Binary) && extension === 'ply';
     }
 
 	ExportContent (exporterModel, format, files, onFinish)
 	{
-		if (format === OV.FileFormat.Text) {
+		if (format === FileFormat.Text) {
 			this.ExportText (exporterModel, files);
 		} else {
 			this.ExportBinary (exporterModel, files);
@@ -22,10 +27,10 @@ OV.ExporterPly = class extends OV.ExporterBase
 
 	ExportText (exporterModel, files)
 	{
-		let plyFile = new OV.ExportedFile ('model.ply');
+		let plyFile = new ExportedFile ('model.ply');
 		files.push (plyFile);
 
-		let plyWriter = new OV.TextWriter ();
+		let plyWriter = new TextWriter ();
 
 		let vertexCount = exporterModel.VertexCount ();
 		let triangleCount = exporterModel.TriangleCount ();
@@ -46,7 +51,7 @@ OV.ExporterPly = class extends OV.ExporterBase
 
 	ExportBinary (exporterModel, files)
 	{
-		let plyFile = new OV.ExportedFile ('model.ply');
+		let plyFile = new ExportedFile ('model.ply');
 		files.push (plyFile);
 
 		let vertexCount = exporterModel.VertexCount ();
@@ -54,7 +59,7 @@ OV.ExporterPly = class extends OV.ExporterBase
 		let headerText = this.GetHeaderText ('binary_little_endian', vertexCount, triangleCount);
 
 		let fullByteLength = headerText.length + vertexCount * 3 * 4 + triangleCount * (1 + 3 * 4);
-		let plyWriter = new OV.BinaryWriter (fullByteLength, true);
+		let plyWriter = new BinaryWriter (fullByteLength, true);
 
 		for (let i = 0; i < headerText.length; i++) {
 			plyWriter.WriteUnsignedCharacter8 (headerText.charCodeAt (i));
@@ -79,7 +84,7 @@ OV.ExporterPly = class extends OV.ExporterBase
 
 	GetHeaderText (format, vertexCount, triangleCount)
 	{
-		let headerWriter = new OV.TextWriter ();
+		let headerWriter = new TextWriter ();
 		headerWriter.WriteLine ('ply');
 		headerWriter.WriteLine ('format ' + format + ' 1.0');
 		headerWriter.WriteLine ('element vertex ' + vertexCount);

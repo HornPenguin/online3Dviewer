@@ -1,4 +1,6 @@
-OV.MeasureTool = class
+import { BigEps, IsEqualEps } from "../geometry/geometry";
+
+export class MeasureTool
 {
     constructor ()
     {
@@ -72,7 +74,7 @@ OV.MeasureTool = class
         const bNormal = this.GetFaceWorldNormal (b);
         result.pointsDistance = a.point.distanceTo (b.point);
         result.facesAngle = aNormal.angleTo (bNormal);
-        if (OV.IsEqualEps (result.facesAngle, 0.0, OV.BigEps) || OV.IsEqualEps (result.facesAngle, Math.PI, OV.BigEps)) {
+        if (IsEqualEps (result.facesAngle, 0.0, BigEps) || IsEqualEps (result.facesAngle, Math.PI, BigEps)) {
             let aPlane = new THREE.Plane ().setFromNormalAndCoplanarPoint (aNormal, a.point);
             result.parallelFacesDistance = Math.abs (aPlane.distanceToPoint (b.point));
         }

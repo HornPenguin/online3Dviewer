@@ -1,4 +1,8 @@
-OV.ParameterConverter =
+import { Coord3D } from "../geometry/coord3d";
+import { Color } from "../model/color";
+import { Camera } from "../viewer/navigation";
+
+export let ParameterConverter =
 {
     IntegerToString (integer)
     {
@@ -59,10 +63,10 @@ OV.ParameterConverter =
         if (paramParts.length !== 9) {
             return null;
         }
-        let camera = new OV.Camera (
-            new OV.Coord3D (this.StringToNumber (paramParts[0]), this.StringToNumber (paramParts[1]), this.StringToNumber (paramParts[2])),
-            new OV.Coord3D (this.StringToNumber (paramParts[3]), this.StringToNumber (paramParts[4]), this.StringToNumber (paramParts[5])),
-            new OV.Coord3D (this.StringToNumber (paramParts[6]), this.StringToNumber (paramParts[7]), this.StringToNumber (paramParts[8]))
+        let camera = new Camera (
+            new Coord3D (this.StringToNumber (paramParts[0]), this.StringToNumber (paramParts[1]), this.StringToNumber (paramParts[2])),
+            new Coord3D (this.StringToNumber (paramParts[3]), this.StringToNumber (paramParts[4]), this.StringToNumber (paramParts[5])),
+            new Coord3D (this.StringToNumber (paramParts[6]), this.StringToNumber (paramParts[7]), this.StringToNumber (paramParts[8]))
         );
         return camera;
     },
@@ -89,7 +93,7 @@ OV.ParameterConverter =
         if (paramParts.length !== 3) {
             return null;
         }
-        let color = new OV.Color (
+        let color = new Color (
             this.StringToInteger (paramParts[0]),
             this.StringToInteger (paramParts[1]),
             this.StringToInteger (paramParts[2])
@@ -121,7 +125,7 @@ OV.ParameterConverter =
         }
         let edgeSettings = {
             showEdges : paramParts[0] === 'on' ? true : false,
-            edgeColor : new OV.Color (
+            edgeColor : new Color (
                 this.StringToInteger (paramParts[1]),
                 this.StringToInteger (paramParts[2]),
                 this.StringToInteger (paramParts[3])
@@ -132,7 +136,7 @@ OV.ParameterConverter =
     }
 };
 
-OV.ParameterListBuilder = class
+export class ParameterListBuilder
 {
     constructor (separator)
     {
@@ -142,31 +146,31 @@ OV.ParameterListBuilder = class
 
     AddModelUrls (urls)
     {
-        this.AddUrlPart ('model', OV.ParameterConverter.ModelUrlsToString (urls));
+        this.AddUrlPart ('model', ParameterConverter.ModelUrlsToString (urls));
         return this;
     }
 
     AddCamera (camera)
     {
-        this.AddUrlPart ('camera', OV.ParameterConverter.CameraToString (camera));
+        this.AddUrlPart ('camera', ParameterConverter.CameraToString (camera));
         return this;
     }
 
     AddBackgroundColor (background)
     {
-        this.AddUrlPart ('backgroundcolor', OV.ParameterConverter.ColorToString (background));
+        this.AddUrlPart ('backgroundcolor', ParameterConverter.ColorToString (background));
         return this;
     }
 
     AddDefaultColor (color)
     {
-        this.AddUrlPart ('defaultcolor', OV.ParameterConverter.ColorToString (color));
+        this.AddUrlPart ('defaultcolor', ParameterConverter.ColorToString (color));
         return this;
     }
 
     AddEdgeSettings (edgeSettings)
     {
-        this.AddUrlPart ('edgesettings', OV.ParameterConverter.EdgeSettingsToString (edgeSettings));
+        this.AddUrlPart ('edgesettings', ParameterConverter.EdgeSettingsToString (edgeSettings));
         return this;
     }
 
@@ -187,7 +191,7 @@ OV.ParameterListBuilder = class
     }
 };
 
-OV.ParameterListParser = class
+export class ParameterListParser
 {
     constructor (paramList, separator)
     {
@@ -203,31 +207,31 @@ OV.ParameterListParser = class
         }
 
         let keywordParams = this.GetKeywordParams ('model');
-        return OV.ParameterConverter.StringToModelUrls (keywordParams);
+        return ParameterConverter.StringToModelUrls (keywordParams);
     }
 
     GetCamera ()
     {
         let keywordParams = this.GetKeywordParams ('camera');
-        return OV.ParameterConverter.StringToCamera (keywordParams);
+        return ParameterConverter.StringToCamera (keywordParams);
     }
 
     GetBackgroundColor ()
     {
         let backgroundParams = this.GetKeywordParams ('backgroundcolor');
-        return OV.ParameterConverter.StringToColor (backgroundParams);
+        return ParameterConverter.StringToColor (backgroundParams);
     }
 
     GetDefaultColor ()
     {
         let colorParams = this.GetKeywordParams ('defaultcolor');
-        return OV.ParameterConverter.StringToColor (colorParams);
+        return ParameterConverter.StringToColor (colorParams);
     }
 
     GetEdgeSettings ()
     {
         let edgeSettingsParams = this.GetKeywordParams ('edgesettings');
-        return OV.ParameterConverter.StringToEdgeSettings (edgeSettingsParams);
+        return ParameterConverter.StringToEdgeSettings (edgeSettingsParams);
     }
 
     GetKeywordParams (keyword)
@@ -247,19 +251,19 @@ OV.ParameterListParser = class
     }
 };
 
-OV.CreateUrlBuilder = function ()
+export function CreateUrlBuilder ()
 {
-    return new OV.ParameterListBuilder ('$');
+    return new ParameterListBuilder ('$');
 };
 
-OV.CreateUrlParser = function (urlParams)
+export function CreateUrlParser (urlParams)
 {
-    return new OV.ParameterListParser (urlParams, '$');
+    return new ParameterListParser (urlParams, '$');
 };
 
-OV.CreateModelUrlParameters = function (urls)
+export function CreateModelUrlParameters (urls)
 {
-    let builder = OV.CreateUrlBuilder ();
+    let builder = CreateUrlBuilder ();
     builder.AddModelUrls (urls);
     return builder.GetParameterList ();
 };

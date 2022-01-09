@@ -1,4 +1,16 @@
-OV.ImporterIfc = class extends OV.ImporterBase
+import { Coord3D } from "../geometry/coord3d";
+import { Direction } from "../geometry/geometry";
+import { Matrix } from "../geometry/matrix";
+import { Transformation } from "../geometry/transformation";
+import { LoadExternalLibrary } from "../io/externallibs";
+import { ColorFromFloatComponents, IntegerToHexString } from "../model/color";
+import { PhongMaterial } from "../model/material";
+import { Mesh } from "../model/mesh";
+import { Property, PropertyGroup, PropertyType } from "../model/property";
+import { Triangle } from "../model/triangle";
+import { ImporterBase } from "./importerbase";
+
+export class ImporterIfc extends ImporterBase
 {
     constructor ()
     {
@@ -13,7 +25,7 @@ OV.ImporterIfc = class extends OV.ImporterBase
 
     GetUpDirection ()
     {
-        return OV.Direction.Y;
+        return Direction.Y;
     }
 
 	ClearContent ()
@@ -31,7 +43,7 @@ OV.ImporterIfc = class extends OV.ImporterBase
     ImportContent (fileContent, onFinish)
     {
 		if (this.ifc === null) {
-			OV.LoadExternalLibrary ('loaders/web-ifc-api-browser.js').then (() => {
+			LoadExternalLibrary ('loaders/web-ifc-api-browser.js').then (() => {
                 this.ifc = new WebIFC.IfcAPI ();
                 this.ifc.Init ().then (() => {
                     this.ImportIfcContent (fileContent);
@@ -65,7 +77,7 @@ OV.ImporterIfc = class extends OV.ImporterBase
 
     ImportIfcMesh (modelID, ifcMesh)
     {
-        let mesh = new OV.Mesh ();
+        let mesh = new Mesh ();
         mesh.SetName ('Mesh ' + ifcMesh.expressID.toString ());
 
         let vertexOffset = 0;
@@ -76,14 +88,14 @@ OV.ImporterIfc = class extends OV.ImporterBase
             const ifcVertices = this.ifc.GetVertexArray (ifcGeometryData.GetVertexData (), ifcGeometryData.GetVertexDataSize ());
             const ifcIndices = this.ifc.GetIndexArray (ifcGeometryData.GetIndexData (), ifcGeometryData.GetIndexDataSize ());
             const materialIndex = this.GetMaterialIndexByColor (ifcGeometry.color);
-            const matrix = new OV.Matrix (ifcGeometry.flatTransformation);
-            const transformation = new OV.Transformation (matrix);
+            const matrix = new Matrix (ifcGeometry.flatTransformation);
+            const transformation = new Transformation (matrix);
 
             for (let i = 0; i < ifcVertices.length; i += 6) {
                 const x = ifcVertices[i];
                 const y = ifcVertices[i + 1];
                 const z = ifcVertices[i + 2];
-                const coord = new OV.Coord3D (x, y, z);
+                const coord = new Coord3D (x, y, z);
                 const transformed = transformation.TransformCoord3D (coord);
                 mesh.AddVertex (transformed);
             }
@@ -92,7 +104,7 @@ OV.ImporterIfc = class extends OV.ImporterBase
                 const v0 = ifcIndices[i];
                 const v1 = ifcIndices[i + 1];
                 const v2 = ifcIndices[i + 2];
-                const triangle = new OV.Triangle (
+                const triangle = new Triangle (
                     vertexOffset + v0,
                     vertexOffset + v1,
                     vertexOffset + v2
@@ -134,7 +146,7 @@ OV.ImporterIfc = class extends OV.ImporterBase
                 if (!propSet || !propSet.HasProperties) {
                     return;
                 }
-                let propertyGroup = new OV.PropertyGroup (propSet.Name.value);
+                let propertyGroup = new PropertyGroup (propSet.Name.value);
                 propSet.HasProperties.forEach ((property) => {
                     if (!property || !property.Name || !property.NominalValue) {
                         return;
@@ -146,7 +158,7 @@ OV.ImporterIfc = class extends OV.ImporterBase
                         case 'IFCTEXT':
                         case 'IFCLABEL':
                         case 'IFCIDENTIFIER':
-                            elemProperty = new OV.Property (OV.PropertyType.Text, propertyName, this.GetIFCString (property.NominalValue.value));
+                            elemProperty = new Property (PropertyType.Text, propertyName, this.GetIFCString (property.NominalValue.value));
                             break;
                         case 'IFCBOOLEAN':
                         case 'IFCLOGICAL':
@@ -156,11 +168,11 @@ OV.ImporterIfc = class extends OV.ImporterBase
                             } else if (property.NominalValue.value === 'F') {
                                 strValue = 'False';
                             }
-                            elemProperty = new OV.Property (OV.PropertyType.Text, propertyName, strValue);
+                            elemProperty = new Property (PropertyType.Text, propertyName, strValue);
                             break;
                         case 'IFCINTEGER':
                         case 'IFCCOUNTMEASURE':
-                            elemProperty = new OV.Property (OV.PropertyType.Integer, propertyName, property.NominalValue.value);
+                            elemProperty = new Property (PropertyType.Integer, propertyName, property.NominalValue.value);
                             break;
                         case 'IFCREAL':
                         case 'IFCLENGTHMEASURE':
@@ -173,7 +185,7 @@ OV.ImporterIfc = class extends OV.ImporterBase
                         case 'IFCMASSPERLENGTHMEASURE':
                         case 'IFCPLANEANGLEMEASURE':
                         case 'IFCTHERMALTRANSMITTANCEMEASURE':
-                            elemProperty = new OV.Property (OV.PropertyType.Number, propertyName, property.NominalValue.value);
+                            elemProperty = new Property (PropertyType.Number, propertyName, property.NominalValue.value);
                             break;
                         default:
                             // TODO
@@ -194,22 +206,22 @@ OV.ImporterIfc = class extends OV.ImporterBase
 
     GetMaterialIndexByColor (ifcColor)
     {
-        const color = OV.ColorFromFloatComponents (ifcColor.x, ifcColor.y, ifcColor.z);
+        const color = ColorFromFloatComponents (ifcColor.x, ifcColor.y, ifcColor.z);
 
         const materialName = 'Color ' +
-            OV.IntegerToHexString (color.r) +
-            OV.IntegerToHexString (color.g) +
-            OV.IntegerToHexString (color.b) +
-            OV.IntegerToHexString (parseInt (ifcColor.w * 255.0, 10));
+            IntegerToHexString (color.r) +
+            IntegerToHexString (color.g) +
+            IntegerToHexString (color.b) +
+            IntegerToHexString (parseInt (ifcColor.w * 255.0, 10));
 
         if (this.materialNameToIndex.has (materialName)) {
             return this.materialNameToIndex.get (materialName);
         } else {
-			let material = new OV.PhongMaterial ();
+			let material = new PhongMaterial ();
             material.name = materialName;
 			material.color = color;
             material.opacity = ifcColor.w;
-            OV.UpdateMaterialTransparency (material);
+            UpdateMaterialTransparency (material);
             let materialIndex = this.model.AddMaterial (material);
             this.materialNameToIndex.set (materialName, materialIndex);
             return materialIndex;

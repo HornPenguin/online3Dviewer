@@ -1,4 +1,10 @@
-OV.Exporter3dm = class extends OV.ExporterBase
+import { LoadExternalLibrary } from "../io/externallibs";
+import { FileFormat } from "../io/fileutils";
+import { MaterialType } from "../model/material";
+import { ConvertMeshToMeshBuffer } from "../model/meshbuffer";
+import { ExportedFile, ExporterBase } from "./exporterbase";
+
+export class Exporter3dm extends ExporterBase
 {
 	constructor ()
 	{
@@ -8,13 +14,13 @@ OV.Exporter3dm = class extends OV.ExporterBase
 
     CanExport (format, extension)
     {
-        return format === OV.FileFormat.Binary && extension === '3dm';
+        return format === FileFormat.Binary && extension === '3dm';
     }
 
 	ExportContent (exporterModel, format, files, onFinish)
 	{
 		if (this.rhino === null) {
-			OV.LoadExternalLibrary ('loaders/rhino3dm.min.js').then (() => {
+			LoadExternalLibrary ('loaders/rhino3dm.min.js').then (() => {
                 rhino3dm ().then ((rhino) => {
                     this.rhino = rhino;
                     this.ExportRhinoContent (exporterModel, files, onFinish);
@@ -39,12 +45,12 @@ OV.Exporter3dm = class extends OV.ExporterBase
             };
         }
 
-		let rhinoFile = new OV.ExportedFile ('model.3dm');
+		let rhinoFile = new ExportedFile ('model.3dm');
 		files.push (rhinoFile);
 
         let rhinoDoc = new this.rhino.File3dm ();
         exporterModel.EnumerateTransformedMeshes ((mesh) => {
-            let meshBuffer = OV.ConvertMeshToMeshBuffer (mesh);
+            let meshBuffer = ConvertMeshToMeshBuffer (mesh);
             for (let primitiveIndex = 0; primitiveIndex < meshBuffer.PrimitiveCount (); primitiveIndex++) {
                 let primitive = meshBuffer.GetPrimitive (primitiveIndex);
                 let threeJson = {
@@ -71,7 +77,7 @@ OV.Exporter3dm = class extends OV.ExporterBase
                 let material = exporterModel.GetMaterial (primitive.material);
                 let rhinoMaterial = new this.rhino.Material ();
                 rhinoMaterial.name = this.GetExportedMaterialName (material.name);
-                if (material.type === OV.MaterialType.Phong) {
+                if (material.type === MaterialType.Phong) {
                     rhinoMaterial.ambientColor = ColorToRhinoColor (material.ambient);
                     rhinoMaterial.specularColor = ColorToRhinoColor (material.specular);
                 }

@@ -3,12 +3,12 @@ OV =
 
 };
 
-OV.IsDefined = function (val)
+export function IsDefined (val)
 {
     return val !== undefined && val !== null;
 };
 
-OV.ValueOrDefault = function (val, def)
+export function ValueOrDefault (val, def)
 {
     if (val === undefined || val === null) {
         return def;
@@ -16,13 +16,13 @@ OV.ValueOrDefault = function (val, def)
     return val;
 };
 
-OV.CopyObjectAttributes = function (src, dest)
+export function CopyObjectAttributes (src, dest)
 {
-    if (!OV.IsDefined (src)) {
+    if (!IsDefined (src)) {
         return;
     }
     for (let attribute of Object.keys (src)) {
-        if (OV.IsDefined (src[attribute])) {
+        if (IsDefined (src[attribute])) {
             dest[attribute] = src[attribute];
         }
     }
