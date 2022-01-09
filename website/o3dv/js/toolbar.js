@@ -1,5 +1,5 @@
-import { AddDiv, CreateDiv } from "../../../source/viewer/domutils";
-import { AddSvgIconElement, InstallTooltip } from "./utils";
+import { AddDiv, CreateDiv } from '../../../source/viewer/domutils.js';
+import { AddSvgIconElement, InstallTooltip } from './utils.js';
 
 export class ToolbarButton
 {
@@ -58,7 +58,7 @@ export class ToolbarButton
             this.buttonDiv.classList.remove ('selected');
         }
     }
-};
+}
 
 export class Toolbar
 {
@@ -113,4 +113,4 @@ export class Toolbar
     {
         return AddDiv (this.mainDiv, 'ov_toolbar_separator');
     }
-};
+}

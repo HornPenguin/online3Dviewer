@@ -1,4 +1,4 @@
-import { CreateModelUrlParameters, CreateUrlParser } from "../../../source/parameters/parameterlist";
+import { CreateModelUrlParameters, CreateUrlParser } from '../../../source/parameters/parameterlist.js';
 
 export class HashHandler
 {
@@ -84,4 +84,4 @@ export class HashHandler
         }
         this.eventListener ();
     }
-};
+}

@@ -1,6 +1,6 @@
-import { ReadLines } from "../../../source/import/importerutils";
-import { AddDiv, CreateDomElement } from "../../../source/viewer/domutils";
-import { ButtonDialog } from "./modal";
+import { ReadLines } from '../../../source/import/importerutils.js';
+import { AddDiv, CreateDomElement } from '../../../source/viewer/domutils.js';
+import { ButtonDialog } from './modal.js';
 
 export function ShowOpenUrlDialog (onOk)
 {
@@ -32,4 +32,4 @@ export function ShowOpenUrlDialog (onOk)
     dialog.Show ();
     urlsTextArea.focus ();
     return dialog;
-};
+}

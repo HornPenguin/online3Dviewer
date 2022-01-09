@@ -1,5 +1,5 @@
-import { IsDefined } from "../../../source/core/core";
-import { TreeViewButton, TreeViewButtonItem, TreeViewGroupButtonItem, TreeViewSingleItem } from "./treeview";
+import { IsDefined } from '../../../source/core/core.js';
+import { TreeViewButton, TreeViewButtonItem, TreeViewGroupButtonItem, TreeViewSingleItem } from './treeview.js';
 
 export const NavigatorItemRecurse =
 {
@@ -18,7 +18,7 @@ export class MaterialItem extends TreeViewSingleItem
             callbacks.onSelected (materialIndex);
         });
     }
-};
+}
 
 export class MeshItem extends TreeViewButtonItem
 {
@@ -74,7 +74,7 @@ export class MeshItem extends TreeViewButtonItem
             }
         }
     }
-};
+}
 
 export class NodeItem extends TreeViewGroupButtonItem
 {
@@ -161,4 +161,4 @@ export class NodeItem extends TreeViewGroupButtonItem
             }
         }
     }
-};
+}

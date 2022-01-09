@@ -1,8 +1,8 @@
-import { AddDiv, SetDomElementHeight, GetDomElementOuterHeight } from "../../../source/viewer/domutils";
-import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from "./dialogs";
-import { MaterialItem } from "./navigatoritems";
-import { NavigatorPanel, NavigatorPopupButton } from "./navigatorpanel";
-import { GetMaterialName, GetMeshName } from "./utils";
+import { AddDiv, SetDomElementHeight, GetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from './dialogs.js';
+import { MaterialItem } from './navigatoritems.js';
+import { NavigatorPanel, NavigatorPopupButton } from './navigatorpanel.js';
+import { GetMaterialName, GetMeshName } from './utils.js';
 
 export class NavigatorMeshesPopupButton extends NavigatorPopupButton
 {
@@ -58,7 +58,7 @@ export class NavigatorMeshesPopupButton extends NavigatorPopupButton
             }
         });
     }
-};
+}
 
 export class NavigatorMaterialsPanel extends NavigatorPanel
 {
@@ -141,4 +141,4 @@ export class NavigatorMaterialsPanel extends NavigatorPanel
     {
         this.meshesButton.Update (meshInfoArray);
     }
-};
+}

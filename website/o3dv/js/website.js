@@ -1,24 +1,24 @@
-import { FileSource, GetFileExtension, TransformFileHostUrls } from "../../../source/io/fileutils";
-import { ImportErrorCode, ImportSettings } from "../../../source/import/importer";
-import { Viewer } from "../../../source/viewer/viewer";
-import { MeasureTool } from "../../../source/viewer/measuretool";
-import { AddDiv, AddDomElement, ShowDomElement, SetDomElementOuterHeight } from "../../../source/viewer/domutils";
-import { CookieHandler } from "./cookies";
-import { CalculatePopupPositionToScreen, ShowListPopup } from "./dialogs";
-import { EventHandler } from "./eventhandler";
-import { HashHandler } from "./hashhandler";
-import { Navigator, Selection, SelectionType } from "./navigator";
-import { Settings } from "./settings";
-import { Sidebar } from "./sidebar";
-import { ThemeHandler } from "./themehandler";
-import { ThreeModelLoaderUI } from "./threemodelloaderui";
-import { Toolbar } from "./toolbar";
-import { ExportDialog } from "./exportdialog";
-import { AddSmallWidthChangeEventListener, GetFilesFromDataTransfer, IsSmallWidth } from "./utils";
-import { ShowOpenUrlDialog } from "./openurldialog";
-import { ShowSharingDialog } from "./sharingdialog";
-import { HasDefaultMaterial, ReplaceDefaultMaterialColor } from "../../../source/model/modelutils";
-import { Direction } from "../../../source/geometry/geometry";
+import { FileSource, GetFileExtension, TransformFileHostUrls } from '../../../source/io/fileutils.js';
+import { ImportErrorCode, ImportSettings } from '../../../source/import/importer.js';
+import { Viewer } from '../../../source/viewer/viewer.js';
+import { MeasureTool } from '../../../source/viewer/measuretool.js';
+import { AddDiv, AddDomElement, ShowDomElement, SetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { CookieHandler } from './cookies.js';
+import { CalculatePopupPositionToScreen, ShowListPopup } from './dialogs.js';
+import { EventHandler } from './eventhandler.js';
+import { HashHandler } from './hashhandler.js';
+import { Navigator, Selection, SelectionType } from './navigator.js';
+import { Settings, Theme } from './settings.js';
+import { Sidebar } from './sidebar.js';
+import { ThemeHandler } from './themehandler.js';
+import { ThreeModelLoaderUI } from './threemodelloaderui.js';
+import { Toolbar } from './toolbar.js';
+import { ExportDialog } from './exportdialog.js';
+import { AddSmallWidthChangeEventListener, GetFilesFromDataTransfer, IsSmallWidth } from './utils.js';
+import { ShowOpenUrlDialog } from './openurldialog.js';
+import { ShowSharingDialog } from './sharingdialog.js';
+import { HasDefaultMaterial, ReplaceDefaultMaterialColor } from '../../../source/model/modelutils.js';
+import { Direction } from '../../../source/geometry/geometry.js';
 
 export const WebsiteUIState =
 {
@@ -767,4 +767,4 @@ export class Website
             popupDiv.remove ();
         });
     }
-};
+}

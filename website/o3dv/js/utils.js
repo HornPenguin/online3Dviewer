@@ -1,7 +1,7 @@
-import { Color } from "../../../source/model/color";
-import { CreateObjectUrl } from "../../../source/io/bufferutils";
-import { AddDiv, CreateDiv, AddDomElement, CreateDomElement, GetDomElementOuterWidth, SetDomElementOuterWidth } from "../../../source/viewer/domutils";
-import { CreateVerticalSplitter } from "./splitter";
+import { Color, ColorToHexString } from '../../../source/model/color.js';
+import { CreateObjectUrl } from '../../../source/io/bufferutils.js';
+import { AddDiv, CreateDiv, AddDomElement, CreateDomElement, GetDomElementOuterWidth, SetDomElementOuterWidth } from '../../../source/viewer/domutils.js';
+import { CreateVerticalSplitter } from './splitter.js';
 
 export function GetNameOrDefault (originalName, defaultName)
 {
@@ -9,43 +9,43 @@ export function GetNameOrDefault (originalName, defaultName)
         return originalName;
     }
     return defaultName;
-};
+}
 
 export function GetNodeName (originalName)
 {
     return GetNameOrDefault (originalName, 'No Name');
-};
+}
 
 export function GetMeshName (originalName)
 {
     return GetNameOrDefault (originalName, 'No Name');
-};
+}
 
 export function GetMaterialName (originalName)
 {
     return GetNameOrDefault (originalName, 'No Name');
-};
+}
 
 export function IsHoverEnabled ()
 {
     return window.matchMedia ('(hover: hover)').matches;
-};
+}
 
 export function AddSmallWidthChangeEventListener (onChange)
 {
     let mediaQuery = window.matchMedia ('(max-width: 800px)');
     mediaQuery.addEventListener ('change', onChange);
-};
+}
 
 export function IsSmallWidth ()
 {
     return window.matchMedia ('(max-width: 800px)').matches;
-};
+}
 
 export function IsSmallHeight ()
 {
     return window.matchMedia ('(max-height: 800px)').matches;
-};
+}
 
 export function InstallTooltip (element, text)
 {
@@ -87,7 +87,7 @@ export function InstallTooltip (element, text)
     element.addEventListener ('mouseout', () => {
         tooltip.remove ();
     });
-};
+}
 
 export function CopyToClipboard (text)
 {
@@ -100,7 +100,7 @@ export function CopyToClipboard (text)
     input.select ();
     document.execCommand ('copy');
     document.body.removeChild (input);
-};
+}
 
 export function DownloadUrlAsFile (url, fileName)
 {
@@ -110,13 +110,13 @@ export function DownloadUrlAsFile (url, fileName)
     document.body.appendChild (link);
     link.click ();
     document.body.removeChild (link);
-};
+}
 
 export function DownloadArrayBufferAsFile (arrayBuffer, fileName)
 {
     let url = CreateObjectUrl (arrayBuffer);
     DownloadUrlAsFile (url, fileName);
-};
+}
 
 export function CreateSvgIconElement (iconName, className)
 {
@@ -126,20 +126,20 @@ export function CreateSvgIconElement (iconName, className)
     }
     AddDomElement (iconDiv, 'i', 'icon icon-' + iconName);
     return iconDiv;
-};
+}
 
 export function AddSvgIconElement (parentElement, iconName, className)
 {
     let iconDiv = CreateSvgIconElement (iconName, className);
     parentElement.appendChild (iconDiv);
     return iconDiv;
-};
+}
 
 export function SetSvgIconImageElement (iconElement, iconName)
 {
     let iconDiv = iconElement.firstChild;
     iconDiv.className = 'icon icon-' + iconName;
-};
+}
 
 export function CreateHeaderButton (parentElement, iconName, title, link)
 {
@@ -151,7 +151,7 @@ export function CreateHeaderButton (parentElement, iconName, title, link)
     AddSvgIconElement (buttonLink, iconName, 'header_button');
     parentElement.appendChild (buttonLink);
     return buttonLink;
-};
+}
 
 export function CreateInlineColorCircle (color)
 {
@@ -166,7 +166,7 @@ export function CreateInlineColorCircle (color)
     circleDiv.style.background = hexString;
     circleDiv.style.border = '1px solid ' + darkerColorHexString;
     return circleDiv;
-};
+}
 
 export function InstallVerticalSplitter (splitterDiv, resizedDiv, flipped, onResize)
 {
@@ -193,7 +193,7 @@ export function InstallVerticalSplitter (splitterDiv, resizedDiv, flipped, onRes
             onResize ();
         }
     });
-};
+}
 
 export function GetFilesFromDataTransfer (dataTransfer, onReady)
 {
@@ -266,4 +266,4 @@ export function GetFilesFromDataTransfer (dataTransfer, onReady)
     } else {
         onReady (dataTransfer.files);
     }
-};
+}

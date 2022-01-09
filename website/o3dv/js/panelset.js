@@ -1,5 +1,5 @@
-import { AddDiv, ShowDomElement, IsDomElementVisible, SetDomElementWidth, SetDomElementHeight } from "../../../source/viewer/domutils";
-import { AddSvgIconElement, SetSvgIconImageElement } from "./utils";
+import { AddDiv, ShowDomElement, IsDomElementVisible, SetDomElementWidth, SetDomElementHeight } from '../../../source/viewer/domutils.js';
+import { AddSvgIconElement, SetSvgIconImageElement } from './utils.js';
 
 export class Panel
 {
@@ -40,7 +40,7 @@ export class Panel
     {
 
     }
-};
+}
 
 export class PanelSet
 {
@@ -191,4 +191,4 @@ export class PanelSet
             panel.Clear ();
         }
     }
-};
+}

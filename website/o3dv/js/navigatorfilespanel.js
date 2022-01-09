@@ -1,6 +1,6 @@
-import { SetDomElementHeight, GetDomElementOuterHeight } from "../../../source/viewer/domutils";
-import { NavigatorPanel } from "./navigatorpanel";
-import { TreeViewButton, TreeViewButtonItem, TreeViewGroupItem, TreeViewSingleItem } from "./treeview";
+import { SetDomElementHeight, GetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { NavigatorPanel } from './navigatorpanel.js';
+import { TreeViewButton, TreeViewButtonItem, TreeViewGroupItem, TreeViewSingleItem } from './treeview.js';
 
 export class NavigatorFilesPanel extends NavigatorPanel
 {
@@ -67,4 +67,4 @@ export class NavigatorFilesPanel extends NavigatorPanel
             }
         }
     }
-};
+}

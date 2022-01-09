@@ -1,14 +1,14 @@
-import { RunTaskAsync } from "../../../source/core/taskrunner";
-import { Coord3D } from "../../../source/geometry/coord3d";
-import { Matrix } from "../../../source/geometry/matrix";
-import { FileFormat } from "../../../source/io/fileutils";
-import { LoadExternalLibrary } from "../../../source/io/externallibs";
-import { Exporter, ExporterSettings } from "../../../source/export/exporter";
-import { ExporterModel } from "../../../source/export/exportermodel";
-import { AddDiv, AddSelect, ClearDomElement } from "../../../source/viewer/domutils";
-import { ShowMessageDialog } from "./dialogs";
-import { ButtonDialog, ProgressDialog } from "./modal";
-import { DownloadArrayBufferAsFile, DownloadUrlAsFile } from "./utils";
+import { RunTaskAsync } from '../../../source/core/taskrunner.js';
+import { Coord3D } from '../../../source/geometry/coord3d.js';
+import { Matrix } from '../../../source/geometry/matrix.js';
+import { FileFormat } from '../../../source/io/fileutils.js';
+import { LoadExternalLibrary } from '../../../source/io/externallibs.js';
+import { Exporter } from '../../../source/export/exporter.js';
+import { ExporterModel, ExporterSettings } from '../../../source/export/exportermodel.js';
+import { AddDiv, AddSelect, ClearDomElement } from '../../../source/viewer/domutils.js';
+import { ShowMessageDialog } from './dialogs.js';
+import { ButtonDialog, ProgressDialog } from './modal.js';
+import { DownloadArrayBufferAsFile, DownloadUrlAsFile } from './utils.js';
 
 export const ExportType =
 {
@@ -45,7 +45,7 @@ export class ExporterUI
         let parameterValueDiv = AddDiv (parameterRow, 'ov_dialog_row_value');
         return AddSelect (parameterValueDiv, values, defaultIndex);
     }
-};
+}
 
 export class ModelExporterUI extends ExporterUI
 {
@@ -132,7 +132,7 @@ export class ModelExporterUI extends ExporterUI
             });
         });
     }
-};
+}
 
 export class ImageExporterUI extends ExporterUI
 {
@@ -171,7 +171,7 @@ export class ImageExporterUI extends ExporterUI
         }
         DownloadUrlAsFile (url, 'model.' + this.extension);
     }
-};
+}
 
 export class ExportDialog
 {
@@ -255,4 +255,4 @@ export class ExportDialog
             this.selectedExporter.ExportImage (viewer);
         }
     }
-};
+}

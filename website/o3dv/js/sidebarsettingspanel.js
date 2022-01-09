@@ -1,8 +1,8 @@
-import { Color, ColorToHexString } from "../../../source/model/color";
-import { AddDiv, AddDomElement, AddRangeSlider, AddToggle, ShowDomElement, GetDomElementOuterHeight, SetDomElementOuterHeight } from "../../../source/viewer/domutils";
-import { FeatureSet } from "./featureset";
-import { Settings, Theme } from "./settings";
-import { SidebarPanel } from "./sidebarpanel";
+import { Color, ColorToHexString } from '../../../source/model/color.js';
+import { AddDiv, AddDomElement, AddRangeSlider, AddToggle, ShowDomElement, GetDomElementOuterHeight, SetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { FeatureSet } from './featureset.js';
+import { Settings, Theme } from './settings.js';
+import { SidebarPanel } from './sidebarpanel.js';
 
 export function AddColorPicker (parentDiv, defaultColor, predefinedColors, onChange)
 {
@@ -39,7 +39,7 @@ export function AddColorPicker (parentDiv, defaultColor, predefinedColors, onCha
         onChange (ovColor);
     });
     return pickr;
-};
+}
 
 export class SettingsColorSection
 {
@@ -82,7 +82,7 @@ export class SettingsColorSection
         }
         this.pickr.hide ();
     }
-};
+}
 
 export class SettingsGridDisplaySection
 {
@@ -112,7 +112,7 @@ export class SettingsGridDisplaySection
         }
         this.showGridToggle.SetStatus (showGrid);
     }
-};
+}
 
 export class SettingsEdgeDisplaySection
 {
@@ -192,7 +192,7 @@ export class SettingsEdgeDisplaySection
         }
         this.pickr.hide ();
     }
-};
+}
 
 export class SettingsThemeSection
 {
@@ -225,7 +225,7 @@ export class SettingsThemeSection
         let isDarkMode = (themeId === Theme.Dark);
         this.darkModeToggle.SetStatus (isDarkMode);
     }
-};
+}
 
 export class SidebarSettingsPanel extends SidebarPanel
 {
@@ -385,4 +385,4 @@ export class SidebarSettingsPanel extends SidebarPanel
         let height = this.parentDiv.offsetHeight;
         SetDomElementOuterHeight (this.sectionsDiv, height - titleHeight - resetButtonHeight);
     }
-};
+}

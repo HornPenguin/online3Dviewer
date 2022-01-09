@@ -1,10 +1,10 @@
-import { ShowDomElement, SetDomElementWidth, SetDomElementHeight, GetDomElementOuterWidth, SetDomElementOuterHeight } from "../../../source/viewer/domutils";
-import { FeatureSet } from "./featureset";
-import { PanelSet } from "./panelset";
-import { SidebarDetailsPanel } from "./sidebardetailspanel";
-import { SidebarMeasurePanel } from "./sidebarmeasurepanel";
-import { SidebarSettingsPanel } from "./sidebarsettingspanel";
-import { InstallVerticalSplitter } from "./utils";
+import { ShowDomElement, SetDomElementWidth, SetDomElementHeight, GetDomElementOuterWidth, SetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { FeatureSet } from './featureset.js';
+import { PanelSet } from './panelset.js';
+import { SidebarDetailsPanel } from './sidebardetailspanel.js';
+import { SidebarMeasurePanel } from './sidebarmeasurepanel.js';
+import { SidebarSettingsPanel } from './sidebarsettingspanel.js';
+import { InstallVerticalSplitter } from './utils.js';
 
 export class Sidebar
 {
@@ -126,4 +126,4 @@ export class Sidebar
     {
         this.detailsPanel.AddMaterialProperties (material);
     }
-};
+}

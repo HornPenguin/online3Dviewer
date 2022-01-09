@@ -1,9 +1,9 @@
-import { AddDiv } from "../../../source/viewer/domutils";
-import { ThreeModelLoader } from "../../../source/threejs/threemodelloader";
-import { ShowMessageDialog } from "./dialogs";
-import { ButtonDialog, ProgressDialog } from "./modal";
-import { AddSvgIconElement } from "./utils";
-import { ImportErrorCode } from "../../../source/import/importer";
+import { AddDiv } from '../../../source/viewer/domutils.js';
+import { ThreeModelLoader } from '../../../source/threejs/threemodelloader.js';
+import { ShowMessageDialog } from './dialogs.js';
+import { ButtonDialog, ProgressDialog } from './modal.js';
+import { AddSvgIconElement } from './utils.js';
+import { ImportErrorCode } from '../../../source/import/importer.js';
 
 export class ThreeModelLoaderUI
 {
@@ -140,4 +140,4 @@ export class ThreeModelLoaderUI
             this.modalDialog = null;
         }
     }
-};
+}

@@ -1,5 +1,5 @@
-import { AddDiv, ClearDomElement } from "../../../source/viewer/domutils";
-import { Panel } from "./panelset";
+import { AddDiv, ClearDomElement } from '../../../source/viewer/domutils.js';
+import { Panel } from './panelset.js';
 
 export class SidebarPanel extends Panel
 {
@@ -30,4 +30,4 @@ export class SidebarPanel extends Panel
     {
         this.callbacks = callbacks;
     }
-};
+}

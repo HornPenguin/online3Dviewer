@@ -1,9 +1,9 @@
-import { ShowDomElement, SetDomElementHeight, GetDomElementOuterWidth, SetDomElementOuterHeight } from "../../../source/viewer/domutils";
-import { NavigatorFilesPanel } from "./navigatorfilespanel";
-import { NavigatorMaterialsPanel } from "./navigatormaterialspanel";
-import { NavigatorMeshesPanel } from "./navigatormeshespanel";
-import { PanelSet } from "./panelset";
-import { InstallVerticalSplitter } from "./utils";
+import { ShowDomElement, SetDomElementHeight, GetDomElementOuterWidth, SetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { NavigatorFilesPanel } from './navigatorfilespanel.js';
+import { NavigatorMaterialsPanel } from './navigatormaterialspanel.js';
+import { NavigatorMeshesPanel } from './navigatormeshespanel.js';
+import { PanelSet } from './panelset.js';
+import { InstallVerticalSplitter } from './utils.js';
 
 export const SelectionType =
 {
@@ -36,7 +36,7 @@ export class Selection
             return this.meshInstanceId.IsEqual (rhs.meshInstanceId);
         }
     }
-};
+}
 
 export class Navigator
 {
@@ -308,4 +308,4 @@ export class Navigator
         this.panelSet.Clear ();
         this.selection = null;
     }
-};
+}

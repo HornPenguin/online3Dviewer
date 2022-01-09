@@ -1,4 +1,4 @@
-import { Theme } from "./settings";
+import { Theme } from './settings.js';
 
 export class ThemeHandler
 {
@@ -60,4 +60,4 @@ export class ThemeHandler
             }
         }
     }
-};
+}

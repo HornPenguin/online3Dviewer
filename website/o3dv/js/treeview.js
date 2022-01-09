@@ -1,6 +1,6 @@
-import { IsDefined } from "../../../source/core/core";
-import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, InsertDomElementAfter } from "../../../source/viewer/domutils";
-import { CreateSvgIconElement, SetSvgIconImageElement } from "./utils";
+import { IsDefined } from '../../../source/core/core.js';
+import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, InsertDomElementAfter } from '../../../source/viewer/domutils.js';
+import { CreateSvgIconElement, SetSvgIconImageElement } from './utils.js';
 
 export function ScrollToView (element)
 {
@@ -8,7 +8,7 @@ export function ScrollToView (element)
         behavior : 'smooth',
         block : 'nearest'
     });
-};
+}
 
 export class TreeViewButton
 {
@@ -37,7 +37,7 @@ export class TreeViewButton
     {
         return this.mainElement;
     }
-};
+}
 
 export class TreeViewItem
 {
@@ -70,7 +70,7 @@ export class TreeViewItem
     {
         parentDiv.appendChild (this.mainElement);
     }
-};
+}
 
 export class TreeViewSingleItem extends TreeViewItem
 {
@@ -99,7 +99,7 @@ export class TreeViewSingleItem extends TreeViewItem
             this.mainElement.classList.remove ('selected');
         }
     }
-};
+}
 
 export class TreeViewButtonItem extends TreeViewSingleItem
 {
@@ -114,7 +114,7 @@ export class TreeViewButtonItem extends TreeViewSingleItem
     {
         this.buttonsDiv.appendChild (button.GetDomElement ());
     }
-};
+}
 
 export class TreeViewGroupItem extends TreeViewItem
 {
@@ -195,7 +195,7 @@ export class TreeViewGroupItem extends TreeViewItem
         }
         return this.childrenDiv;
     }
-};
+}
 
 export class TreeViewGroupButtonItem extends TreeViewGroupItem
 {
@@ -210,7 +210,7 @@ export class TreeViewGroupButtonItem extends TreeViewGroupItem
     {
         this.buttonsDiv.appendChild (button.GetDomElement ());
     }
-};
+}
 
 export class TreeView
 {
@@ -236,4 +236,4 @@ export class TreeView
         ClearDomElement (this.mainDiv);
         this.children = [];
     }
-};
+}

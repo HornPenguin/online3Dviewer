@@ -1,7 +1,7 @@
-import { AddDiv } from "../../../source/viewer/domutils";
-import { Panel } from "./panelset";
-import { TreeView } from "./treeview";
-import { AddSvgIconElement } from "./utils";
+import { AddDiv } from '../../../source/viewer/domutils.js';
+import { Panel } from './panelset.js';
+import { TreeView } from './treeview.js';
+import { AddSvgIconElement } from './utils.js';
 
 export class NavigatorPopupButton
 {
@@ -36,7 +36,7 @@ export class NavigatorPopupButton
             this.popup = null;
         }
     }
-};
+}
 
 export class NavigatorPanel extends Panel
 {
@@ -73,4 +73,4 @@ export class NavigatorPanel extends Panel
     {
 
     }
-};
+}

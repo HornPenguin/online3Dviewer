@@ -1,5 +1,5 @@
-import { AddDiv, CreateDiv } from "../../../source/viewer/domutils";
-import { AddSvgIconElement, CreateInlineColorCircle, IsHoverEnabled } from "./utils";
+import { AddDiv, CreateDiv } from '../../../source/viewer/domutils.js';
+import { AddSvgIconElement, CreateInlineColorCircle, IsHoverEnabled } from './utils.js';
 
 export class Modal
 {
@@ -94,7 +94,7 @@ export class Modal
         this.modalDiv.style.left = positionX + 'px';
         this.modalDiv.style.top = positionY + 'px';
     }
-};
+}
 
 export class Dialog
 {
@@ -132,7 +132,7 @@ export class Dialog
     {
         this.modal.Close ();
     }
-};
+}
 
 export class ProgressDialog extends Dialog
 {
@@ -157,7 +157,7 @@ export class ProgressDialog extends Dialog
     {
         this.textDiv.innerHTML = text;
     }
-};
+}
 
 export class ButtonDialog extends Dialog
 {
@@ -192,7 +192,7 @@ export class ButtonDialog extends Dialog
 
         return dialogContentDiv;
     }
-};
+}
 
 export class PopupDialog extends Dialog
 {
@@ -208,7 +208,7 @@ export class PopupDialog extends Dialog
         this.modal.SetPositionCalculator (positionCalculator);
         return contentDiv;
     }
-};
+}
 
 export class ListPopup extends PopupDialog
 {
@@ -247,4 +247,4 @@ export class ListPopup extends PopupDialog
             });
         }
     }
-};
+}

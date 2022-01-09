@@ -1,10 +1,10 @@
-import { NodeType } from "../../../source/model/node";
-import { MeshInstanceId } from "../../../source/model/meshinstance";
-import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, SetDomElementHeight, GetDomElementOuterHeight } from "../../../source/viewer/domutils";
-import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from "./dialogs";
-import { MeshItem, NavigatorItemRecurse, NodeItem } from "./navigatoritems";
-import { NavigatorPanel, NavigatorPopupButton } from "./navigatorpanel";
-import { AddSvgIconElement, GetMaterialName, GetMeshName, GetNodeName, SetSvgIconImageElement } from "./utils";
+import { NodeType } from '../../../source/model/node.js';
+import { MeshInstanceId } from '../../../source/model/meshinstance.js';
+import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, SetDomElementHeight, GetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from './dialogs.js';
+import { MeshItem, NavigatorItemRecurse, NodeItem } from './navigatoritems.js';
+import { NavigatorPanel, NavigatorPopupButton } from './navigatorpanel.js';
+import { AddSvgIconElement, GetMaterialName, GetMeshName, GetNodeName, SetSvgIconImageElement } from './utils.js';
 
 export class NavigatorMaterialsPopupButton extends NavigatorPopupButton
 {
@@ -54,7 +54,7 @@ export class NavigatorMaterialsPopupButton extends NavigatorPopupButton
             }
         });
     }
-};
+}
 
 export class NavigatorMeshesPanel extends NavigatorPanel
 {
@@ -467,4 +467,4 @@ export class NavigatorMeshesPanel extends NavigatorPanel
         this.ShowAllMeshes (false);
         this.ToggleMeshVisibility (meshInstanceId);
     }
-};
+}

@@ -1,10 +1,10 @@
-import { CreateModelUrlParameters } from "../../../source/parameters/parameterlist";
-import { FileSource, TransformFileHostUrls } from "../../../source/io/fileutils";
-import { ImportSettings } from "../../../source/import/importer";
-import { AddDomElement } from "../../../source/viewer/domutils";
-import { Viewer } from "../../../source/viewer/viewer";
-import { HashHandler } from "./hashhandler";
-import { ThreeModelLoaderUI } from "./threemodelloaderui";
+import { CreateModelUrlParameters } from '../../../source/parameters/parameterlist.js';
+import { FileSource, TransformFileHostUrls } from '../../../source/io/fileutils.js';
+import { ImportSettings } from '../../../source/import/importer.js';
+import { AddDomElement } from '../../../source/viewer/domutils.js';
+import { Viewer } from '../../../source/viewer/viewer.js';
+import { HashHandler } from './hashhandler.js';
+import { ThreeModelLoaderUI } from './threemodelloaderui.js';
 
 export class Embed
 {
@@ -108,4 +108,4 @@ export class Embed
             'assets/envmaps/grayclouds/negz.jpg'
         ]);
     }
-};
+}

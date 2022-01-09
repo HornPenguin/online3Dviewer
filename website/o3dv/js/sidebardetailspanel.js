@@ -1,13 +1,14 @@
-import { RunTaskAsync } from "../../../source/core/taskrunner";
-import { SubCoord3D } from "../../../source/geometry/coord3d";
-import { GetBoundingBox, IsSolid } from "../../../source/model/modelutils";
-import { CalculateVolume, CalculateSurfaceArea } from "../../../source/model/quantities";
-import { Property, PropertyType, ClearDomElement } from "../../../source/model/property";
-import { AddDiv, AddDomElement } from "../../../source/viewer/domutils";
-import { SidebarPanel } from "./sidebarpanel";
-import { CreateInlineColorCircle } from "./utils";
-import { GetFileName } from "../../../source/io/fileutils";
-import { MaterialType } from "../../../source/model/material";
+import { RunTaskAsync } from '../../../source/core/taskrunner.js';
+import { SubCoord3D } from '../../../source/geometry/coord3d.js';
+import { GetBoundingBox, IsSolid } from '../../../source/model/modelutils.js';
+import { CalculateVolume, CalculateSurfaceArea } from '../../../source/model/quantities.js';
+import { Property, PropertyType } from '../../../source/model/property.js';
+import { AddDiv, AddDomElement, ClearDomElement } from '../../../source/viewer/domutils.js';
+import { SidebarPanel } from './sidebarpanel.js';
+import { CreateInlineColorCircle } from './utils.js';
+import { GetFileName } from '../../../source/io/fileutils.js';
+import { MaterialType } from '../../../source/model/material.js';
+import { ColorToHexString } from '../../../source/model/color.js';
 
 export class SidebarDetailsPanel extends SidebarPanel
 {
@@ -187,4 +188,4 @@ export class SidebarDetailsPanel extends SidebarPanel
             targetDiv.setAttribute ('title', valueText);
         }
     }
-};
+}

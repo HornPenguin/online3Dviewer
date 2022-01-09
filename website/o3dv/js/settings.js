@@ -1,4 +1,4 @@
-import { Color } from "../../../source/model/color";
+import { Color, ColorComponentFromFloat } from '../../../source/model/color.js';
 
 export const Theme =
 {
@@ -41,4 +41,4 @@ export class Settings
         cookieHandler.SetIntVal ('ov_edge_threshold', this.edgeThreshold);
         cookieHandler.SetIntVal ('ov_theme_id', this.themeId);
     }
-};
+}

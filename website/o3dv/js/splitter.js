@@ -23,4 +23,4 @@ export function CreateVerticalSplitter (splitterDiv, callbacks)
         document.addEventListener ('mouseup', mouseUpHandler);
         document.addEventListener ('mouseleave', mouseUpHandler);
     });
-};
+}

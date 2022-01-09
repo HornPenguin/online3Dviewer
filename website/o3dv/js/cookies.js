@@ -1,4 +1,4 @@
-import { ParameterConverter } from "../../../source/parameters/parameterlist";
+import { ParameterConverter } from '../../../source/parameters/parameterlist.js';
 
 export class CookieHandler
 {
@@ -73,4 +73,4 @@ export class CookieHandler
     {
         this.SetStringVal (key, ParameterConverter.ColorToString (value));
     }
-};
+}

@@ -1,5 +1,5 @@
-import { AddDiv } from "../../../source/viewer/domutils";
-import { ButtonDialog, ListPopup } from "./modal";
+import { AddDiv } from '../../../source/viewer/domutils.js';
+import { ButtonDialog, ListPopup } from './modal.js';
 
 export function ShowMessageDialog (title, message, subMessage)
 {
@@ -18,7 +18,7 @@ export function ShowMessageDialog (title, message, subMessage)
     }
     dialog.Show ();
     return dialog;
-};
+}
 
 export function ShowListPopup (items, callbacks)
 {
@@ -51,7 +51,7 @@ export function ShowListPopup (items, callbacks)
     }
     popup.Show ();
     return popup;
-};
+}
 
 export function CalculatePopupPositionToElementBottomRight (elementDiv, contentDiv)
 {
@@ -60,7 +60,7 @@ export function CalculatePopupPositionToElementBottomRight (elementDiv, contentD
         x : offset.left + elementDiv.offsetWidth,
         y : offset.top + elementDiv.offsetHeight - contentDiv.offsetHeight
     };
-};
+}
 
 export function CalculatePopupPositionToScreen (globalMouseCoordinates, contentDiv)
 {
@@ -80,4 +80,4 @@ export function CalculatePopupPositionToScreen (globalMouseCoordinates, contentD
         x : left,
         y : top
     };
-};
+}

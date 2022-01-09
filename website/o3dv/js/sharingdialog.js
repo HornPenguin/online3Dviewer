@@ -1,9 +1,9 @@
-import { FileSource } from "../../../source/io/fileutils";
-import { AddDiv, AddDomElement, AddCheckbox } from "../../../source/viewer/domutils";
-import { CreateUrlBuilder } from "../../../source/parameters/parameterlist";
-import { ShowMessageDialog } from "./dialogs";
-import { ButtonDialog } from "./modal";
-import { CopyToClipboard } from "./utils";
+import { FileSource } from '../../../source/io/fileutils.js';
+import { AddDiv, AddDomElement, AddCheckbox } from '../../../source/viewer/domutils.js';
+import { CreateUrlBuilder } from '../../../source/parameters/parameterlist.js';
+import { ShowMessageDialog } from './dialogs.js';
+import { ButtonDialog } from './modal.js';
+import { CopyToClipboard } from './utils.js';
 
 export function ShowSharingDialog (fileList, settings, camera, eventHandler)
 {
@@ -153,4 +153,4 @@ export function ShowSharingDialog (fileList, settings, camera, eventHandler)
 
     dialog.Show ();
     return dialog;
-};
+}
