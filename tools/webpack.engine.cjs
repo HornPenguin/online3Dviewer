@@ -2,7 +2,7 @@ const path = require ('path');
 
 module.exports = {
     mode: 'development',
-    entry: './tools/engine_main.js',
+    entry: './source/main.js',
     output: {
         filename: 'o3dv.min.js',
         path: path.resolve ('build'),
