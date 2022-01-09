@@ -1,8 +1,6 @@
 import * as assert from 'assert';
 import * as OV from '../../tools/engine_main.js';
 
-var path = require ('path');
-
 export default function suite ()
 {
 

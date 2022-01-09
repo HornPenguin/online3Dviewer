@@ -11,7 +11,7 @@ import { ExporterPly } from '../source/export/exporterply.js';
 import { ExporterStl } from '../source/export/exporterstl.js';
 import { Box3D, BoundingBoxCalculator3D } from '../source/geometry/box3d.js';
 import { Coord2D, CoordIsEqual2D, AddCoord2D, SubCoord2D, CoordDistance2D } from '../source/geometry/coord2d.js';
-import { Coord3D, CoordIsEqual3D, AddCoord3D, SubCoord3D, CoordDistance3D, VectorAngle3D, DotVector3D, CrossVector3D, VectorLength3D, ArrayToCoord3D } from '../source/geometry/coord3d.js';
+import { Coord3D, CoordIsEqual3D, AddCoord3D, SubCoord3D, CoordDistance3D, DotVector3D, VectorAngle3D, CrossVector3D, VectorLength3D, ArrayToCoord3D } from '../source/geometry/coord3d.js';
 import { Coord4D } from '../source/geometry/coord4d.js';
 import { IsZero, IsLower, IsGreater, IsLowerOrEqual, IsGreaterOrEqual, IsEqual, IsEqualEps, IsPositive, IsNegative, Eps, BigEps, RadDeg, DegRad, Direction } from '../source/geometry/geometry.js';
 import { Matrix, MatrixIsEqual } from '../source/geometry/matrix.js';
@@ -37,7 +37,7 @@ import { NameFromLine, ParametersFromLine, ReadLines, IsPowerOfTwo, NextPowerOfT
 import { BinaryReader } from '../source/io/binaryreader.js';
 import { BinaryWriter } from '../source/io/binarywriter.js';
 import { ArrayBufferToUtf8String, ArrayBufferToAsciiString, AsciiStringToArrayBuffer, Utf8StringToArrayBuffer, Base64DataURIToArrayBuffer, GetFileExtensionFromMimeType, CreateObjectUrl, CreateObjectUrlWithMimeType, RevokeObjectUrl } from '../source/io/bufferutils.js';
-import { LoadExternalLibrary, ExternalLibLocation, LoadedExternalLibs } from '../source/io/externallibs.js';
+import { SetExternalLibLocation, LoadExternalLibrary, ExternalLibLocation, LoadedExternalLibs } from '../source/io/externallibs.js';
 import { GetFileName, GetFileExtension, RequestUrl, ReadFile, TransformFileHostUrls, FileSource, FileFormat } from '../source/io/fileutils.js';
 import { TextWriter } from '../source/io/textwriter.js';
 import { Color, ColorComponentFromFloat, ColorFromFloatComponents, SRGBToLinear, LinearToSRGB, IntegerToHexString, ColorToHexString, HexStringToColor, ArrayToColor, ColorIsEqual } from '../source/model/color.js';
@@ -60,7 +60,7 @@ import { ParameterListBuilder, ParameterListParser, CreateUrlBuilder, CreateUrlP
 import { ModelToThreeConversionParams, ModelToThreeConversionOutput, ThreeConversionStateHandler, ThreeNodeTree, ConvertModelToThreeObject } from '../source/threejs/threeconverter.js';
 import { ThreeModelLoader } from '../source/threejs/threemodelloader.js';
 import { HasHighpDriverIssue, GetShadingType, ConvertThreeColorToColor, ConvertColorToThreeColor, ConvertThreeGeometryToMesh, ShadingType } from '../source/threejs/threeutils.js';
-import { GetIntegerFromStyle, GetDomElementExternalWidth, GetDomElementExternalHeight, GetDomElementInnerDimensions, GetDomElementClientCoordinates, CreateDomElement, AddDomElement, ClearDomElement, InsertDomElementBefore, InsertDomElementAfter, ShowDomElement, IsDomElementVisible, SetDomElementWidth, SetDomElementHeight, GetDomElementOuterWidth, GetDomElementOuterHeight, SetDomElementOuterWidth, SetDomElementOuterHeight, AddRadioButton, AddCheckbox, AddRangeSlider, AddSelect, AddToggle, CreateDiv, AddDiv } from '../source/viewer/domutils.js';
+import { GetIntegerFromStyle, GetDomElementExternalWidth, GetDomElementExternalHeight, GetDomElementInnerDimensions, GetDomElementClientCoordinates, CreateDomElement, AddDomElement, AddDiv, ClearDomElement, InsertDomElementBefore, InsertDomElementAfter, ShowDomElement, IsDomElementVisible, SetDomElementWidth, SetDomElementHeight, GetDomElementOuterWidth, GetDomElementOuterHeight, SetDomElementOuterWidth, SetDomElementOuterHeight, AddRadioButton, AddCheckbox, AddRangeSlider, AddSelect, AddToggle, CreateDiv } from '../source/viewer/domutils.js';
 import { EmbeddedViewer, Init3DViewerElement, Init3DViewerElements } from '../source/viewer/embeddedviewer.js';
 import { MeasureTool } from '../source/viewer/measuretool.js';
 import { Camera, MouseInteraction, TouchInteraction, ClickDetector, Navigation, CameraIsEqual3D, NavigationType } from '../source/viewer/navigation.js';
@@ -99,8 +99,8 @@ export {
     AddCoord3D,
     SubCoord3D,
     CoordDistance3D,
-    VectorAngle3D,
     DotVector3D,
+    VectorAngle3D,
     CrossVector3D,
     VectorLength3D,
     ArrayToCoord3D,
@@ -188,6 +188,7 @@ export {
     CreateObjectUrl,
     CreateObjectUrlWithMimeType,
     RevokeObjectUrl,
+    SetExternalLibLocation,
     LoadExternalLibrary,
     ExternalLibLocation,
     LoadedExternalLibs,
@@ -288,6 +289,7 @@ export {
     GetDomElementClientCoordinates,
     CreateDomElement,
     AddDomElement,
+    AddDiv,
     ClearDomElement,
     InsertDomElementBefore,
     InsertDomElementAfter,
@@ -305,7 +307,6 @@ export {
     AddSelect,
     AddToggle,
     CreateDiv,
-    AddDiv,
     EmbeddedViewer,
     Init3DViewerElement,
     Init3DViewerElements,

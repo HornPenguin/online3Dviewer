@@ -1,6 +1,11 @@
 export let ExternalLibLocation = null;
 export let LoadedExternalLibs = new Set ();
 
+export function SetExternalLibLocation (newExternalLibLocation)
+{
+    ExternalLibLocation = newExternalLibLocation;
+}
+
 export function LoadExternalLibrary (libName)
 {
     return new Promise ((resolve, reject) => {

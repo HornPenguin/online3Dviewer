@@ -1,6 +1,5 @@
 import * as assert from 'assert';
 import * as OV from '../../tools/engine_main.js';
-var testUtils = require ('../utils/testutils.js');
 
 export default function suite ()
 {

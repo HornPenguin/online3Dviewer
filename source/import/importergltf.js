@@ -1,20 +1,20 @@
-import { Coord2D } from "../geometry/coord2d.js";
-import { ArrayToCoord3D, Coord3D } from "../geometry/coord3d.js";
-import { Coord4D } from "../geometry/coord4d.js";
-import { Direction } from "../geometry/geometry.js";
-import { Matrix } from "../geometry/matrix.js";
-import { ArrayToQuaternion } from "../geometry/quaternion.js";
-import { Transformation } from "../geometry/transformation.js";
-import { BinaryReader } from "../io/binaryreader.js";
-import { ArrayBufferToUtf8String, Base64DataURIToArrayBuffer, CreateObjectUrlWithMimeType, GetFileExtensionFromMimeType } from "../io/bufferutils.js";
-import { LoadExternalLibrary } from "../io/externallibs.js";
-import { Color, ColorComponentFromFloat, ColorFromFloatComponents, LinearToSRGB } from "../model/color.js";
-import { PhongMaterial, PhysicalMaterial, TextureMap } from "../model/material.js";
-import { Mesh } from "../model/mesh.js";
-import { Node, NodeType } from "../model/node.js";
-import { Property, PropertyGroup, PropertyType } from "../model/property.js";
-import { Triangle } from "../model/triangle.js";
-import { ImporterBase } from "./importerbase.js";
+import { Coord2D } from '../geometry/coord2d.js';
+import { ArrayToCoord3D, Coord3D } from '../geometry/coord3d.js';
+import { Coord4D } from '../geometry/coord4d.js';
+import { Direction } from '../geometry/geometry.js';
+import { Matrix } from '../geometry/matrix.js';
+import { ArrayToQuaternion } from '../geometry/quaternion.js';
+import { Transformation } from '../geometry/transformation.js';
+import { BinaryReader } from '../io/binaryreader.js';
+import { ArrayBufferToUtf8String, Base64DataURIToArrayBuffer, CreateObjectUrlWithMimeType, GetFileExtensionFromMimeType } from '../io/bufferutils.js';
+import { LoadExternalLibrary } from '../io/externallibs.js';
+import { Color, ColorComponentFromFloat, ColorFromFloatComponents, LinearToSRGB } from '../model/color.js';
+import { PhongMaterial, PhysicalMaterial, TextureMap } from '../model/material.js';
+import { Mesh } from '../model/mesh.js';
+import { Node, NodeType } from '../model/node.js';
+import { Property, PropertyGroup, PropertyType } from '../model/property.js';
+import { Triangle } from '../model/triangle.js';
+import { ImporterBase } from './importerbase.js';
 
 export const GltfComponentType =
 {
@@ -62,7 +62,7 @@ export function GetGltfColor (color)
         LinearToSRGB (color[1]),
         LinearToSRGB (color[2])
     );
-};
+}
 
 export function GetGltfVertexColor (color, componentType)
 {
@@ -80,7 +80,7 @@ export function GetGltfVertexColor (color, componentType)
         GetColorComponent (color[1], componentType),
         GetColorComponent (color[2], componentType)
     );
-};
+}
 
 export class GltfBufferReader
 {
@@ -258,7 +258,7 @@ export class GltfBufferReader
         }
         return 0;
     }
-};
+}
 
 export class GltfExtensions
 {
@@ -479,7 +479,7 @@ export class GltfExtensions
 
         return true;
     }
-};
+}
 
 export class ImporterGltf extends ImporterBase
 {
@@ -1082,4 +1082,4 @@ export class ImporterGltf extends ImporterBase
         reader.SkipBytes (sparseAccessor.byteOffset || 0);
         return reader;
     }
-};
+}

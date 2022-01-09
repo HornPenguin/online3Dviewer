@@ -1,17 +1,16 @@
 import * as assert from 'assert';
 import * as OV from '../../tools/engine_main.js';
-
-var testFiles = require ('../utils/testfiles.js');
-var testUtils = require ('../utils/testutils.js');
+import { ImportPlyFile } from '../utils/testfiles.js';
+import { ModelToObject, ModelToObjectSimple } from '../utils/testutils.js';
 
 export default function suite ()
 {
 
 describe ('Ply Importer', function() {
     it ('single_triangle.ply', function (done) {
-        var model = testFiles.ImportPlyFile ('single_triangle.ply', function (model) {
+        ImportPlyFile ('single_triangle.ply', function (model) {
             assert.ok (OV.CheckModel (model));
-            assert.deepStrictEqual (testUtils.ModelToObject (model), {
+            assert.deepStrictEqual (ModelToObject (model), {
                 name : '',
                 materials : [
                     { name : '' }
@@ -35,9 +34,9 @@ describe ('Ply Importer', function() {
     });
 
     it ('two_triangles.ply', function (done) {
-        var model = testFiles.ImportPlyFile ('two_triangles.ply', function (model) {
+        ImportPlyFile ('two_triangles.ply', function (model) {
             assert.ok (OV.CheckModel (model));
-            assert.deepStrictEqual (testUtils.ModelToObject (model), {
+            assert.deepStrictEqual (ModelToObject (model), {
                 name : '',
                 materials : [
                     { name : '' }
@@ -67,9 +66,9 @@ describe ('Ply Importer', function() {
     });
 
     it ('single_rectangle.ply', function (done) {
-        var model = testFiles.ImportPlyFile ('single_rectangle.ply', function (model) {
+        ImportPlyFile ('single_rectangle.ply', function (model) {
             assert.ok (OV.CheckModel (model));
-            assert.deepStrictEqual (testUtils.ModelToObject (model), {
+            assert.deepStrictEqual (ModelToObject (model), {
                 name : '',
                 materials : [
                     { name : '' }
@@ -99,9 +98,9 @@ describe ('Ply Importer', function() {
     });
 
     it ('single_triangle_with_comments.ply', function (done) {
-        var model = testFiles.ImportPlyFile ('single_triangle_with_comments.ply', function (model) {
+        ImportPlyFile ('single_triangle_with_comments.ply', function (model) {
             assert.ok (OV.CheckModel (model));
-            assert.deepStrictEqual (testUtils.ModelToObject (model), {
+            assert.deepStrictEqual (ModelToObject (model), {
                 name : '',
                 materials : [
                     { name : '' }
@@ -125,9 +124,9 @@ describe ('Ply Importer', function() {
     });
 
     it ('cube.ply', function (done) {
-        var model = testFiles.ImportPlyFile ('cube.ply', function (model) {
+        ImportPlyFile ('cube.ply', function (model) {
             assert.ok (OV.CheckModel (model));
-            assert.deepStrictEqual (testUtils.ModelToObjectSimple (model), {
+            assert.deepStrictEqual (ModelToObjectSimple (model), {
                 name : '',
                 materials : [
                     { name : '' }
@@ -152,9 +151,9 @@ describe ('Ply Importer', function() {
     });
 
     it ('cube_meshlab_ascii.ply', function (done) {
-        var model = testFiles.ImportPlyFile ('cube_meshlab_ascii.ply', function (model) {
+        ImportPlyFile ('cube_meshlab_ascii.ply', function (model) {
             assert.ok (OV.CheckModel (model));
-            assert.deepStrictEqual (testUtils.ModelToObjectSimple (model), {
+            assert.deepStrictEqual (ModelToObjectSimple (model), {
                 name : '',
                 materials : [
                     { name : '' }
@@ -179,9 +178,9 @@ describe ('Ply Importer', function() {
     });
 
     it ('cube_meshlab_binary.ply', function (done) {
-        var model = testFiles.ImportPlyFile ('cube_meshlab_binary.ply', function (model) {
+        ImportPlyFile ('cube_meshlab_binary.ply', function (model) {
             assert.ok (OV.CheckModel (model));
-            assert.deepStrictEqual (testUtils.ModelToObjectSimple (model), {
+            assert.deepStrictEqual (ModelToObjectSimple (model), {
                 name : '',
                 materials : [
                     { name : '' }
@@ -206,9 +205,9 @@ describe ('Ply Importer', function() {
     });
 
     it ('cube_rgb_binary.ply', function (done) {
-        var model = testFiles.ImportPlyFile ('cube_rgb_binary.ply', function (model) {
+        ImportPlyFile ('cube_rgb_binary.ply', function (model) {
             assert.ok (OV.CheckModel (model));
-            assert.deepStrictEqual (testUtils.ModelToObjectSimple (model), {
+            assert.deepStrictEqual (ModelToObjectSimple (model), {
                 name : '',
                 materials : [
                     { name : 'Color cc0000ff' },

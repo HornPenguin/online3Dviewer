@@ -1,17 +1,16 @@
 import * as assert from 'assert';
 import * as OV from '../../tools/engine_main.js';
-
-var testFiles = require ('../utils/testfiles.js');
-var testUtils = require ('../utils/testutils.js');
+import { ImportO3dvFile } from '../utils/testfiles.js';
+import { ModelNodesToTree } from '../utils/testutils.js';
 
 export default function suite ()
 {
 
 describe ('O3dv Importer', function () {
     it ('translateandrotate.o3dv', function (done) {
-        testFiles.ImportO3dvFile ('translateandrotate.o3dv', function (model) {
+        ImportO3dvFile ('translateandrotate.o3dv', function (model) {
             assert.ok (OV.CheckModel (model));
-            assert.deepStrictEqual (testUtils.ModelNodesToTree (model), {
+            assert.deepStrictEqual (ModelNodesToTree (model), {
                 name : '<Root>',
                 childNodes : [
                     {
@@ -61,9 +60,9 @@ describe ('O3dv Importer', function () {
     });
 
     it ('solids.o3dv', function (done) {
-        testFiles.ImportO3dvFile ('solids.o3dv', function (model) {
+        ImportO3dvFile ('solids.o3dv', function (model) {
             assert.ok (OV.CheckModel (model));
-            assert.deepStrictEqual (testUtils.ModelNodesToTree (model), {
+            assert.deepStrictEqual (ModelNodesToTree (model), {
                 name : '<Root>',
                 childNodes : [
                     {
