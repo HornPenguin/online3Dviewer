@@ -1,4 +1,5 @@
-import { TransformFileHostUrls } from "../../../source/io/fileutils";
+import { FileSource, GetFileExtension, TransformFileHostUrls } from "../../../source/io/fileutils";
+import { ImportErrorCode, ImportSettings } from "../../../source/import/importer";
 import { Viewer } from "../../../source/viewer/viewer";
 import { MeasureTool } from "../../../source/viewer/measuretool";
 import { AddDiv, AddDomElement, ShowDomElement, SetDomElementOuterHeight } from "../../../source/viewer/domutils";
@@ -16,6 +17,8 @@ import { ExportDialog } from "./exportdialog";
 import { AddSmallWidthChangeEventListener, GetFilesFromDataTransfer, IsSmallWidth } from "./utils";
 import { ShowOpenUrlDialog } from "./openurldialog";
 import { ShowSharingDialog } from "./sharingdialog";
+import { HasDefaultMaterial, ReplaceDefaultMaterialColor } from "../../../source/model/modelutils";
+import { Direction } from "../../../source/geometry/geometry";
 
 export const WebsiteUIState =
 {
@@ -274,7 +277,7 @@ export class Website
                 return;
             }
             TransformFileHostUrls (urls);
-            let importSettings = new OV.ImportSettings ();
+            let importSettings = new ImportSettings ();
             importSettings.defaultColor = this.settings.defaultColor;
             let defaultColor = this.hashHandler.GetDefaultColorFromHash ();
             if (defaultColor !== null) {
@@ -335,7 +338,7 @@ export class Website
 
     UpdateSidebar ()
     {
-        let hasDefaultMaterial = OV.HasDefaultMaterial (this.model);
+        let hasDefaultMaterial = HasDefaultMaterial (this.model);
         this.sidebar.UpdateSettings (hasDefaultMaterial);
     }
 
@@ -359,15 +362,15 @@ export class Website
 
     LoadModelFromUrlList (urls, settings)
     {
-        this.LoadModel (urls, OV.FileSource.Url, settings);
+        this.LoadModel (urls, FileSource.Url, settings);
         this.ClearHashIfNotOnlyUrlList ();
     }
 
     LoadModelFromFileList (files)
     {
-        let importSettings = new OV.ImportSettings ();
+        let importSettings = new ImportSettings ();
         importSettings.defaultColor = this.settings.defaultColor;
-        this.LoadModel (files, OV.FileSource.File, importSettings);
+        this.LoadModel (files, FileSource.File, importSettings);
         this.ClearHashIfNotOnlyUrlList ();
     }
 
@@ -383,7 +386,7 @@ export class Website
             {
                 this.SetUIState (WebsiteUIState.Model);
                 this.OnModelLoaded (importResult, threeObject);
-                let importedExtension = OV.GetFileExtension (importResult.mainFile);
+                let importedExtension = GetFileExtension (importResult.mainFile);
                 this.eventHandler.HandleEvent ('model_loaded', importedExtension);
             },
             onRender : () =>
@@ -400,11 +403,11 @@ export class Website
                     extensions.push (fileList[i].extension);
                 }
                 let extensionsStr = extensions.join (',');
-                if (importError.code === OV.ImportErrorCode.NoImportableFile) {
+                if (importError.code === ImportErrorCode.NoImportableFile) {
                     this.eventHandler.HandleEvent ('no_importable_file', extensionsStr);
-                } else if (importError.code === OV.ImportErrorCode.FailedToLoadFile) {
+                } else if (importError.code === ImportErrorCode.FailedToLoadFile) {
                     this.eventHandler.HandleEvent ('failed_to_load_file', extensionsStr);
-                } else if (importError.code === OV.ImportErrorCode.ImportFailed) {
+                } else if (importError.code === ImportErrorCode.ImportFailed) {
                     this.eventHandler.HandleEvent ('import_failed', extensionsStr);
                 }
             }
@@ -443,7 +446,7 @@ export class Website
             this.viewer.SetBackgroundColor (this.settings.backgroundColor);
             let modelLoader = this.modelLoaderUI.GetModelLoader ();
             if (modelLoader.GetDefaultMaterial () !== null) {
-                OV.ReplaceDefaultMaterialColor (this.model, this.settings.defaultColor);
+                ReplaceDefaultMaterialColor (this.model, this.settings.defaultColor);
                 modelLoader.ReplaceDefaultMaterialColor (this.settings.defaultColor);
             }
         }
@@ -532,10 +535,10 @@ export class Website
             this.FitModelToWindow (false);
         });
         AddButton (this.toolbar, 'up_y', 'Set Y axis as up vector', ['only_on_model'], () => {
-            this.viewer.SetUpVector (OV.Direction.Y, true);
+            this.viewer.SetUpVector (Direction.Y, true);
         });
         AddButton (this.toolbar, 'up_z', 'Set Z axis as up vector', ['only_on_model'], () => {
-            this.viewer.SetUpVector (OV.Direction.Z, true);
+            this.viewer.SetUpVector (Direction.Z, true);
         });
         AddButton (this.toolbar, 'flip', 'Flip up vector', ['only_on_model'], () => {
             this.viewer.FlipUpVector ();
@@ -607,7 +610,7 @@ export class Website
                 this.settings.SaveToCookies (this.cookieHandler);
                 let modelLoader = this.modelLoaderUI.GetModelLoader ();
                 if (modelLoader.GetDefaultMaterial () !== null) {
-                    OV.ReplaceDefaultMaterialColor (this.model, this.settings.defaultColor);
+                    ReplaceDefaultMaterialColor (this.model, this.settings.defaultColor);
                     modelLoader.ReplaceDefaultMaterialColor (this.settings.defaultColor);
                 }
                 this.viewer.Render ();

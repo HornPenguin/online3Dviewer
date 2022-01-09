@@ -1,4 +1,4 @@
-import { ParameterConverter } from "../../../source/main";
+import { ParameterConverter } from "../../../source/parameters/parameterlist";
 
 export class CookieHandler
 {

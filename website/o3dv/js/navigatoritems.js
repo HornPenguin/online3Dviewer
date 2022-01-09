@@ -1,3 +1,4 @@
+import { IsDefined } from "../../../source/core/core";
 import { TreeViewButton, TreeViewButtonItem, TreeViewGroupButtonItem, TreeViewSingleItem } from "./treeview";
 
 export const NavigatorItemRecurse =
@@ -132,7 +133,7 @@ export class NodeItem extends TreeViewGroupButtonItem
         } else {
             this.showHideButton.SetImage ('hidden');
         }
-        if (OV.IsDefined (this.callbacks.onVisibilityChanged)) {
+        if (IsDefined (this.callbacks.onVisibilityChanged)) {
             this.callbacks.onVisibilityChanged (this.visible);
         }
         if (recurse === NavigatorItemRecurse.Children || recurse === NavigatorItemRecurse.All) {

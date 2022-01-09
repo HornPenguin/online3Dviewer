@@ -1,4 +1,6 @@
+import { FileSource } from "../../../source/io/fileutils";
 import { AddDiv, AddDomElement, AddCheckbox } from "../../../source/viewer/domutils";
+import { CreateUrlBuilder } from "../../../source/parameters/parameterlist";
 import { ShowMessageDialog } from "./dialogs";
 import { ButtonDialog } from "./modal";
 import { CopyToClipboard } from "./utils";
@@ -15,7 +17,7 @@ export function ShowSharingDialog (fileList, settings, camera, eventHandler)
 
     function GetSharingLink (params)
     {
-        let builder = OV.CreateUrlBuilder ();
+        let builder = CreateUrlBuilder ();
         builder.AddModelUrls (params.files);
         let hashParameters = builder.GetParameterList ();
         return 'https://3dviewer.net#' + hashParameters;
@@ -23,7 +25,7 @@ export function ShowSharingDialog (fileList, settings, camera, eventHandler)
 
     function GetEmbeddingCode (params)
     {
-        let builder = OV.CreateUrlBuilder ();
+        let builder = CreateUrlBuilder ();
         builder.AddModelUrls (params.files);
         builder.AddCamera (params.camera);
         builder.AddBackgroundColor (params.backgroundColor);
@@ -115,7 +117,7 @@ export function ShowSharingDialog (fileList, settings, camera, eventHandler)
     let modelFiles = [];
     for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
         let file = files[fileIndex];
-        if (file.source === OV.FileSource.Url) {
+        if (file.source === FileSource.Url) {
             modelFiles.push (file.fileUrl);
         }
     }

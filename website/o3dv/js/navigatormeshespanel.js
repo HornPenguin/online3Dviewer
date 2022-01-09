@@ -1,3 +1,5 @@
+import { NodeType } from "../../../source/model/node";
+import { MeshInstanceId } from "../../../source/model/meshinstance";
 import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, SetDomElementHeight, GetDomElementOuterHeight } from "../../../source/viewer/domutils";
 import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from "./dialogs";
 import { MeshItem, NavigatorItemRecurse, NodeItem } from "./navigatoritems";
@@ -234,7 +236,7 @@ export class NavigatorMeshesPanel extends NavigatorPanel
         const rootNode = importResult.model.GetRootNode ();
         let isHierarchical = false;
         for (let childNode of rootNode.GetChildNodes ()) {
-            if (childNode.GetType () === OV.NodeType.GroupNode) {
+            if (childNode.GetType () === NodeType.GroupNode) {
                 isHierarchical = true;
                 break;
             }
@@ -285,7 +287,7 @@ export class NavigatorMeshesPanel extends NavigatorPanel
         {
             let mesh = model.GetMesh (meshIndex);
             let meshName = GetMeshName (mesh.GetName ());
-            let meshInstanceId = new OV.MeshInstanceId (node.GetId (), meshIndex);
+            let meshInstanceId = new MeshInstanceId (node.GetId (), meshIndex);
             let meshItemIcon = showTree ? 'tree_mesh' : null;
             let meshItem = new MeshItem (meshName, meshItemIcon, meshInstanceId, {
                 onShowHide : (selectedMeshId) => {
@@ -342,11 +344,11 @@ export class NavigatorMeshesPanel extends NavigatorPanel
             let meshNodes = [];
             for (let childNode of node.GetChildNodes ()) {
                 if (showTree) {
-                    if (childNode.GetType () === OV.NodeType.GroupNode) {
+                    if (childNode.GetType () === NodeType.GroupNode) {
                         let nodeItem = CreateNodeItem (panel, childNode);
                         parentItem.AddChild (nodeItem);
                         AddModelNodeToTree (panel, model, childNode, nodeItem, showTree);
-                    } else if (childNode.GetType () === OV.NodeType.MeshNode) {
+                    } else if (childNode.GetType () === NodeType.MeshNode) {
                         meshNodes.push (childNode);
                     }
                 } else {

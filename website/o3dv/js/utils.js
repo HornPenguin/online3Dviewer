@@ -1,4 +1,6 @@
-import { AddDiv, CreateDiv, AddDomElement, GetDomElementOuterWidth, SetDomElementOuterWidth } from "../../../source/viewer/domutils";
+import { Color } from "../../../source/model/color";
+import { CreateObjectUrl } from "../../../source/io/bufferutils";
+import { AddDiv, CreateDiv, AddDomElement, CreateDomElement, GetDomElementOuterWidth, SetDomElementOuterWidth } from "../../../source/viewer/domutils";
 import { CreateVerticalSplitter } from "./splitter";
 
 export function GetNameOrDefault (originalName, defaultName)
@@ -112,7 +114,7 @@ export function DownloadUrlAsFile (url, fileName)
 
 export function DownloadArrayBufferAsFile (arrayBuffer, fileName)
 {
-    let url = OV.CreateObjectUrl (arrayBuffer);
+    let url = CreateObjectUrl (arrayBuffer);
     DownloadUrlAsFile (url, fileName);
 };
 
@@ -141,7 +143,7 @@ export function SetSvgIconImageElement (iconElement, iconName)
 
 export function CreateHeaderButton (parentElement, iconName, title, link)
 {
-    let buttonLink = OV.CreateDomElement ('a');
+    let buttonLink = CreateDomElement ('a');
     buttonLink.setAttribute ('href', link);
     buttonLink.setAttribute ('target', '_blank');
     buttonLink.setAttribute ('rel', 'noopener noreferrer');
@@ -153,13 +155,13 @@ export function CreateHeaderButton (parentElement, iconName, title, link)
 
 export function CreateInlineColorCircle (color)
 {
-    let hexString = '#' + OV.ColorToHexString (color);
-    let darkerColor = new OV.Color (
+    let hexString = '#' + ColorToHexString (color);
+    let darkerColor = new Color (
         Math.max (0, color.r - 50),
         Math.max (0, color.g - 50),
         Math.max (0, color.b - 50)
     );
-    let darkerColorHexString = '#' + OV.ColorToHexString (darkerColor);
+    let darkerColorHexString = '#' + ColorToHexString (darkerColor);
     let circleDiv = CreateDiv ('ov_color_circle');
     circleDiv.style.background = hexString;
     circleDiv.style.border = '1px solid ' + darkerColorHexString;

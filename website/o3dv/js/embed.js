@@ -1,4 +1,6 @@
-import { TransformFileHostUrls } from "../../../source/io/fileutils";
+import { CreateModelUrlParameters } from "../../../source/parameters/parameterlist";
+import { FileSource, TransformFileHostUrls } from "../../../source/io/fileutils";
+import { ImportSettings } from "../../../source/import/importer";
 import { AddDomElement } from "../../../source/viewer/domutils";
 import { Viewer } from "../../../source/viewer/viewer";
 import { HashHandler } from "./hashhandler";
@@ -38,12 +40,12 @@ export class Embed
                     edgeSettings.edgeThreshold
                 );
             }
-            let settings = new OV.ImportSettings ();
+            let settings = new ImportSettings ();
             let defaultColor = this.hashHandler.GetDefaultColorFromHash ();
             if (defaultColor !== null) {
                 settings.defaultColor = defaultColor;
             }
-            this.modelLoaderUI.LoadModel (urls, OV.FileSource.Url, settings, {
+            this.modelLoaderUI.LoadModel (urls, FileSource.Url, settings, {
                 onStart : () =>
                 {
 
@@ -61,7 +63,7 @@ export class Embed
 
                 }
             });
-            let hashParameters = OV.CreateModelUrlParameters (urls);
+            let hashParameters = CreateModelUrlParameters (urls);
             let websiteUrl = this.parameters.websiteLinkDiv.getAttribute ('href') + '#' + hashParameters;
             this.parameters.websiteLinkDiv.setAttribute ('href', websiteUrl);
         }

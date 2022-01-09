@@ -1,3 +1,4 @@
+import { IsDefined } from "../../../source/core/core";
 import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, InsertDomElementAfter } from "../../../source/viewer/domutils";
 import { CreateSvgIconElement, SetSvgIconImageElement } from "./utils";
 
@@ -47,7 +48,7 @@ export class TreeViewItem
         this.mainElement = CreateDiv ('ov_tree_item');
         this.mainElement.setAttribute ('title', this.name);
         this.nameElement = AddDiv (this.mainElement, 'ov_tree_item_name', this.name);
-        if (OV.IsDefined (icon)) {
+        if (IsDefined (icon)) {
             let iconElement = CreateSvgIconElement (icon, 'ov_tree_item_icon');
             InsertDomElementBefore (iconElement, this.nameElement);
         }
@@ -128,7 +129,7 @@ export class TreeViewGroupItem extends TreeViewItem
         this.openButtonIcon = 'arrow_down';
         this.closeButtonIcon = 'arrow_right';
 
-        this.openCloseButton = OV.CreateSvgIconElement (this.openButtonIcon, 'ov_tree_item_icon');
+        this.openCloseButton = CreateSvgIconElement (this.openButtonIcon, 'ov_tree_item_icon');
         InsertDomElementBefore (this.openCloseButton, this.nameElement);
     }
 

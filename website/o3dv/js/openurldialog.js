@@ -1,10 +1,11 @@
-import { AddDiv } from "../../../source/viewer/domutils";
+import { ReadLines } from "../../../source/import/importerutils";
+import { AddDiv, CreateDomElement } from "../../../source/viewer/domutils";
 import { ButtonDialog } from "./modal";
 
 export function ShowOpenUrlDialog (onOk)
 {
     let dialog = new ButtonDialog ();
-    let urlsTextArea = OV.CreateDomElement ('textarea', 'ov_dialog_textarea');
+    let urlsTextArea = CreateDomElement ('textarea', 'ov_dialog_textarea');
     let contentDiv = dialog.Init ('Open Model from Url', [
         {
             name : 'Cancel',
@@ -17,7 +18,7 @@ export function ShowOpenUrlDialog (onOk)
             name : 'OK',
             onClick () {
                 let urls = [];
-                OV.ReadLines (urlsTextArea.value, (line) => {
+                ReadLines (urlsTextArea.value, (line) => {
                     urls.push (line);
                 });
                 dialog.Hide ();

@@ -1,3 +1,4 @@
+import { RadDeg } from "../../../source/geometry/geometry";
 import { AddDiv, ShowDomElement, ClearDomElement } from "../../../source/viewer/domutils";
 import { SidebarPanel } from "./sidebarpanel";
 
@@ -85,7 +86,7 @@ export class SidebarMeasurePanel extends SidebarPanel
                 }
 
                 AddDiv (this.resultSection, 'ov_sidebar_measure_name', 'Angle of faces');
-                let facesAngleDegree = calculatedValues.facesAngle * OV.RadDeg;
+                let facesAngleDegree = calculatedValues.facesAngle * RadDeg;
                 let facesAngleStr = facesAngleDegree.toLocaleString (undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 4

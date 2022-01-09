@@ -1,7 +1,13 @@
+import { RunTaskAsync } from "../../../source/core/taskrunner";
+import { SubCoord3D } from "../../../source/geometry/coord3d";
+import { GetBoundingBox, IsSolid } from "../../../source/model/modelutils";
+import { CalculateVolume, CalculateSurfaceArea } from "../../../source/model/quantities";
 import { Property, PropertyType, ClearDomElement } from "../../../source/model/property";
 import { AddDiv, AddDomElement } from "../../../source/viewer/domutils";
 import { SidebarPanel } from "./sidebarpanel";
 import { CreateInlineColorCircle } from "./utils";
+import { GetFileName } from "../../../source/io/fileutils";
+import { MaterialType } from "../../../source/model/material";
 
 export class SidebarDetailsPanel extends SidebarPanel
 {
@@ -24,25 +30,25 @@ export class SidebarDetailsPanel extends SidebarPanel
     {
         this.Clear ();
         let table = AddDiv (this.contentDiv, 'ov_property_table');
-        let boundingBox = OV.GetBoundingBox (object3D);
-        let size = OV.SubCoord3D (boundingBox.max, boundingBox.min);
+        let boundingBox = GetBoundingBox (object3D);
+        let size = SubCoord3D (boundingBox.max, boundingBox.min);
         this.AddProperty (table, new Property (PropertyType.Integer, 'Vertices', object3D.VertexCount ()));
         this.AddProperty (table, new Property (PropertyType.Integer, 'Triangles', object3D.TriangleCount ()));
         this.AddProperty (table, new Property (PropertyType.Number, 'Size X', size.x));
         this.AddProperty (table, new Property (PropertyType.Number, 'Size Y', size.y));
         this.AddProperty (table, new Property (PropertyType.Number, 'Size Z', size.z));
         this.AddCalculatedProperty (table, 'Volume', () => {
-            if (!OV.IsSolid (object3D)) {
+            if (!IsSolid (object3D)) {
                 return null;
             }
-            const volume = OV.CalculateVolume (object3D);
+            const volume = CalculateVolume (object3D);
             if (volume === null) {
                 return null;
             }
             return new Property (PropertyType.Number, null, volume);
         });
         this.AddCalculatedProperty (table, 'Surface', () => {
-            const surfaceArea = OV.CalculateSurfaceArea (object3D);
+            const surfaceArea = CalculateSurfaceArea (object3D);
             if (surfaceArea === null) {
                 return null;
             }
@@ -69,16 +75,16 @@ export class SidebarDetailsPanel extends SidebarPanel
             if (map === null || map.name === null) {
                 return;
             }
-            let fileName = OV.GetFileName (map.name);
+            let fileName = GetFileName (map.name);
             obj.AddProperty (table, new Property (PropertyType.Text, name, fileName));
         }
 
         this.Clear ();
         let table = AddDiv (this.contentDiv, 'ov_property_table');
         let typeString = null;
-        if (material.type === OV.MaterialType.Phong) {
+        if (material.type === MaterialType.Phong) {
             typeString = 'Phong';
-        } else if (material.type === OV.MaterialType.Physical) {
+        } else if (material.type === MaterialType.Physical) {
             typeString = 'Physical';
         }
         this.AddProperty (table, new Property (PropertyType.Text, 'Source', material.isDefault ? 'Default' : 'Model'));
@@ -87,12 +93,12 @@ export class SidebarDetailsPanel extends SidebarPanel
             this.AddProperty (table, new Property (PropertyType.Text, 'Color', 'Vertex colors'));
         } else {
             this.AddProperty (table, new Property (PropertyType.Color, 'Color', material.color));
-            if (material.type === OV.MaterialType.Phong) {
+            if (material.type === MaterialType.Phong) {
                 this.AddProperty (table, new Property (PropertyType.Color, 'Ambient', material.ambient));
                 this.AddProperty (table, new Property (PropertyType.Color, 'Specular', material.specular));
             }
         }
-        if (material.type === OV.MaterialType.Physical) {
+        if (material.type === MaterialType.Physical) {
             this.AddProperty (table, new Property (PropertyType.Percent, 'Metalness', material.metalness));
             this.AddProperty (table, new Property (PropertyType.Percent, 'Roughness', material.roughness));
         }
@@ -101,9 +107,9 @@ export class SidebarDetailsPanel extends SidebarPanel
         AddTextureMap (this, table, 'Bump Map', material.bumpMap);
         AddTextureMap (this, table, 'Normal Map', material.normalMap);
         AddTextureMap (this, table, 'Emissive Map', material.emissiveMap);
-        if (material.type === OV.MaterialType.Phong) {
+        if (material.type === MaterialType.Phong) {
             AddTextureMap (this, table, 'Specular Map', material.specularMap);
-        } else if (material.type === OV.MaterialType.Physical) {
+        } else if (material.type === MaterialType.Physical) {
             AddTextureMap (this, table, 'Metallic Map', material.metalnessMap);
         }
         this.Resize ();
@@ -142,7 +148,7 @@ export class SidebarDetailsPanel extends SidebarPanel
         calculateButton.addEventListener ('click', () => {
             ClearDomElement (valueColumn);
             valueColumn.innerHTML = 'Please wait...';
-            OV.RunTaskAsync (() => {
+            RunTaskAsync (() => {
                 let propertyValue = calculateValue ();
                 if (propertyValue === null) {
                     valueColumn.innerHTML = '-';
@@ -171,7 +177,7 @@ export class SidebarDetailsPanel extends SidebarPanel
         } else if (property.type === PropertyType.Percent) {
             valueText = parseInt (property.value * 100, 10).toString () + '%';
         } else if (property.type === PropertyType.Color) {
-            let hexString = '#' + OV.ColorToHexString (property.value);
+            let hexString = '#' + ColorToHexString (property.value);
             let colorCircle = CreateInlineColorCircle (property.value);
             targetDiv.appendChild (colorCircle);
             AddDomElement (targetDiv, 'span', null, hexString);

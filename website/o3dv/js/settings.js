@@ -1,3 +1,5 @@
+import { Color } from "../../../source/model/color";
+
 export const Theme =
 {
     Light : 1,
@@ -8,22 +10,22 @@ export class Settings
 {
     constructor ()
     {
-        this.backgroundColor = new OV.Color (255, 255, 255);
-        this.defaultColor = new OV.Color (200, 200, 200);
+        this.backgroundColor = new ColorComponentFromFloat (255, 255, 255);
+        this.defaultColor = new Color (200, 200, 200);
         this.showGrid = false;
         this.showEdges = false;
-        this.edgeColor = new OV.Color (0, 0, 0);
+        this.edgeColor = new Color (0, 0, 0);
         this.edgeThreshold = 1;
         this.themeId = Theme.Light;
     }
 
     LoadFromCookies (cookieHandler)
     {
-        this.backgroundColor = cookieHandler.GetColorVal ('ov_background_color', new OV.Color (255, 255, 255));
-        this.defaultColor = cookieHandler.GetColorVal ('ov_default_color', new OV.Color (200, 200, 200));
+        this.backgroundColor = cookieHandler.GetColorVal ('ov_background_color', new Color (255, 255, 255));
+        this.defaultColor = cookieHandler.GetColorVal ('ov_default_color', new Color (200, 200, 200));
         this.showGrid = cookieHandler.GetBoolVal ('ov_show_grid', false);
         this.showEdges = cookieHandler.GetBoolVal ('ov_show_edges', false);
-        this.edgeColor = cookieHandler.GetColorVal ('ov_edge_color', new OV.Color (0, 0, 0));
+        this.edgeColor = cookieHandler.GetColorVal ('ov_edge_color', new Color (0, 0, 0));
         this.edgeThreshold = cookieHandler.GetIntVal ('ov_edge_threshold', 1);
         this.showEdges = cookieHandler.GetBoolVal ('ov_show_edges', false);
         this.themeId = cookieHandler.GetIntVal ('ov_theme_id', Theme.Light);

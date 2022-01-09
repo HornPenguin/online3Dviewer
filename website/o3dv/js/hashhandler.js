@@ -1,4 +1,4 @@
-import { CreateModelUrlParameters, CreateUrlParser } from "../../../source/main";
+import { CreateModelUrlParameters, CreateUrlParser } from "../../../source/parameters/parameterlist";
 
 export class HashHandler
 {

@@ -1,4 +1,10 @@
+import { RunTaskAsync } from "../../../source/core/taskrunner";
+import { Coord3D } from "../../../source/geometry/coord3d";
+import { Matrix } from "../../../source/geometry/matrix";
 import { FileFormat } from "../../../source/io/fileutils";
+import { LoadExternalLibrary } from "../../../source/io/externallibs";
+import { Exporter, ExporterSettings } from "../../../source/export/exporter";
+import { ExporterModel } from "../../../source/export/exportermodel";
 import { AddDiv, AddSelect, ClearDomElement } from "../../../source/viewer/domutils";
 import { ShowMessageDialog } from "./dialogs";
 import { ButtonDialog, ProgressDialog } from "./modal";
@@ -65,7 +71,7 @@ export class ModelExporterUI extends ExporterUI
 
     ExportModel (model, callbacks)
     {
-        let settings = new OV.ExporterSettings ();
+        let settings = new ExporterSettings ();
         if (this.visibleOnlySelect.selectedIndex === 1) {
             settings.isMeshVisible = (meshInstanceId) => {
                 return callbacks.isMeshVisible (meshInstanceId);
@@ -73,14 +79,14 @@ export class ModelExporterUI extends ExporterUI
         }
 
         if (this.rotationSelect.selectedIndex === 1) {
-            let matrix = new OV.Matrix ().CreateRotationAxisAngle (new OV.Coord3D (1.0, 0.0, 0.0), -Math.PI / 2.0);
+            let matrix = new Matrix ().CreateRotationAxisAngle (new Coord3D (1.0, 0.0, 0.0), -Math.PI / 2.0);
             settings.transformation.SetMatrix (matrix);
         } else if (this.rotationSelect.selectedIndex === 2) {
-            let matrix = new OV.Matrix ().CreateRotationAxisAngle (new OV.Coord3D (1.0, 0.0, 0.0), Math.PI / 2.0);
+            let matrix = new Matrix ().CreateRotationAxisAngle (new Coord3D (1.0, 0.0, 0.0), Math.PI / 2.0);
             settings.transformation.SetMatrix (matrix);
         }
 
-        let exporterModel = new OV.ExporterModel (model, settings);
+        let exporterModel = new ExporterModel (model, settings);
         if (exporterModel.MeshInstanceCount () === 0) {
             let errorDialog = ShowMessageDialog (
                 'Export Failed',
@@ -95,8 +101,8 @@ export class ModelExporterUI extends ExporterUI
         progressDialog.Init ('Exporting Model');
         progressDialog.Show ();
 
-        OV.RunTaskAsync (() => {
-            let exporter = new OV.Exporter ();
+        RunTaskAsync (() => {
+            let exporter = new Exporter ();
             exporter.Export (model, settings, this.format, this.extension, {
                 onError : () => {
                     progressDialog.Hide ();
@@ -109,7 +115,7 @@ export class ModelExporterUI extends ExporterUI
                         let file = files[0];
                         DownloadArrayBufferAsFile (file.GetBufferContent (), file.GetName ());
                     } else if (files.length > 1) {
-                        OV.LoadExternalLibrary ('loaders/fflate.min.js').then (() => {
+                        LoadExternalLibrary ('loaders/fflate.min.js').then (() => {
                             let filesInZip = {};
                             for (let file of files) {
                                 filesInZip[file.name] = new Uint8Array (file.content);

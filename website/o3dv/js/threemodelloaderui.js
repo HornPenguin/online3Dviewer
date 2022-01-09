@@ -1,13 +1,15 @@
 import { AddDiv } from "../../../source/viewer/domutils";
+import { ThreeModelLoader } from "../../../source/threejs/threemodelloader";
 import { ShowMessageDialog } from "./dialogs";
 import { ButtonDialog, ProgressDialog } from "./modal";
 import { AddSvgIconElement } from "./utils";
+import { ImportErrorCode } from "../../../source/import/importer";
 
 export class ThreeModelLoaderUI
 {
     constructor ()
     {
-        this.modelLoader = new OV.ThreeModelLoader ();
+        this.modelLoader = new ThreeModelLoader ();
         this.modalDialog = null;
     }
 
@@ -66,19 +68,19 @@ export class ThreeModelLoaderUI
 
     ShowErrorDialog (importError)
     {
-        if (importError.code === OV.ImportErrorCode.NoImportableFile) {
+        if (importError.code === ImportErrorCode.NoImportableFile) {
             return ShowMessageDialog (
                 'Something went wrong',
                 'No importable file found.',
                 importError.message
             );
-        } else if (importError.code === OV.ImportErrorCode.FailedToLoadFile) {
+        } else if (importError.code === ImportErrorCode.FailedToLoadFile) {
             return ShowMessageDialog (
                 'Something went wrong',
                 'Failed to load file for import.',
                 importError.message
             );
-        } else if (importError.code === OV.ImportErrorCode.ImportFailed) {
+        } else if (importError.code === ImportErrorCode.ImportFailed) {
             return ShowMessageDialog (
                 'Something went wrong',
                 'Failed to import model.',
