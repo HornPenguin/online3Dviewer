@@ -1,5 +1,4 @@
 import * as path from 'path';
-import rewire from 'rewire';
 import { GetArrayBufferFileContent, GetTextFileContent } from './testutils.js';
 
 

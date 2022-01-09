@@ -12,9 +12,6 @@ install:
 build_script:
   - npm run create_package
 
-test_script:
-  - npm run test
-
 artifacts:
   - path: dist\final\package\*
 
