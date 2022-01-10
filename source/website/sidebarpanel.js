@@ -1,4 +1,4 @@
-import { AddDiv, ClearDomElement } from '../../../source/viewer/domutils.js';
+import { AddDiv, ClearDomElement } from '../engine/viewer/domutils.js';
 import { Panel } from './panelset.js';
 
 export class SidebarPanel extends Panel

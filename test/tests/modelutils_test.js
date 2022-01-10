@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as OV from '../../source/main.js';
+import * as OV from '../../source/engine/main.js';
 import { GetModelWithOneMesh, GetTetrahedronMesh, GetTwoCubesConnectingInOneEdgeModel, GetTwoCubesConnectingInOneFaceModel, GetTwoCubesConnectingInOneVertexModel } from '../utils/testutils.js';
 
 export default function suite ()

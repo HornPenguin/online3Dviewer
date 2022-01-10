@@ -1,5 +1,5 @@
-import { SetExternalLibLocation } from '../../../source/io/externallibs.js';
-import { CreateDomElement } from '../../../source/viewer/domutils.js';
+import { SetExternalLibLocation } from '../engine/io/externallibs.js';
+import { CreateDomElement } from '../engine/viewer/domutils.js';
 import { AddSvgIconElement, InstallTooltip } from './utils.js';
 import { Embed } from './embed.js';
 import { Website } from './website.js';

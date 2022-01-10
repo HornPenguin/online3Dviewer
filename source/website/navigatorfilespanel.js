@@ -1,4 +1,4 @@
-import { SetDomElementHeight, GetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { SetDomElementHeight, GetDomElementOuterHeight } from '../engine/viewer/domutils.js';
 import { NavigatorPanel } from './navigatorpanel.js';
 import { TreeViewButton, TreeViewButtonItem, TreeViewGroupItem, TreeViewSingleItem } from './treeview.js';
 

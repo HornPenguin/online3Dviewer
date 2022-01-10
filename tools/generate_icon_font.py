@@ -33,7 +33,7 @@ def Main (argv):
 		'-n', 'O3DVIcons'
 	])
 
-	websiteCssDir = os.path.join (rootDir, 'website', 'o3dv', 'css')
+	websiteCssDir = os.path.join (rootDir, 'website', 'css')
 	websiteIconFontDir = os.path.join (websiteCssDir, 'O3DVIcons')
 	if not os.path.exists (websiteIconFontDir):
 		os.makedirs (websiteIconFontDir)

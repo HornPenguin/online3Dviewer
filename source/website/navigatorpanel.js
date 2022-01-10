@@ -1,4 +1,4 @@
-import { AddDiv } from '../../../source/viewer/domutils.js';
+import { AddDiv } from '../engine/viewer/domutils.js';
 import { Panel } from './panelset.js';
 import { TreeView } from './treeview.js';
 import { AddSvgIconElement } from './utils.js';

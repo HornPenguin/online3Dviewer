@@ -1,4 +1,4 @@
-import { ShowDomElement, SetDomElementWidth, SetDomElementHeight, GetDomElementOuterWidth, SetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { ShowDomElement, SetDomElementWidth, SetDomElementHeight, GetDomElementOuterWidth, SetDomElementOuterHeight } from '../engine/viewer/domutils.js';
 import { FeatureSet } from './featureset.js';
 import { PanelSet } from './panelset.js';
 import { SidebarDetailsPanel } from './sidebardetailspanel.js';

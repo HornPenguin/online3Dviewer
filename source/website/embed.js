@@ -1,8 +1,8 @@
-import { CreateModelUrlParameters } from '../../../source/parameters/parameterlist.js';
-import { FileSource, TransformFileHostUrls } from '../../../source/io/fileutils.js';
-import { ImportSettings } from '../../../source/import/importer.js';
-import { AddDomElement } from '../../../source/viewer/domutils.js';
-import { Viewer } from '../../../source/viewer/viewer.js';
+import { CreateModelUrlParameters } from '../engine/parameters/parameterlist.js';
+import { FileSource, TransformFileHostUrls } from '../engine/io/fileutils.js';
+import { ImportSettings } from '../engine/import/importer.js';
+import { AddDomElement } from '../engine/viewer/domutils.js';
+import { Viewer } from '../engine/viewer/viewer.js';
 import { HashHandler } from './hashhandler.js';
 import { ThreeModelLoaderUI } from './threemodelloaderui.js';
 

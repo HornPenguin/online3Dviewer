@@ -1,5 +1,5 @@
-import { Color, ColorToHexString } from '../../../source/model/color.js';
-import { AddDiv, AddDomElement, AddRangeSlider, AddToggle, ShowDomElement, GetDomElementOuterHeight, SetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { Color, ColorToHexString } from '../engine/model/color.js';
+import { AddDiv, AddDomElement, AddRangeSlider, AddToggle, ShowDomElement, GetDomElementOuterHeight, SetDomElementOuterHeight } from '../engine/viewer/domutils.js';
 import { FeatureSet } from './featureset.js';
 import { Settings, Theme } from './settings.js';
 import { SidebarPanel } from './sidebarpanel.js';

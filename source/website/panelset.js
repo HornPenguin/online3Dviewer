@@ -1,4 +1,4 @@
-import { AddDiv, ShowDomElement, IsDomElementVisible, SetDomElementWidth, SetDomElementHeight } from '../../../source/viewer/domutils.js';
+import { AddDiv, ShowDomElement, IsDomElementVisible, SetDomElementWidth, SetDomElementHeight } from '../engine/viewer/domutils.js';
 import { AddSvgIconElement, SetSvgIconImageElement } from './utils.js';
 
 export class Panel

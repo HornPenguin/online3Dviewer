@@ -1,5 +1,5 @@
-import { RadDeg } from '../../../source/geometry/geometry.js';
-import { AddDiv, ShowDomElement, ClearDomElement } from '../../../source/viewer/domutils.js';
+import { RadDeg } from '../engine/geometry/geometry.js';
+import { AddDiv, ShowDomElement, ClearDomElement } from '../engine/viewer/domutils.js';
 import { SidebarPanel } from './sidebarpanel.js';
 
 export class SidebarMeasurePanel extends SidebarPanel

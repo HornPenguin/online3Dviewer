@@ -1,9 +1,9 @@
-import { AddDiv } from '../../../source/viewer/domutils.js';
-import { ThreeModelLoader } from '../../../source/threejs/threemodelloader.js';
+import { AddDiv } from '../engine/viewer/domutils.js';
+import { ThreeModelLoader } from '../engine/threejs/threemodelloader.js';
 import { ShowMessageDialog } from './dialogs.js';
 import { ButtonDialog, ProgressDialog } from './modal.js';
 import { AddSvgIconElement } from './utils.js';
-import { ImportErrorCode } from '../../../source/import/importer.js';
+import { ImportErrorCode } from '../engine/import/importer.js';
 
 export class ThreeModelLoaderUI
 {

@@ -1,4 +1,4 @@
-import { ShowDomElement, SetDomElementHeight, GetDomElementOuterWidth, SetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { ShowDomElement, SetDomElementHeight, GetDomElementOuterWidth, SetDomElementOuterHeight } from '../engine/viewer/domutils.js';
 import { NavigatorFilesPanel } from './navigatorfilespanel.js';
 import { NavigatorMaterialsPanel } from './navigatormaterialspanel.js';
 import { NavigatorMeshesPanel } from './navigatormeshespanel.js';

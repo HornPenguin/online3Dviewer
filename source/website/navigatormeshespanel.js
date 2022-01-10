@@ -1,6 +1,6 @@
-import { NodeType } from '../../../source/model/node.js';
-import { MeshInstanceId } from '../../../source/model/meshinstance.js';
-import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, SetDomElementHeight, GetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { NodeType } from '../engine/model/node.js';
+import { MeshInstanceId } from '../engine/model/meshinstance.js';
+import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, SetDomElementHeight, GetDomElementOuterHeight } from '../engine/viewer/domutils.js';
 import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from './dialogs.js';
 import { MeshItem, NavigatorItemRecurse, NodeItem } from './navigatoritems.js';
 import { NavigatorPanel, NavigatorPopupButton } from './navigatorpanel.js';

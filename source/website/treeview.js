@@ -1,5 +1,5 @@
-import { IsDefined } from '../../../source/core/core.js';
-import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, InsertDomElementAfter } from '../../../source/viewer/domutils.js';
+import { IsDefined } from '../engine/core/core.js';
+import { AddDiv, CreateDiv, ShowDomElement, ClearDomElement, InsertDomElementBefore, InsertDomElementAfter } from '../engine/viewer/domutils.js';
 import { CreateSvgIconElement, SetSvgIconImageElement } from './utils.js';
 
 export function ScrollToView (element)

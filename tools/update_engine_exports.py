@@ -15,7 +15,7 @@ def Main (argv):
 		config = json.load (configJson)
 
 	engineFiles = []
-	sourceFolder = os.path.join (rootDir, 'source')
+	sourceFolder = os.path.join (rootDir, 'source', 'engine')
 	for dirName in os.listdir (sourceFolder):
 		dirPath = os.path.join (sourceFolder, dirName)
 		if not os.path.isdir (dirPath):
@@ -51,7 +51,7 @@ def Main (argv):
 		mainFileContent += '\n'
 	mainFileContent += '};\n'
 
-	Tools.WriteContentToFile (os.path.join ('source', 'main.js'), mainFileContent)
+	Tools.WriteContentToFile (os.path.join (sourceFolder, 'main.js'), mainFileContent)
 	return 0
 
 sys.exit (Main (sys.argv))

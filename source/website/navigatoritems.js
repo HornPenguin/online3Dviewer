@@ -1,4 +1,4 @@
-import { IsDefined } from '../../../source/core/core.js';
+import { IsDefined } from '../engine/core/core.js';
 import { TreeViewButton, TreeViewButtonItem, TreeViewGroupButtonItem, TreeViewSingleItem } from './treeview.js';
 
 export const NavigatorItemRecurse =

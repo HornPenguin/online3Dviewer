@@ -1,4 +1,4 @@
-import * as OV from '../../source/main.js';
+import * as OV from '../../source/engine/main.js';
 import { GetArrayBufferFileContent } from './testutils.js';
 import * as path from 'path';
 

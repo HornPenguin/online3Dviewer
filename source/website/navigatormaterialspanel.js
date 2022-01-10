@@ -1,4 +1,4 @@
-import { AddDiv, SetDomElementHeight, GetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { AddDiv, SetDomElementHeight, GetDomElementOuterHeight } from '../engine/viewer/domutils.js';
 import { CalculatePopupPositionToElementBottomRight, ShowListPopup } from './dialogs.js';
 import { MaterialItem } from './navigatoritems.js';
 import { NavigatorPanel, NavigatorPopupButton } from './navigatorpanel.js';

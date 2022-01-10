@@ -1,4 +1,4 @@
-import { AddDiv } from '../../../source/viewer/domutils.js';
+import { AddDiv } from '../engine/viewer/domutils.js';
 import { ButtonDialog, ListPopup } from './modal.js';
 
 export function ShowMessageDialog (title, message, subMessage)

@@ -1,14 +1,14 @@
-import { RunTaskAsync } from '../../../source/core/taskrunner.js';
-import { SubCoord3D } from '../../../source/geometry/coord3d.js';
-import { GetBoundingBox, IsSolid } from '../../../source/model/modelutils.js';
-import { CalculateVolume, CalculateSurfaceArea } from '../../../source/model/quantities.js';
-import { Property, PropertyType } from '../../../source/model/property.js';
-import { AddDiv, AddDomElement, ClearDomElement } from '../../../source/viewer/domutils.js';
+import { RunTaskAsync } from '../engine/core/taskrunner.js';
+import { SubCoord3D } from '../engine/geometry/coord3d.js';
+import { GetBoundingBox, IsSolid } from '../engine/model/modelutils.js';
+import { CalculateVolume, CalculateSurfaceArea } from '../engine/model/quantities.js';
+import { Property, PropertyType } from '../engine/model/property.js';
+import { AddDiv, AddDomElement, ClearDomElement } from '../engine/viewer/domutils.js';
 import { SidebarPanel } from './sidebarpanel.js';
 import { CreateInlineColorCircle } from './utils.js';
-import { GetFileName } from '../../../source/io/fileutils.js';
-import { MaterialType } from '../../../source/model/material.js';
-import { ColorToHexString } from '../../../source/model/color.js';
+import { GetFileName } from '../engine/io/fileutils.js';
+import { MaterialType } from '../engine/model/material.js';
+import { ColorToHexString } from '../engine/model/color.js';
 
 export class SidebarDetailsPanel extends SidebarPanel
 {

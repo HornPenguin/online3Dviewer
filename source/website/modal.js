@@ -1,4 +1,4 @@
-import { AddDiv, CreateDiv } from '../../../source/viewer/domutils.js';
+import { AddDiv, CreateDiv } from '../engine/viewer/domutils.js';
 import { AddSvgIconElement, CreateInlineColorCircle, IsHoverEnabled } from './utils.js';
 
 export class Modal

@@ -1,8 +1,8 @@
-import { FileSource, GetFileExtension, TransformFileHostUrls } from '../../../source/io/fileutils.js';
-import { ImportErrorCode, ImportSettings } from '../../../source/import/importer.js';
-import { Viewer } from '../../../source/viewer/viewer.js';
-import { MeasureTool } from '../../../source/viewer/measuretool.js';
-import { AddDiv, AddDomElement, ShowDomElement, SetDomElementOuterHeight } from '../../../source/viewer/domutils.js';
+import { FileSource, GetFileExtension, TransformFileHostUrls } from '../engine/io/fileutils.js';
+import { ImportErrorCode, ImportSettings } from '../engine/import/importer.js';
+import { Viewer } from '../engine/viewer/viewer.js';
+import { MeasureTool } from '../engine/viewer/measuretool.js';
+import { AddDiv, AddDomElement, ShowDomElement, SetDomElementOuterHeight } from '../engine/viewer/domutils.js';
 import { CookieHandler } from './cookies.js';
 import { CalculatePopupPositionToScreen, ShowListPopup } from './dialogs.js';
 import { EventHandler } from './eventhandler.js';
@@ -17,8 +17,8 @@ import { ExportDialog } from './exportdialog.js';
 import { AddSmallWidthChangeEventListener, GetFilesFromDataTransfer, IsSmallWidth } from './utils.js';
 import { ShowOpenUrlDialog } from './openurldialog.js';
 import { ShowSharingDialog } from './sharingdialog.js';
-import { HasDefaultMaterial, ReplaceDefaultMaterialColor } from '../../../source/model/modelutils.js';
-import { Direction } from '../../../source/geometry/geometry.js';
+import { HasDefaultMaterial, ReplaceDefaultMaterialColor } from '../engine/model/modelutils.js';
+import { Direction } from '../engine/geometry/geometry.js';
 
 export const WebsiteUIState =
 {

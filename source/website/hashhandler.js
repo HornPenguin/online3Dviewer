@@ -1,4 +1,4 @@
-import { CreateModelUrlParameters, CreateUrlParser } from '../../../source/parameters/parameterlist.js';
+import { CreateModelUrlParameters, CreateUrlParser } from '../engine/parameters/parameterlist.js';
 
 export class HashHandler
 {

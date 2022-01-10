@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as OV from '../../source/main.js';
+import * as OV from '../../source/engine/main.js';
 import { GetHierarchicalModelNoFinalization, GetTranslatedRotatedCubesModel, ModelNodesToTree } from '../utils/testutils.js';
 
 export default function suite ()

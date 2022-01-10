@@ -1,5 +1,5 @@
-import { ReadLines } from '../../../source/import/importerutils.js';
-import { AddDiv, CreateDomElement } from '../../../source/viewer/domutils.js';
+import { ReadLines } from '../engine/import/importerutils.js';
+import { AddDiv, CreateDomElement } from '../engine/viewer/domutils.js';
 import { ButtonDialog } from './modal.js';
 
 export function ShowOpenUrlDialog (onOk)

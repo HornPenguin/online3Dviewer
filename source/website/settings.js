@@ -1,4 +1,4 @@
-import { Color } from '../../../source/model/color.js';
+import { Color } from '../engine/model/color.js';
 
 export const Theme =
 {
