@@ -6,6 +6,7 @@ import { Color } from '../model/color.js';
 import { File, FileList } from './filelist.js';
 import { Importer3dm } from './importer3dm.js';
 import { Importer3ds } from './importer3ds.js';
+import { ImporterBlend } from './importerblend.js';
 import { ImporterGltf } from './importergltf.js';
 import { ImporterIfc } from './importerifc.js';
 import { ImporterO3dv } from './importero3dv.js';
@@ -105,6 +106,7 @@ export class Importer
             new ImporterO3dv (),
             new Importer3dm (),
             new ImporterIfc (),
+            new ImporterBlend (),
             new ImporterThreeFbx (),
             new ImporterThreeDae (),
             new ImporterThreeWrl (),
