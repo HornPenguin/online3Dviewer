@@ -55,7 +55,8 @@
 			"THREE": "readonly",
 			"DracoDecoderModule": "readonly",
 			"rhino3dm": "readonly",
-			"WebIFC": "readonly"
+			"WebIFC": "readonly",
+			"jsblend": "readonly"
 		},
 		"parserOptions": {
 			"ecmaVersion": 12,
