@@ -2,13 +2,13 @@ import { Coord2D } from '../geometry/coord2d.js';
 import { ArrayToCoord3D, Coord3D } from '../geometry/coord3d.js';
 import { Direction } from '../geometry/geometry.js';
 import { Matrix } from '../geometry/matrix.js';
-import { Quaternion } from '../geometry/quaternion.js';
+import { QuaternionFromXYZ } from '../geometry/quaternion.js';
 import { Transformation } from '../geometry/transformation.js';
 import { LoadExternalLibrary } from '../io/externallibs.js';
 import { ColorFromFloatComponents } from '../model/color.js';
 import { PhongMaterial, TextureMap } from '../model/material.js';
 import { Mesh } from '../model/mesh.js';
-import { Node, NodeType } from '../model/node.js';
+import { Node } from '../model/node.js';
 import { Triangle } from '../model/triangle.js';
 import { ImporterBase } from './importerbase.js';
 
@@ -192,41 +192,14 @@ export class ImporterBlend extends ImporterBase
                 AddPoly (mesh, loops, polys, hasUVs, meshToModelMaterial);
             }
 
-            // mesh.rotateZ(object.rot[2]);
-            // mesh.rotateY(object.rot[1]);
-            // mesh.rotateX(object.rot[0]);
-            // mesh.scale.fromArray(object.size, 0);
-            // mesh.position.fromArray([object.loc[0], (object.loc[2]), (-object.loc[1])], 0);
-
             let meshIndex = this.model.AddMesh (mesh);
-
-
-            const cos = Math.cos;
-            const sin = Math.sin;
-
-            let x = blenderObject.rot[0];
-            let y = blenderObject.rot[1];
-            let z = blenderObject.rot[2];
-            const c1 = cos( x / 2 );
-            const c2 = cos( y / 2 );
-            const c3 = cos( z / 2 );
-
-            const s1 = sin( x / 2 );
-            const s2 = sin( y / 2 );
-            const s3 = sin( z / 2 );
-
-            let q = new Quaternion (0.0, 0.0, 0.0, 1.0);
-            q.x = s1 * c2 * c3 + c1 * s2 * s3;
-            q.y = c1 * s2 * c3 + s1 * c2 * s3;
-            q.z = c1 * c2 * s3 - s1 * s2 * c3;
-            q.w = c1 * c2 * c3 - s1 * s2 * s3;
 
             let node = new Node ();
             node.SetName (blenderObject.aname);
             let matrix = new Matrix ();
             matrix.ComposeTRS (
                 ArrayToCoord3D (blenderObject.loc),
-                q,
+                QuaternionFromXYZ (blenderObject.rot[0], blenderObject.rot[1], blenderObject.rot[2], 'XYZ'),
                 ArrayToCoord3D (blenderObject.size)
             );
             node.SetTransformation (new Transformation (matrix));
