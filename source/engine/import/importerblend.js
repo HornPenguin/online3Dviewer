@@ -1,10 +1,14 @@
 import { Coord2D } from '../geometry/coord2d.js';
-import { Coord3D } from '../geometry/coord3d.js';
+import { ArrayToCoord3D, Coord3D } from '../geometry/coord3d.js';
 import { Direction } from '../geometry/geometry.js';
+import { Matrix } from '../geometry/matrix.js';
+import { Quaternion } from '../geometry/quaternion.js';
+import { Transformation } from '../geometry/transformation.js';
 import { LoadExternalLibrary } from '../io/externallibs.js';
 import { ColorFromFloatComponents } from '../model/color.js';
 import { PhongMaterial, TextureMap } from '../model/material.js';
 import { Mesh } from '../model/mesh.js';
+import { Node, NodeType } from '../model/node.js';
 import { Triangle } from '../model/triangle.js';
 import { ImporterBase } from './importerbase.js';
 
@@ -87,11 +91,13 @@ export class ImporterBlend extends ImporterBase
 
         function ConvertMaterial (blenderMaterial, callbacks)
         {
+            console.log (blenderMaterial);
             let material = new PhongMaterial ();
-            material.name = blenderMaterial.id.name;
+            material.name = blenderMaterial.aname;
             material.color = ColorFromFloatComponents (blenderMaterial.r, blenderMaterial.g, blenderMaterial.b);
             material.specular = ColorFromFloatComponents (blenderMaterial.specr, blenderMaterial.specg, blenderMaterial.specb);
-            material.shininess = blenderMaterial.har / 51200.0;
+            // TODO
+            //material.shininess = blenderMaterial.har / 51200.0;
             if (blenderMaterial.mtex && blenderMaterial.mtex.length > 0) {
                 for (let actBlenderMaterial of blenderMaterial.mtex) {
                     ConvertTexture (material, actBlenderMaterial, callbacks);
@@ -109,7 +115,8 @@ export class ImporterBlend extends ImporterBase
                 let v1 = loops[loopStart + i + 1].v;
                 let v2 = loops[loopStart + i + 2].v;
                 let triangle = new Triangle (v0, v1, v2);
-                triangle.SetNormals (v0, v1, v2);
+                // TODO: normals are always smoothed in the file
+                //triangle.SetNormals (v0, v1, v2);
                 if (hasUVs) {
                     triangle.SetTextureUVs (
                         loopStart,
@@ -124,18 +131,31 @@ export class ImporterBlend extends ImporterBase
             }
         }
 
-        let materialNameToIndex = new Map ();
-        for (let blenderMaterial of blenderContent.objects.Material) {
-            let material = ConvertMaterial (blenderMaterial, this.callbacks);
-            let materialIndex = this.model.AddMaterial (material);
-            materialNameToIndex.set (material.name, materialIndex);
-        }
+        console.log (blenderContent);
 
-        for (let blenderMesh of blenderContent.objects.Mesh) {
+        let materialIdToIndex = new Map ();
+        for (let blenderObject of blenderContent.objects.Object) {
+            if (blenderObject.type !== 1) {
+                continue;
+            }
+
+            let blenderMesh = blenderObject.data;
+            if (!blenderMesh) {
+                continue;
+            }
+
             let meshToModelMaterial = new Map ();
             for (let meshMaterialIndex = 0; meshMaterialIndex < blenderMesh.mat.length; meshMaterialIndex++) {
                 let blenderMaterial = blenderMesh.mat[meshMaterialIndex];
-                meshToModelMaterial.set (meshMaterialIndex, materialNameToIndex.get (blenderMaterial.id.name));
+                let materialId = blenderMaterial.id.name;
+                if (materialIdToIndex.has (materialId)) {
+                    meshToModelMaterial.set (meshMaterialIndex, materialIdToIndex.get (materialId));
+                } else {
+                    let material = ConvertMaterial (blenderMaterial, this.callbacks);
+                    let materialIndex = this.model.AddMaterial (material);
+                    meshToModelMaterial.set (meshMaterialIndex, materialIndex);
+                    materialIdToIndex.set (materialId, materialIndex);
+                }
             }
 
             // TODO: vertex colors
@@ -144,14 +164,12 @@ export class ImporterBlend extends ImporterBase
             let polys = blenderMesh.mpoly;
             let loops = blenderMesh.mloop;
 
-            console.log (verts);
-
             if (!verts || !polys || !loops) {
                 continue;
             }
 
             let mesh = new Mesh ();
-            mesh.SetName (blenderMesh.id.name);
+            mesh.SetName (blenderMesh.aname);
 
             for (let vert of verts) {
                 mesh.AddVertex (new Coord3D (vert.co[0], vert.co[1], vert.co[2]));
@@ -174,7 +192,48 @@ export class ImporterBlend extends ImporterBase
                 AddPoly (mesh, loops, polys, hasUVs, meshToModelMaterial);
             }
 
-            this.model.AddMeshToRootNode (mesh);
+            // mesh.rotateZ(object.rot[2]);
+            // mesh.rotateY(object.rot[1]);
+            // mesh.rotateX(object.rot[0]);
+            // mesh.scale.fromArray(object.size, 0);
+            // mesh.position.fromArray([object.loc[0], (object.loc[2]), (-object.loc[1])], 0);
+
+            let meshIndex = this.model.AddMesh (mesh);
+
+
+            const cos = Math.cos;
+            const sin = Math.sin;
+
+            let x = blenderObject.rot[0];
+            let y = blenderObject.rot[1];
+            let z = blenderObject.rot[2];
+            const c1 = cos( x / 2 );
+            const c2 = cos( y / 2 );
+            const c3 = cos( z / 2 );
+
+            const s1 = sin( x / 2 );
+            const s2 = sin( y / 2 );
+            const s3 = sin( z / 2 );
+
+            let q = new Quaternion (0.0, 0.0, 0.0, 1.0);
+            q.x = s1 * c2 * c3 + c1 * s2 * s3;
+            q.y = c1 * s2 * c3 + s1 * c2 * s3;
+            q.z = c1 * c2 * s3 - s1 * s2 * c3;
+            q.w = c1 * c2 * c3 - s1 * s2 * s3;
+
+            let node = new Node ();
+            node.SetName (blenderObject.aname);
+            let matrix = new Matrix ();
+            matrix.ComposeTRS (
+                ArrayToCoord3D (blenderObject.loc),
+                q,
+                ArrayToCoord3D (blenderObject.size)
+            );
+            node.SetTransformation (new Transformation (matrix));
+            node.AddMeshIndex (meshIndex);
+
+            let rootNode = this.model.GetRootNode ();
+            rootNode.AddChildNode (node);
         }
     }
 }
