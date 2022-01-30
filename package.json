@@ -58,7 +58,8 @@
 			"THREE": "readonly",
 			"DracoDecoderModule": "readonly",
 			"rhino3dm": "readonly",
-			"WebIFC": "readonly"
+			"WebIFC": "readonly",
+			"occtimportjs" : "readonly"
 		},
 		"parserOptions": {
 			"ecmaVersion": 12,
