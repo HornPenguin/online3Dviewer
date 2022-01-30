@@ -39,6 +39,12 @@ webIfcFileMap = [
     [os.path.join ('web-ifc', 'web-ifc.wasm'), os.path.join ('loaders', 'web-ifc.wasm')],
 ]
 
+occtImportJsFileMap = [
+    [os.path.join ('occt-import-js', 'dist', 'occt-import-js.js'), os.path.join ('loaders', 'occt-import-js.js')],
+    [os.path.join ('occt-import-js', 'dist', 'occt-import-js.wasm'), os.path.join ('loaders', 'occt-import-js.wasm')],
+    [os.path.join ('occt-import-js', 'LICENSE.md'), os.path.join ('loaders', 'occt-import-js.license.md')]
+]
+
 def PrintInfo (message):
     print ('INFO: ' + message)
 
@@ -66,6 +72,7 @@ def Main (argv):
     UpdateModule (rhino3dmFileMap, nodeModulesDir, libsDir)
     UpdateModule (fflateFileMap, nodeModulesDir, libsDir)
     UpdateModule (webIfcFileMap, nodeModulesDir, libsDir)
+    UpdateModule (occtImportJsFileMap, nodeModulesDir, libsDir)
 
     return 0
 
